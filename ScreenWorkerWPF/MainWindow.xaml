@@ -1,0 +1,120 @@
+﻿<Window 
+    x:Class="ScreenWorkerWPF.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:common="clr-namespace:ScreenWorkerWPF.Common"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    ui:TitleBar.ExtendViewIntoTitleBar="True"
+    Height="800" Width="1000"
+    Icon="icon.ico"
+    Title="{Binding Title}">
+    <Window.Resources>
+
+        <sys:Double x:Key="NavigationViewItemOnLeftMinHeight">32</sys:Double>
+
+        <common:MenuItemTemplateSelector x:Key="MenuItemTemplateSelector" >
+            <common:MenuItemTemplateSelector.ItemTemplate>
+                <DataTemplate>
+                    <ui:NavigationViewItem 
+                        IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                        SelectsOnInvoked="{Binding CanSelect}"
+                        Content="{Binding Title}"
+                        MenuItemsSource="{Binding Items}"
+                        FocusVisualStyle="{x:Null}">
+                        <ui:NavigationViewItem.InputBindings>
+                            <MouseBinding Gesture="LeftClick" Command="{Binding Click}"/>
+                        </ui:NavigationViewItem.InputBindings>
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="{Binding Glyph, Mode=OneTime}" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
+                </DataTemplate>
+            </common:MenuItemTemplateSelector.ItemTemplate>
+            <common:MenuItemTemplateSelector.CustomItemTemplate>
+                <DataTemplate>
+                    <ui:NavigationViewItem 
+                        SelectsOnInvoked="{Binding CanSelect}"
+                        Content="{Binding Title}"
+                        MenuItemsSource="{Binding Items}"
+                        FocusVisualStyle="{x:Null}">
+                        <ui:NavigationViewItem.InputBindings>
+                            <MouseBinding Gesture="LeftClick" Command="{Binding Click}"/>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding Edit}"/>
+                        </ui:NavigationViewItem.InputBindings>
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="{Binding Glyph, Mode=OneTime}" />
+                        </ui:NavigationViewItem.Icon>
+                        <ui:ContextFlyoutService.ContextFlyout>
+                            <ui:MenuFlyout>
+                                <MenuItem
+                                    Command="{Binding Edit}"
+                                    Header="Edit">
+                                    <MenuItem.Icon>
+                                        <ui:FontIcon Glyph="&#xE70F;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem
+                                    Command="{Binding Delete}"
+                                    Header="Delete"
+                                    InputGestureText="Delete">
+                                    <MenuItem.Icon>
+                                        <ui:FontIcon Glyph="&#xE107;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ui:MenuFlyout>
+                        </ui:ContextFlyoutService.ContextFlyout>
+                    </ui:NavigationViewItem>
+                </DataTemplate>
+            </common:MenuItemTemplateSelector.CustomItemTemplate>
+            <common:MenuItemTemplateSelector.HeaderTemplate>
+                <DataTemplate>
+                    <ui:NavigationViewItemHeader Content="{Binding Title}"/>
+                </DataTemplate>
+            </common:MenuItemTemplateSelector.HeaderTemplate>
+            <common:MenuItemTemplateSelector.SeparatorTemplate>
+                <DataTemplate>
+                    <ui:NavigationViewItemSeparator/>
+                </DataTemplate>
+            </common:MenuItemTemplateSelector.SeparatorTemplate>
+        </common:MenuItemTemplateSelector>
+    </Window.Resources>
+    <!--<ListView x:Name="test">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ui:SimpleStackPanel>
+                    <TextBlock Text="{Binding}"/>
+                    <ui:SymbolIcon Symbol="{Binding}"/>
+                </ui:SimpleStackPanel>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>-->
+    <ui:NavigationView 
+        MenuItemTemplateSelector="{StaticResource MenuItemTemplateSelector}"
+        MenuItemsSource="{Binding Items}" 
+        SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+        PaneTitle="ScreenWorker"
+        PaneDisplayMode="Left" 
+        OpenPaneLength="200"
+        IsTabStop="False"
+        IsBackButtonVisible="Collapsed"
+        IsSettingsVisible="False"
+        IsPaneOpen="True"
+        IsPaneToggleButtonVisible="False">
+        <ui:NavigationView.AutoSuggestBox>
+            <ui:AutoSuggestBox
+                QueryIcon="Find" 
+                PlaceholderText="Search"
+                Background="#00000000"
+                QuerySubmitted="OnQuerySubmitted"
+                TextChanged="OnTextChanged"/>
+        </ui:NavigationView.AutoSuggestBox>
+        <ui:Frame 
+            DataContext="{Binding SelectedItem, Mode=OneWay}"
+            DataContextChanged="OnDataContextChanged"/>
+    </ui:NavigationView>
+</Window>
