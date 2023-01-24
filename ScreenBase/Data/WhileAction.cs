@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using AE.Core;
+﻿using AE.Core;
 
 using ScreenBase.Data.Base;
 

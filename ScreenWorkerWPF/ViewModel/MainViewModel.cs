@@ -117,6 +117,7 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Сycles", Symbol.Sync, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new WhileAction(),
+                new WhileGetColorAction(),
                 new ForAction(),
                 new ForeachColorAction(),
             }),

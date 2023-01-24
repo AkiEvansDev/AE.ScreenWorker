@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Linq;
-using System.Threading;
+﻿using System.Linq;
 
 using AE.Core;
 
@@ -14,9 +12,9 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
     public override ActionType Type => ActionType.IfGetColor;
 
     public override string GetTitle() 
-        => $"If GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) == {GetValueString(ColorPoint.GetColor(), ColorVariable)} =<AL></AL> {GetResultString(Result)}";
+        => $"If (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) == {GetValueString(ColorPoint.GetColor(), ColorVariable)}) =<AL></AL> {GetResultString(Result)}";
     public override string GetDebugTitle(IScriptExecutor executor)
-        => $"If GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) == {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))} =<AL></AL> {GetResultString(Result)}";
+        => $"If (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) == {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))}) =<AL></AL> {GetResultString(Result)}";
 
     private ScreenPoint point;
 
@@ -62,9 +60,6 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
     [NumberEditProperty(9, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
     public double Accuracy { get; set; }
 
-    [NumberEditProperty(9, $"{nameof(Timeout)} (second)", minValue: 0, smallChange: 1, largeChange: 10)]
-    public int Timeout { get; set; }
-
     [ComboBoxEditProperty(10, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
@@ -72,35 +67,20 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
     {
         point = new ScreenPoint();
         Accuracy = 0.8;
-        Timeout = 2;
     }
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
+        worker.Screen();
 
         var x = executor.GetValue(X, XVariable);
         var y = executor.GetValue(Y, YVariable);
 
-        var result = false;
-        var count = 0;
+        var color1 = worker.GetColor(x, y);
+        var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
 
-        while (count <= Timeout)
-        {
-            count++;
-
-            worker.Screen();
-            var color1 = worker.GetColor(x, y);
-
-            result = executor.IsColor(color1, color2, Accuracy);
-            executor.Log($"<P>{result}</P> = ColorFromScreen{GetColorString(color1)} == new Color{GetColorString(color2)};");
-
-            if (result)
-                break;
-
-            if (count <= Timeout)
-                Thread.Sleep(1000);
-        }
+        var result = executor.IsColor(color1, color2, Accuracy);
+        executor.Log($"<P>{result}</P> = ColorFromScreen{GetColorString(color1)} == new Color{GetColorString(color2)};");
 
         if (!Result.IsNull())
             executor.SetVariable(Result, result);

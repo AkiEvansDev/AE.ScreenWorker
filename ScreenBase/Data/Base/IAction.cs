@@ -117,6 +117,7 @@ public enum ActionType
     For = 30,
     ForeachColor = 31,
     While = 32,
+    WhileGetColor = 33,
     End = 40,
 
     Execute = 50,
