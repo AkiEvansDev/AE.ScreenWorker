@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AE.CoreWPF\AE.CoreWPF\AE.CoreWPF.csproj" />
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
   </ItemGroup>
 
