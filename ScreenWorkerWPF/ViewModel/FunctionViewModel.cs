@@ -12,6 +12,7 @@ using ModernWpf.Controls;
 
 using ScreenBase.Data;
 using ScreenBase.Data.Base;
+using ScreenBase.Data.Variable;
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;

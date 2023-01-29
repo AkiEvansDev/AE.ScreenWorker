@@ -2,14 +2,14 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Cycles;
 
 [AESerializable]
 public class ForAction : BaseGroupAction<ForAction>
 {
     public override ActionType Type => ActionType.For;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"For {GetResultString(Result)} = {GetValueString(From, FromVariable)} to {GetValueString(To, ToVariable)} {GetResultString(Result)} += {GetValueString(Step)}";
     public override string GetDebugTitle(IScriptExecutor executor)
         => $"For {GetResultString(Result)} = {GetValueString(executor.GetValue(From, FromVariable))} to {GetValueString(executor.GetValue(To, ToVariable))} {GetResultString(Result)} += {GetValueString(Step)}";

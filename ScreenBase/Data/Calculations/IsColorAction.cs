@@ -2,7 +2,7 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Calculations;
 
 [AESerializable]
 public class IsColorAction : BaseAction<IsColorAction>
@@ -10,9 +10,9 @@ public class IsColorAction : BaseAction<IsColorAction>
     public override ActionType Type => ActionType.IsColor;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = {GetValueString(Color1.GetColor(), Color1Variable)} is {GetValueString(Color2.GetColor(), Color2Variable)} with {GetValueString(Accuracy)} accuracy;";
-    public override string GetDebugTitle(IScriptExecutor executor) 
-        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Color1.GetColor(), Color1Variable))} is {GetValueString(executor.GetValue(Color2.GetColor(), Color2Variable))} with {GetValueString(Accuracy)} accuracy;";
+        => $"{GetResultString(Result)} = {GetValueString(Color1.GetColor(), Color1Variable)} is{(Not ? " not" : "")} {GetValueString(Color2.GetColor(), Color2Variable)} with {GetValueString(Accuracy)} accuracy;";
+    public override string GetDebugTitle(IScriptExecutor executor)
+        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Color1.GetColor(), Color1Variable))} is{(Not ? " not" : "")} {GetValueString(executor.GetValue(Color2.GetColor(), Color2Variable))} with {GetValueString(Accuracy)} accuracy;";
 
     private ScreenPoint color1;
     private ScreenPoint color2;
@@ -48,6 +48,9 @@ public class IsColorAction : BaseAction<IsColorAction>
     [NumberEditProperty(4, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
     public double Accuracy { get; set; }
 
+    [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Boolean)]
+    public bool Not { get; set; }
+
     [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
@@ -64,7 +67,12 @@ public class IsColorAction : BaseAction<IsColorAction>
             var color1 = executor.GetValue(Color1.GetColor(), Color1Variable);
             var color2 = executor.GetValue(Color2.GetColor(), Color2Variable);
 
-            executor.SetVariable(Result, executor.IsColor(color1, color2, Accuracy));
+            var result = executor.IsColor(color1, color2, Accuracy);
+
+            if (Not)
+                result = !result;
+
+            executor.SetVariable(Result, result);
         }
         else
             executor.Log($"<E>IsColor ignored</E>");

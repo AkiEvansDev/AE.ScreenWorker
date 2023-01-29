@@ -2,16 +2,16 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Calculations;
 
 [AESerializable]
 public class CalculationNumberAction : BaseAction<CalculationNumberAction>
 {
     public override ActionType Type => ActionType.CalculationNumber;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} {GetSumb()} {GetValueString(Value2, Value2Variable)};";
-    public override string GetDebugTitle(IScriptExecutor executor) 
+    public override string GetDebugTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSumb()} {GetValueString(executor.GetValue(Value2, Value2Variable))};";
 
     private string GetSumb()
@@ -73,6 +73,6 @@ public class CalculationNumberAction : BaseAction<CalculationNumberAction>
             }
         }
         else
-            executor.Log($"<E>ChangeNumber ignored</E>");
+            executor.Log($"<E>CalculationNumber ignored</E>");
     }
 }

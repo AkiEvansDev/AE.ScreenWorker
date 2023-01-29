@@ -4,19 +4,22 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Cycles;
 
 [AESerializable]
 public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
 {
     public override ActionType Type => ActionType.WhileGetColor;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"While (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) {(Not ? "!" : "=")}= {GetValueString(ColorPoint.GetColor(), ColorVariable)}){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
     public override string GetDebugTitle(IScriptExecutor executor)
         => $"While (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) {(Not ? "!" : "=")}= {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))}){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
 
     private ScreenPoint point;
+
+    [ComboBoxEditProperty(-1, source: ComboBoxEditPropertySource.Boolean)]
+    public bool Not { get; set; }
 
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X { get => point.X; set => point.X = value; }
@@ -57,9 +60,6 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
     [VariableEditProperty("Color", VariableType.Color, 7, propertyNames: $"{nameof(ColorPoint)}")]
     public string ColorVariable { get; set; }
 
-    [ComboBoxEditProperty(9, source: ComboBoxEditPropertySource.Boolean)]
-    public bool Not { get; set; }
-
     [NumberEditProperty(10, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
     public double Accuracy { get; set; }
 
@@ -75,11 +75,6 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
-
-        var x = executor.GetValue(X, XVariable);
-        var y = executor.GetValue(Y, YVariable);
-
         var result = true;
         var sw = new Stopwatch();
 
@@ -90,7 +85,12 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
 
             worker.Screen();
 
+            var x = executor.GetValue(X, XVariable);
+            var y = executor.GetValue(Y, YVariable);
+
             var color1 = worker.GetColor(x, y);
+            var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
+
             result = executor.IsColor(color1, color2, Accuracy);
 
             if (Not)

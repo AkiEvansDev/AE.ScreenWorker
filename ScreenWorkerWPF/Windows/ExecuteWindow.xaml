@@ -11,13 +11,12 @@
     WindowStartupLocation="Manual"
     Topmost="True"
     Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
-    Height="100" Width="200"
-    Closing="OnClosing">
+    Height="100" Width="200">
     <ui:SimpleStackPanel
         VerticalAlignment="Center">
         <TextBlock
+            x:Name="Info"
             Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
-            Text="Press Ctrl+Alt+F1 to stop" 
             FontSize="14"
             HorizontalAlignment="Center"/>
         <TextBlock 

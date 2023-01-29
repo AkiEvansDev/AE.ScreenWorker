@@ -4,16 +4,16 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Variable;
 
 [AESerializable]
 public class SetNumberAction : BaseAction<SetNumberAction>
 {
     public override ActionType Type => ActionType.SetNumber;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
-    public override string GetDebugTitle(IScriptExecutor executor) 
+    public override string GetDebugTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
 
     [NumberEditProperty(1, "-", useXFromScreen: true, useYFromScreen: true)]
@@ -39,7 +39,7 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
 {
     public override ActionType Type => ActionType.SetBoolean;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
     public override string GetDebugTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
@@ -47,7 +47,7 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
     [ComboBoxEditProperty(1, "-", source: ComboBoxEditPropertySource.Boolean)]
     public bool Value { get; set; }
 
-    [VariableEditProperty(nameof(Value), VariableType. Boolean, 0)]
+    [VariableEditProperty(nameof(Value), VariableType.Boolean, 0)]
     public string ValueVariable { get; set; }
 
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
@@ -67,7 +67,7 @@ public class SetPointAction : BaseAction<SetPointAction>
 {
     public override ActionType Type => ActionType.SetPoint;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"{GetResultString(Result)} = new Point({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
     public override string GetDebugTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = new Point({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
@@ -113,7 +113,7 @@ public class SetPointAction : BaseAction<SetPointAction>
 public class SetColorAction : BaseAction<SetColorAction>
 {
     public override ActionType Type => ActionType.SetColor;
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(ColorPoint.GetColor(), ColorVariable)};";
     public override string GetDebugTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))};";
@@ -148,5 +148,33 @@ public class SetColorAction : BaseAction<SetColorAction>
             executor.SetVariable(Result, executor.GetValue(ColorPoint.GetColor(), ColorVariable));
         else
             executor.Log($"<E>SetColor ignored</E>");
+    }
+}
+
+[AESerializable]
+public class SetTextAction : BaseAction<SetTextAction>
+{
+    public override ActionType Type => ActionType.SetText;
+
+    public override string GetTitle()
+        => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
+    public override string GetDebugTitle(IScriptExecutor executor)
+        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
+
+    [TextEditProperty(1, "-")]
+    public string Value { get; set; }
+
+    [VariableEditProperty(nameof(Value), VariableType.Number, 0)]
+    public string ValueVariable { get; set; }
+
+    [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    public string Result { get; set; }
+
+    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    {
+        if (!Result.IsNull())
+            executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
+        else
+            executor.Log($"<E>SetText ignored</E>");
     }
 }

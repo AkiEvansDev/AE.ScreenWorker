@@ -144,6 +144,9 @@ internal class ActionItem : BaseModel
         get => isSelected;
         set
         {
+            if (value == isSelected) 
+                return;
+
             isSelected = value;
 
             NotifyPropertyChanged(nameof(IsSelected));
@@ -151,6 +154,12 @@ internal class ActionItem : BaseModel
 
             if (Parent != null && (Action.Type == ActionType.End || Action.Type == ActionType.Else))
                 Parent.IsSelected = value;
+
+            if (Action is IGroupAction && Children.Any(i => i.Action.Type == ActionType.End))
+                Children.First(i => i.Action.Type == ActionType.End).IsSelected = value;
+
+            if (Action is IElseAction && Children.Any(i => i.Action.Type == ActionType.Else))
+                Children.First(i => i.Action.Type == ActionType.Else).IsSelected = value;
         }
     }
 

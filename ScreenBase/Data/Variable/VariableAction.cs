@@ -4,7 +4,7 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Variable;
 
 [AESerializable]
 public class VariableAction : BaseAction<VariableAction>

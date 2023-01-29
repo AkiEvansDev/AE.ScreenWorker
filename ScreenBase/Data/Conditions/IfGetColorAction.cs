@@ -4,17 +4,17 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Conditions;
 
 [AESerializable]
 public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
 {
     public override ActionType Type => ActionType.IfGetColor;
 
-    public override string GetTitle() 
-        => $"If (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) == {GetValueString(ColorPoint.GetColor(), ColorVariable)}) =<AL></AL> {GetResultString(Result)}";
+    public override string GetTitle()
+        => $"If (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) {(Not ? "<P>!=</P>" : "==")} {GetValueString(ColorPoint.GetColor(), ColorVariable)}) =<AL></AL> {GetResultString(Result)}";
     public override string GetDebugTitle(IScriptExecutor executor)
-        => $"If (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) == {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))}) =<AL></AL> {GetResultString(Result)}";
+        => $"If (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) {(Not ? "<P>!=</P>" : "==")} {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))}) =<AL></AL> {GetResultString(Result)}";
 
     private ScreenPoint point;
 
@@ -80,6 +80,10 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
         var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
 
         var result = executor.IsColor(color1, color2, Accuracy);
+
+        if (Not)
+            result = !result;
+
         executor.Log($"<P>{result}</P> = ColorFromScreen{GetColorString(color1)} == new Color{GetColorString(color2)};");
 
         if (!Result.IsNull())

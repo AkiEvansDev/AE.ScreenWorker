@@ -132,12 +132,17 @@ public enum ActionType
     SetBoolean = 81,
     SetPoint = 82,
     SetColor = 83,
+    SetText = 84,
 
     CalculationNumber = 90,
-    CompareNumber = 91,
-    IsColor = 92,
+    CalculationBoolean = 91,
+    CompareNumber = 92,
+    IsColor = 93,
 
     Log = 100,
+
+    ExtractText = 200,
+    ParseNumber = 201
 }
 
 public enum VariableType
@@ -145,7 +150,8 @@ public enum VariableType
     Number = 1,
     Boolean = 2,
     Point = 3,
-    Color = 4
+    Color = 4,
+    Text = 5
 }
 
 public enum KeyEventType
@@ -161,6 +167,12 @@ public enum CalculationNumberType
     Decrement = 2,
     Multiply = 3,
     Divide = 4
+}
+
+public enum CalculationBooleanType
+{
+    And = 1,
+    Or = 2,
 }
 
 public enum CompareType
@@ -202,6 +214,7 @@ public interface IGroupAction
 public interface IElseAction : IGroupAction 
 { 
     bool NeedElse { get; set; }
+    bool Not { get; set; }
 }
 
 public abstract class BaseAction<T> : IAction
@@ -245,6 +258,9 @@ public abstract class BaseAction<T> : IAction
 
             if (value is Enum @enum)
                 return $"<P>{@enum.Name()}</P>";
+
+            if (value is string)
+                return $"<T>\"{value}\"</T>";
 
             return $"<P>{value}</P>";
         }
@@ -296,13 +312,16 @@ public abstract class BaseGroupAction<T> : BaseAction<T>, IGroupAction
 public abstract class BaseGroupElseAction<T> : BaseGroupAction<T>, IElseAction
     where T : class, IAction, IGroupAction, IElseAction
 {
-
     [ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
     public bool NeedElse { get; set; }
+
+    [ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
+    public bool Not { get; set; }
 
     public BaseGroupElseAction()
     {
         NeedElse = true;
+        Not = false;
     }
 }
 

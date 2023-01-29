@@ -2,14 +2,14 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Calculations;
 
 [AESerializable]
-public class CompareAction : BaseAction<CompareAction>
+public class CompareNumberAction : BaseAction<CompareNumberAction>
 {
     public override ActionType Type => ActionType.CompareNumber;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} {GetSymb()} {GetValueString(Value2, Value2Variable)};";
     public override string GetDebugTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSymb()} {GetValueString(executor.GetValue(Value2, Value2Variable))};";
@@ -45,7 +45,7 @@ public class CompareAction : BaseAction<CompareAction>
     [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
-    public CompareAction()
+    public CompareNumberAction()
     {
         Action = CompareType.Equal;
     }

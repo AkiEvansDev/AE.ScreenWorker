@@ -2,7 +2,7 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Cycles;
 
 [AESerializable]
 public class ForeachColorAction : BaseGroupAction<ForeachColorAction>

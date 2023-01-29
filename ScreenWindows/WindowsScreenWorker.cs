@@ -1,5 +1,5 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading;
 
 using ScreenBase;
@@ -28,6 +28,16 @@ public class WindowsScreenWorker : IScreenWorker
     public Color GetColor(int x, int y)
     {
         return screen.GetPixel(x, y);
+    }
+
+    public Bitmap GetPart(int x1, int y1, int x2, int y2)
+    {
+        return screen.Clone(new Rectangle(x1, y1, x2 - x1, y2 - y1), PixelFormat.Format16bppRgb555);
+    }
+
+    public Bitmap GetPalettePart(int x1, int y1, int x2, int y2)
+    {
+        return screen.Clone(new Rectangle(x1, y1, x2 - x1, y2 - y1), PixelFormat.Format8bppIndexed);
     }
 
     public Color[,] GetColors(Rectangle range)

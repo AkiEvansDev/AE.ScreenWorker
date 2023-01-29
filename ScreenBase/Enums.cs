@@ -56,6 +56,18 @@ public enum KeyFlags
     KeyArrowLeft = 0x25,
     KeyArrowRight = 0x27,
     KeyEsc = 0x1B,
+    KeyF1 = 0x70,
+    KeyF2 = 0x71,
+    KeyF3 = 0x72,
+    KeyF4 = 0x73,
+    KeyF5 = 0x74,
+    KeyF6 = 0x75,
+    KeyF7 = 0x76,
+    KeyF8 = 0x77,
+    KeyF9 = 0x78,
+    KeyF10 = 0x79,
+    KeyF11 = 0x7A,
+    KeyF12 = 0x7B,
 }
 
 [Flags]

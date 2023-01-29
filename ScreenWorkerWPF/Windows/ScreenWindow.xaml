@@ -18,32 +18,60 @@
             x:Name="Img"
             Margin="0"/>
         <Border
+            x:Name="OldHorizontalLine"
+            Visibility="Collapsed"
+            BorderThickness="0.5"
+            BorderBrush="#88FF0000"/>
+        <Border
+            x:Name="OldVerticalLine"
+            Visibility="Collapsed"
+            BorderThickness="0.5"
+            BorderBrush="#88FF0000"/>
+        <Border
+            x:Name="HorizontalLine"
+            BorderThickness="0.5"
+            BorderBrush="#66FFFFFF"/>
+        <Border
+            x:Name="VerticalLine"
+            BorderThickness="0.5"
+            BorderBrush="#66FFFFFF"/>
+        <Border
             x:Name="BorderElement"
             Visibility="Collapsed"
             BorderThickness="1"
             BorderBrush="White"/>
         <Border
             x:Name="MoveElement"
-            CornerRadius="45"
-            Width="45"
-            Height="45"
+            CornerRadius="75"
+            Width="75"
+            Height="75"
             BorderThickness="2"
             BorderBrush="White">
             <Canvas>
                 <Image
                     x:Name="ImgPart"
-                    Width="41"
-                    Height="41">
+                    Width="71"
+                    Height="71">
                     <Image.Clip>
-                        <EllipseGeometry Center="20.5,20.5" RadiusX="20.5" RadiusY="20.5"/>
+                        <EllipseGeometry Center="35.5,35.5" RadiusX="35.5" RadiusY="35.5"/>
                     </Image.Clip>
                 </Image>
+                <Border
+                    Width="71"
+                    Canvas.Top="34.5"
+                    BorderThickness="1"
+                    BorderBrush="#44FFFFFF"/>
+                <Border
+                    Height="71"
+                    Canvas.Left="34.5"
+                    BorderThickness="1"
+                    BorderBrush="#44FFFFFF"/>
                 <Ellipse
                     Fill="#FFFFFF"
-                    Canvas.Left="19"
-                    Canvas.Top="19"
-                    Width="3" 
-                    Height="3" />
+                    Canvas.Left="33"
+                    Canvas.Top="33"
+                    Width="5" 
+                    Height="5" />
             </Canvas>
         </Border>
     </Canvas>

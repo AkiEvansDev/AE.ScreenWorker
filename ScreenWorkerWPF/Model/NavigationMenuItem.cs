@@ -43,6 +43,7 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
     public RelayCommand Edit { get; }
     public RelayCommand Delete { get; }
 
+    public int GlyphSize { get; }
     public Symbol Glyph { get; }
     public FunctionViewModelBase Tab { get; }
     public IAction Action { get; }
@@ -55,9 +56,17 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
 
     protected NavigationMenuItem(string title, Symbol glyph, object tab, Action onClick) : base(title)
     {
+        GlyphSize = glyph switch
+        {
+            Symbol.Save => 16,
+            Symbol.Add => 12,
+            _ => 14
+        };
         Glyph = glyph;
+
         Tab = tab as FunctionViewModelBase;
         Action = tab as IAction;
+
         Items = new ObservableCollection<NavigationMenuItemBase>();
 
         if (onClick != null)
@@ -134,24 +143,9 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
     }
 }
 
-internal class DefaultNavigationMenuItem : NavigationMenuItem
+internal class VariableNavigationMenuItem : NavigationMenuItem
 {
-    public override bool IsExpanded
-    {
-        get => true;
-        set => NotifyPropertyChanged(nameof(NavigationMenuItem.IsExpanded));
-    }
-
-    public DefaultNavigationMenuItem(string title, string addTitle, Symbol glyph, FunctionViewModelBase tab, Action onAdd) : base(title, glyph, tab, null)
-    {
-        Items.Add(new ActionNavigationMenuItem(addTitle, Symbol.Add, onAdd));
-    }
-}
-
-internal class VariableNavigationMenuItem : DefaultNavigationMenuItem
-{
-
-    public VariableNavigationMenuItem(Action addVariable) : base("Variables", "Add variable", Symbol.AllApps, new VariablesViewModel(), addVariable) { }
+    public VariableNavigationMenuItem() : base("Variables", Symbol.AllApps, new VariablesViewModel(), null) { }
 
     public void OnAddVariable()
     {
@@ -159,11 +153,20 @@ internal class VariableNavigationMenuItem : DefaultNavigationMenuItem
     }
 }
 
-internal class MainNavigationMenuItem : DefaultNavigationMenuItem
+internal class MainNavigationMenuItem : NavigationMenuItem
 {
-    public MainNavigationMenuItem(Action addFunction) : base("Main();", "Add function", Symbol.Document, new MainFunctionViewModel(), addFunction) { }
+    public override bool IsExpanded
+    {
+        get => true;
+        set => NotifyPropertyChanged(nameof(NavigationMenuItem.IsExpanded));
+    }
 
-    public async void OnAddFunction()
+    public MainNavigationMenuItem() : base("Main();", Symbol.Document, new MainFunctionViewModel(), null)
+    {
+        Items.Add(new ActionNavigationMenuItem("New function", Symbol.NewFolder, OnAddFunction));
+    }
+
+    private async void OnAddFunction()
     {
         var func = new CustomFunctionNavigationMenuItem();
         func.ValidateTitle();
@@ -200,4 +203,9 @@ internal class ActionNavigationMenuItem : NavigationMenuItem
         foreach (var action in actions)
             Items.Add(action);
     }
+}
+
+internal class AddVaribleAction : ActionNavigationMenuItem
+{
+    public AddVaribleAction(Action action) : base("Add variable", Symbol.Add, action) { }
 }

@@ -4,7 +4,7 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Conditions;
 
 [AESerializable]
 public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
@@ -12,9 +12,9 @@ public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
     public override ActionType Type => ActionType.IfCompareNumber;
 
     public override string GetTitle()
-        => $"If {GetValueString(Value1, Value1Variable)} {GetSymb()} {GetValueString(Value2, Value2Variable)} =<AL></AL> {GetResultString(Result)}";
+        => $"If {(Not ? "<P>!</P>" : "")}({GetValueString(Value1, Value1Variable)} {GetSymb()} {GetValueString(Value2, Value2Variable)}) =<AL></AL> {GetResultString(Result)}";
     public override string GetDebugTitle(IScriptExecutor executor)
-        => $"If {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSymb()} {GetValueString(executor.GetValue(Value2, Value2Variable))} =<AL></AL> {GetResultString(Result)}";
+        => $"If {(Not ? "<P>!</P>" : "")}({GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSymb()} {GetValueString(executor.GetValue(Value2, Value2Variable))}) =<AL></AL> {GetResultString(Result)}";
 
     private string GetSymb()
     {
@@ -76,6 +76,9 @@ public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
                 result = value1 == value2;
                 break;
         }
+
+        if (Not)
+            result = !result;
 
         if (!Result.IsNull())
             executor.SetVariable(Result, result);

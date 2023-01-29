@@ -83,7 +83,8 @@ public enum VariablesFilter
     Number = 1,
     Boolean = 2,
     Point = 3,
-    Color = 4
+    Color = 4,
+    Text = 5
 }
 
 public class ComboBoxEditPropertyAttribute : EditPropertyAttribute

@@ -2,16 +2,16 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Mouse;
 
 [AESerializable]
 public class MouseMoveAction : BaseDelayAction<MouseMoveAction>
 {
     public override ActionType Type => ActionType.MouseMove;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"MouseMove({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor) 
+    public override string GetDebugTitle(IScriptExecutor executor)
         => $"MouseMove({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
     [NumberEditProperty(1, "-", minValue: 0)]

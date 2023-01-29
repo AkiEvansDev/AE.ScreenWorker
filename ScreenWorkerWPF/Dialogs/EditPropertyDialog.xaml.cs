@@ -133,7 +133,7 @@ public partial class EditPropertyDialog : ContentDialog
         {
             Minimum = nAttr.MinValue,
             Maximum = nAttr.MaxValue,
-            SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Inline,
+            SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Hidden,
             Header = nAttr.Title == "-" ? null : nAttr.Title ?? property.Name,
             FocusVisualStyle = null
         };
@@ -179,7 +179,8 @@ public partial class EditPropertyDialog : ContentDialog
 
                 control1.Click += (s, e) =>
                 {
-                    var point = ScreenWindow.GetPoint();
+                    var oldX = (int)property.GetValue(clone);
+                    var point = ScreenWindow.GetPoint(new ScreenPoint(oldX, 0));
 
                     if (point != null)
                     {
@@ -207,7 +208,8 @@ public partial class EditPropertyDialog : ContentDialog
 
                 control1.Click += (s, e) =>
                 {
-                    var point = ScreenWindow.GetPoint();
+                    var oldY = (int)property.GetValue(clone);
+                    var point = ScreenWindow.GetPoint(new ScreenPoint(0, oldY));
 
                     if (point != null)
                     {
@@ -246,7 +248,8 @@ public partial class EditPropertyDialog : ContentDialog
 
         control.Click += (s, e) =>
         {
-            var point = ScreenWindow.GetPoint();
+            var oldPoint = (ScreenPoint)property.GetValue(clone);
+            var point = ScreenWindow.GetPoint(oldPoint);
 
             if (point != null)
             {

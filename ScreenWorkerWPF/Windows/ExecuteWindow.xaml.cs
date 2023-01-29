@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows;
 using System.Windows.Interop;
+
+using AE.Core;
 
 using ScreenBase;
 using ScreenBase.Data.Base;
@@ -15,36 +14,52 @@ namespace ScreenWorkerWPF.Windows;
 
 public partial class ExecuteWindow : Window
 {
-    private GlobalKeyboardHook globalKeyboardHook;
-    private IScriptExecutor executor;
+    internal static IScriptExecutor Executor { get; private set; }
 
-    public ExecuteWindow(ScriptInfo scriptData)
+    public ExecuteWindow(ScriptInfo scriptData, bool isDebug)
     {
         InitializeComponent();
         
         var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
         var size = WindowsHelper.GetMonitorSize(hwnd);
 
-        Top = size.Height - Height;
-        Left = size.Width - Width;
-
-        globalKeyboardHook = new GlobalKeyboardHook();
-        globalKeyboardHook.KeyboardPressed += OnKeyboardPressed;
+        var margin = App.CurrentSettings.ExecuteWindowMargin;
+        switch (App.CurrentSettings.ExecuteWindowLocation)
+        {
+            case ExecuteWindowLocation.LeftTop:
+                Top = margin;
+                Left = margin;
+                break;
+            case ExecuteWindowLocation.LeftBottom:
+                Top = size.Height - Height - margin;
+                Left = margin;
+                break;
+            case ExecuteWindowLocation.RightTop:
+                Top = margin;
+                Left = size.Width - Width - margin;
+                break;
+            case ExecuteWindowLocation.RightBottom:
+                Top = size.Height - Height - margin;
+                Left = size.Width - Width - margin;
+                break;
+        }
 
         Loaded += (s, e) =>
         {
+            Info.Text = $"Press Ctrl+Alt+{App.CurrentSettings.StopKey.Name().Substring(3)} to stop";
+
             LogsWindow.Clear();
 
             var worker = new WindowsScreenWorker();
             worker.Init(size.Width, size.Height);
 
-            executor = new ScriptExecutor();
+            Executor = new ScriptExecutor();
 
-            executor.OnStop += () =>
+            Executor.OnStop += () =>
             {
                 Application.Current.Dispatcher.Invoke(Close);
             };
-            executor.OnMessage += (message, needDisplay) =>
+            Executor.OnMessage += (message, needDisplay) =>
             {
                 LogsWindow.AddLog(message, needDisplay);
 
@@ -52,43 +67,19 @@ public partial class ExecuteWindow : Window
                     Application.Current.Dispatcher.Invoke(() => FormattedTextBlockBehavior.SetFormattedText(Display, message.Trim()));
             };
 
-            executor.Start(scriptData, worker);
+            Executor.Start(scriptData, worker, isDebug);
         };
     }
 
-    public static void Start(ScriptInfo scriptData)
+    public static void Start(ScriptInfo scriptData, bool isDebug)
     {
         var state = Application.Current.MainWindow.WindowState;
         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-        var window = new ExecuteWindow(scriptData);
+        var window = new ExecuteWindow(scriptData, isDebug);
         window.ShowDialog();
 
         Application.Current.MainWindow.WindowState = state;
         Application.Current.MainWindow.Activate();
-    }
-
-    private readonly List<Key> keysPressed = new();
-    private void OnKeyboardPressed(object sender, GlobalKeyboardHookEventArgs e)
-    {
-        var key = KeyInterop.KeyFromVirtualKey(e.KeyboardData.VirtualCode);
-
-        if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown && !keysPressed.Contains(key))
-            keysPressed.Add(key);
-        else if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyUp)
-            keysPressed.Remove(key);
-      
-        if (keysPressed.Contains(Key.LeftCtrl) && keysPressed.Contains(Key.LeftAlt) && keysPressed.Contains(Key.F1))
-        {
-            e.Handled = true;
-            executor.Stop();
-        }
-    }
-
-    private void OnClosing(object sender, CancelEventArgs e)
-    {
-        globalKeyboardHook.KeyboardPressed -= OnKeyboardPressed;
-        globalKeyboardHook.Dispose();
-        globalKeyboardHook = null;
     }
 }

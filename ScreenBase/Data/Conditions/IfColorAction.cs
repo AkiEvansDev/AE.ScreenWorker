@@ -2,19 +2,21 @@
 
 using AE.Core;
 
+using Patagames.Ocr;
+
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Conditions;
 
 [AESerializable]
 public class IfColorAction : BaseGroupElseAction<IfColorAction>
 {
     public override ActionType Type => ActionType.IfColor;
 
-    public override string GetTitle() 
-        => $"If {GetValueString(Color1.GetColor(), Color1Variable)} is {GetValueString(Color2.GetColor(), Color2Variable)} with {GetValueString(Accuracy)} accuracy =<AL></AL> {GetResultString(Result)}";
+    public override string GetTitle()
+        => $"If {GetValueString(Color1.GetColor(), Color1Variable)} is{(Not ? " not" : "")} {GetValueString(Color2.GetColor(), Color2Variable)} with {GetValueString(Accuracy)} accuracy =<AL></AL> {GetResultString(Result)}";
     public override string GetDebugTitle(IScriptExecutor executor)
-       => $"If {GetValueString(executor.GetValue(Color1.GetColor(), Color1Variable))} is {GetValueString(executor.GetValue(Color2.GetColor(), Color2Variable))} with {GetValueString(Accuracy)} accuracy =<AL></AL> {GetResultString(Result)}";
+       => $"If {GetValueString(executor.GetValue(Color1.GetColor(), Color1Variable))} is{(Not ? " not" : "")} {GetValueString(executor.GetValue(Color2.GetColor(), Color2Variable))} with {GetValueString(Accuracy)} accuracy =<AL></AL> {GetResultString(Result)}";
 
     private ScreenPoint color1;
     private ScreenPoint color2;
@@ -65,6 +67,9 @@ public class IfColorAction : BaseGroupElseAction<IfColorAction>
         var color2 = executor.GetValue(Color2.GetColor(), Color2Variable);
 
         var result = executor.IsColor(color1, color2, Accuracy);
+
+        if (Not)
+            result = !result;
 
         if (!Result.IsNull())
             executor.SetVariable(Result, result);

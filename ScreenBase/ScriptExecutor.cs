@@ -19,7 +19,7 @@ public interface IScriptExecutor
 
     IReadOnlyDictionary<string, IAction[]> Functions { get; }
 
-    void Start(ScriptInfo script, IScreenWorker worker);
+    void Start(ScriptInfo script, IScreenWorker worker, bool isDebug = false);
     void Stop(bool force = true);
     void Execute(IEnumerable<IAction> actions);
     T GetValue<T>(T value, string variable = null);
@@ -38,18 +38,21 @@ public class ScriptExecutor : IScriptExecutor
     private bool needStop;
     private int space;
 
+    private bool IsDebug;
     private IScreenWorker Worker;
     private Dictionary<string, object> Variables;
 
     public IReadOnlyDictionary<string, IAction[]> Functions { get; private set; }
 
-    public void Start(ScriptInfo script, IScreenWorker worker)
+    public void Start(ScriptInfo script, IScreenWorker worker, bool isDebug = false)
     {
         needStop = false;
         space = 0;
 
+        IsDebug = isDebug;
         Worker = worker;
         Variables = new Dictionary<string, object>();
+
         Functions = script.Data;
 
         foreach (var variable in script.Variables)
@@ -59,12 +62,14 @@ public class ScriptExecutor : IScriptExecutor
                 VariableType.Boolean => false,
                 VariableType.Point => new Point(),
                 VariableType.Color => new Color(),
+                VariableType.Text => "",
                 _ => throw new NotImplementedException()
             });
 
         thread = new Thread(() =>
         {
-            Log($"Script <F>{BaseAction<IAction>.GetTextForDisplay(script.Name)}</F> start");
+            if (IsDebug)
+                Log($"Script <F>{BaseAction<IAction>.GetTextForDisplay(script.Name)}</F> start");
 
             Execute(script.Main);
             Stop(false);
@@ -79,7 +84,9 @@ public class ScriptExecutor : IScriptExecutor
     {
         if (!actions.Any())
         {
-            Log("=<AL></AL> No items;");
+            if (IsDebug)
+                Log("=<AL></AL> No items;");
+
             return;
         }
 
@@ -107,7 +114,8 @@ public class ScriptExecutor : IScriptExecutor
                             case ActionType.Log:
                                 break;
                             default:
-                                Log(action.GetDebugTitle(this));
+                                if (IsDebug)
+                                    Log(action.GetDebugTitle(this));
                                 break;
                         }
 
@@ -124,7 +132,9 @@ public class ScriptExecutor : IScriptExecutor
 
                         if (action is IDelayAction delayAction && delayAction.DelayAfter > 0)
                         {
-                            Log($"DelayActer({BaseAction<IAction>.GetValueString(delayAction.DelayAfter)});");
+                            if (IsDebug)
+                                Log($"DelayActer({BaseAction<IAction>.GetValueString(delayAction.DelayAfter)});");
+
                             Thread.Sleep(delayAction.DelayAfter);
                         }
 
@@ -134,7 +144,8 @@ public class ScriptExecutor : IScriptExecutor
             catch (ThreadInterruptedException) { }
             catch (Exception ex)
             {
-                Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}");
+                if (IsDebug)
+                    Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}");
             }
         }
     }
@@ -146,7 +157,9 @@ public class ScriptExecutor : IScriptExecutor
 
         if (force)
         {
-            Log($"<E>Script force stop</E>");
+            if (IsDebug)
+                Log($"<E>Script force stop</E>");
+            
             try
             {
                 thread.Interrupt();
@@ -154,7 +167,7 @@ public class ScriptExecutor : IScriptExecutor
             }
             catch { }
         }
-        else
+        else if (IsDebug)
             Log($"Script stop");
 
         OnStop?.Invoke();
@@ -219,7 +232,8 @@ public class ScriptExecutor : IScriptExecutor
             Variables[name] = value;
         }
 
-        Log($"=<AL></AL> <V>{name}</V> = {BaseAction<IAction>.GetValueString(Variables[name])};");
+        if (IsDebug)
+            Log($"=<AL></AL> <V>{name}</V> = {BaseAction<IAction>.GetValueString(Variables[name])};");
     }
 
     public object GetVariable(string name)

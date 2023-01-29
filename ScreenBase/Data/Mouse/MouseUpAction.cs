@@ -2,7 +2,7 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Mouse;
 
 [AESerializable]
 public class MouseUpAction : BaseDelayAction<MouseUpAction>

@@ -4,16 +4,16 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Mouse;
 
 [AESerializable]
 public class MouseClickAction : BaseDelayAction<MouseClickAction>
 {
     public override ActionType Type => ActionType.MouseClick;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"MouseClick({GetValueString(Event)}, {GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor) 
+    public override string GetDebugTitle(IScriptExecutor executor)
         => $"MouseClick({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
 
@@ -45,7 +45,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>
     [ComboBoxEditProperty(5)]
     public MouseEventType Event { get; set; }
 
-    [NumberEditProperty(6)]
+    [NumberEditProperty(1000)]
     public int PressDelay { get; set; }
 
     public MouseClickAction()

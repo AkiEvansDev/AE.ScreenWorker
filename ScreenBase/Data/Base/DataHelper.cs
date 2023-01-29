@@ -4,12 +4,19 @@ using System.IO;
 using System.Linq;
 
 using AE.Core;
+using ScreenBase.Data.Variable;
 
 namespace ScreenBase.Data.Base;
 
 [AESerializable]
 public class ScriptInfo : IEditProperties
 {
+    public event Action NeedUpdate;
+    public void NeedUpdateInvoke()
+    {
+        NeedUpdate?.Invoke();
+    }
+
     [TextEditProperty]
     public string Name { get; set; }
 
@@ -20,15 +27,9 @@ public class ScriptInfo : IEditProperties
     public IAction[] Main { get; set; }
     public Dictionary<string, IAction[]> Data { get; set; }
 
-    public event Action NeedUpdate;
-    public void NeedUpdateInvoke()
-    {
-        NeedUpdate?.Invoke();
-    }
-
     public ScriptInfo()
     {
-        Name = "Script 1";
+        Name = "New Script";
         Folder = GetDefaultPath();
 
         if (!Directory.Exists(Folder))
@@ -68,23 +69,68 @@ public class ScriptInfo : IEditProperties
     }
 }
 
+public enum ExecuteWindowLocation
+{
+    LeftTop = 1,
+    RightTop = 2,
+    LeftBottom = 3,
+    RightBottom = 4,
+}
+
+[AESerializable]
+public class ScriptSettings : IEditProperties
+{
+    public event Action NeedUpdate;
+    public void NeedUpdateInvoke()
+    {
+        NeedUpdate?.Invoke();
+    }
+
+    [ComboBoxEditProperty(0, "Ctrl + Alt + {key} to start", trimStart: "Key")]
+    public KeyFlags StartKey { get; set; }
+
+    [ComboBoxEditProperty(1, "Ctrl + Alt + {key} to stop", trimStart: "Key")]
+    public KeyFlags StopKey { get; set; }
+
+    [ComboBoxEditProperty(2, "Execute window location")]
+    public ExecuteWindowLocation ExecuteWindowLocation { get; set; }
+
+    [NumberEditProperty(3, "Execute window margin")]
+    public int ExecuteWindowMargin { get; set; }
+
+    public ScriptSettings()
+    {
+        StartKey = KeyFlags.KeyF1;
+        StopKey = KeyFlags.KeyF2;
+        ExecuteWindowLocation = ExecuteWindowLocation.RightBottom;
+        ExecuteWindowMargin = 0;
+    }
+
+    public IEditProperties Clone()
+    {
+        return DataHelper.Clone<ScriptSettings>(this);
+    }
+}
+
 public static class DataHelper
 {
-    public static void Save(string path, ScriptInfo data)
+    public static void Save<T>(string path, T data)
+        where T : class
     {
         File.WriteAllText(path, data.Serialize());
     }
 
-    public static ScriptInfo Load(string path)
+    public static T Load<T>(string path)
+        where T : class
     {
         var data = File.ReadAllText(path);
-        return data.Deserialize<ScriptInfo>();
+        return data.Deserialize<T>();
     }
 
-    public static IAction Clone<T>(IAction action)
-        where T : class, IAction
+    public static T Clone<T>(object obj)
+        where T : class
     {
-        var data = action.Serialize();
+        var data = obj.Serialize();
         return data.Deserialize<T>();
     }
 }

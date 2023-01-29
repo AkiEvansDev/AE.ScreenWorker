@@ -4,7 +4,7 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Keyboard;
 
 [AESerializable]
 public class KeyEventAction : BaseDelayAction<KeyEventAction>
@@ -20,7 +20,7 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
     [ComboBoxEditProperty(0)]
     public KeyEventType Event { get; set; }
 
-    [NumberEditProperty(1)]
+    [NumberEditProperty(1000)]
     public int PressDelay { get; set; }
 
     public KeyEventAction()

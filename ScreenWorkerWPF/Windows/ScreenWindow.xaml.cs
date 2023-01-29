@@ -18,12 +18,27 @@ public partial class ScreenWindow : Window
     private readonly Bitmap Src;
     private Point? Result = null;
 
-    public ScreenWindow(Bitmap image, bool isPart = false)
+    public ScreenWindow(Bitmap image, ScreenPoint oldPosition = null, bool isPart = false)
     {
         InitializeComponent();
 
-        Img.Width = Width = image.Width;
-        Img.Height = Height = image.Height;
+        Img.Width = Width = HorizontalLine.Width = OldHorizontalLine.Width = image.Width;
+        Img.Height = Height = VerticalLine.Height = OldVerticalLine.Height = image.Height;
+
+        if (oldPosition != null)
+        {
+            if (oldPosition.X > 0)
+            {
+                Canvas.SetLeft(OldVerticalLine, oldPosition.X);
+                OldVerticalLine.Visibility = Visibility.Visible;
+            }
+
+            if (oldPosition.Y > 0)
+            {
+                Canvas.SetTop(OldHorizontalLine, oldPosition.Y);
+                OldHorizontalLine.Visibility = Visibility.Visible;
+            }
+        }
 
         if (isPart)
         {
@@ -34,9 +49,16 @@ public partial class ScreenWindow : Window
         }
 
         Img.Source = BitmapToImageSource(Src = image);
+
+        Loaded += (s, e) => OnMove();
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
+    {
+        OnMove();
+    }
+
+    private void OnMove()
     {
         var position = WindowsHelper.GetCursorPosition();
         Bitmap bmp = null;
@@ -83,8 +105,11 @@ public partial class ScreenWindow : Window
             }
             catch { }
 
-        Canvas.SetLeft(MoveElement, position.X < 40 ? position.X : position.X - 40);
-        Canvas.SetTop(MoveElement, position.Y + 50 > Src.Height ? Src.Height - 50 : position.Y + 10);
+        Canvas.SetLeft(VerticalLine, position.X);
+        Canvas.SetTop(HorizontalLine, position.Y);
+
+        Canvas.SetLeft(MoveElement, position.X <= MoveElement.Width ? 0 : position.X - MoveElement.Width);
+        Canvas.SetTop(MoveElement, position.Y + MoveElement.Height >= Src.Height ? Src.Height - MoveElement.Height : position.Y);
     }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -97,10 +122,10 @@ public partial class ScreenWindow : Window
 
     #region Static
 
-    public static ScreenPoint GetPoint()
+    public static ScreenPoint GetPoint(ScreenPoint oldPosition = null)
     {
         var bitmap = GetBitmap();
-        var window = new ScreenWindow(bitmap);
+        var window = new ScreenWindow(bitmap, oldPosition);
         window.ShowDialog();
 
         if (window.Result != null)
@@ -115,7 +140,7 @@ public partial class ScreenWindow : Window
     public static ScreenPart GetPart()
     {
         var bitmap = GetBitmap();
-        var window = new ScreenWindow(bitmap, true);
+        var window = new ScreenWindow(bitmap, null, true);
         window.ShowDialog();
 
         if (window.Result != null)

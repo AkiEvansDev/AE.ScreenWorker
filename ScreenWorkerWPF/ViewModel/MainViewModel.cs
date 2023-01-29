@@ -12,7 +12,12 @@ using ModernWpf.Controls;
 
 using ScreenBase.Data;
 using ScreenBase.Data.Base;
-
+using ScreenBase.Data.Calculations;
+using ScreenBase.Data.Conditions;
+using ScreenBase.Data.Cycles;
+using ScreenBase.Data.Keyboard;
+using ScreenBase.Data.Mouse;
+using ScreenBase.Data.Variable;
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;
@@ -56,7 +61,10 @@ internal class MainViewModel : BaseModel
         }
     }
 
+    public AddVaribleAction AddVaribleAction { get; }
+    public ObservableCollection<NavigationMenuItemBase> HeaderItems { get; }
     public ObservableCollection<NavigationMenuItemBase> Items { get; }
+    public ObservableCollection<NavigationMenuItemBase> FooterItems { get; }
 
     public VariableNavigationMenuItem VariablesMenuItem => Items
         .OfType<VariableNavigationMenuItem>()
@@ -76,7 +84,7 @@ internal class MainViewModel : BaseModel
             .SelectMany(i => i.Items)
             .OfType<NavigationMenuItem>()
         )
-        .Where(i => i.Tab != null || i.Click != null);
+        .Where(i => i.Action != null);
 
     public IEnumerable<VariableAction> Variables => VariablesVM.Items.Select(i => i.Action as VariableAction);
     public IEnumerable<NavigationMenuItem> CustomFunctions => MainMenuItem.Items.OfType<CustomFunctionNavigationMenuItem>();
@@ -86,22 +94,23 @@ internal class MainViewModel : BaseModel
     {
         Current = this;
 
+        AddVaribleAction = new AddVaribleAction(OnAddVariable);
+
+        HeaderItems = new ObservableCollection<NavigationMenuItemBase>
+        {
+            new ActionNavigationMenuItem("Start", Symbol.Play, () => OnStart(false)),
+            new ActionNavigationMenuItem("Debug", Symbol.Repair, () => OnStart(true)),
+            new ActionNavigationMenuItem("New", Symbol.NewFolder, OnNew),
+            new ActionNavigationMenuItem("Save", Symbol.Save, OnSave),
+            new ActionNavigationMenuItem("Open", Symbol.OpenFile, OnOpen),
+            new ActionNavigationMenuItem("Show logs", Symbol.AlignLeft, OnLog),
+        };
+
         Items = new ObservableCollection<NavigationMenuItemBase>
         {
-            new ActionNavigationMenuItem(new List<NavigationMenuItemBase>
-            {
-                new ActionNavigationMenuItem("Start", Symbol.Play, () => OnStart(false)),
-                new ActionNavigationMenuItem("Debug", Symbol.Repair, () => OnStart(true)),
-                new ActionNavigationMenuItem("Show logs", Symbol.View, OnLog),
-                new NavigationMenuSeparator(),
-                new ActionNavigationMenuItem("New", Symbol.NewFolder, OnNew),
-                new ActionNavigationMenuItem("Save", Symbol.Save, OnSave),
-                new ActionNavigationMenuItem("Open", Symbol.OpenFile, OnOpen),
-            }),
             new NavigationMenuHeader("Scripts"),
-            new VariableNavigationMenuItem(OnAddVariable),
-            new MainNavigationMenuItem(OnAddFunction),
-            new NavigationMenuSeparator(),
+            new VariableNavigationMenuItem(),
+            new MainNavigationMenuItem(),
             new NavigationMenuHeader("Functions"),
             new ActionNavigationMenuItem("Mouse", Symbol.TouchPointer, Symbol.Placeholder, OnClick, new List<IAction>
             {
@@ -128,27 +137,38 @@ internal class MainViewModel : BaseModel
                 new IfGetColorAction(),
                 new IfCompareNumberAction(),
             }),
-            new ActionNavigationMenuItem("Variable", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionNavigationMenuItem("Set variable", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new SetNumberAction(),
                 new SetBooleanAction(),
                 new SetPointAction(),
                 new SetColorAction(),
+                new SetTextAction(),
             }),
             new ActionNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new CalculationNumberAction(),
-                new CompareAction(),
+                new CalculationBooleanAction(),
+                new CompareNumberAction(),
                 new IsColorAction(),
+            }),
+            new ActionNavigationMenuItem("Ocr", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>
+            {
+                new ExtractTextAction(),
+                new ParseNumberAction(),
             }),
             new ActionNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
             {
-                new ExecuteAction(),
                 new DelayAction(),
-                new CommentAction(),
+                new ExecuteAction(),
                 new LogAction(),
+                new CommentAction(),
             }),
-            new NavigationMenuSeparator(),
+        };
+
+        FooterItems = new ObservableCollection<NavigationMenuItemBase>
+        {
+            new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
         New();
@@ -186,17 +206,12 @@ internal class MainViewModel : BaseModel
         VariablesMenuItem.OnAddVariable();
     }
 
-    private void OnAddFunction()
-    {
-        MainMenuItem.OnAddFunction();
-    }
-
-    private void OnStart(bool debug)
+    public void OnStart(bool debug)
     {
         LogsWindow.IsDebug = debug;
         if (SaveData() && !ScriptInfo.IsEmpty())
         {
-            ExecuteWindow.Start(ScriptInfo);
+            ExecuteWindow.Start(ScriptInfo, debug);
         }
     }
 
@@ -222,6 +237,12 @@ internal class MainViewModel : BaseModel
         LoadData(new ScriptInfo());
     }
 
+    private async void OnSettings()
+    {
+        var settingsDialog = new EditPropertyDialog(App.CurrentSettings, "Settings");
+        await settingsDialog.ShowAsync(ContentDialogPlacement.Popup);
+    }
+
     private void OnClick(IAction action)
     {
         if (SelectedItem != null && SelectedItem.Tab is not VariablesViewModel)
@@ -230,8 +251,8 @@ internal class MainViewModel : BaseModel
 
     private async void OnSave()
     {
-        var nameDialog = new EditPropertyDialog(ScriptInfo, "Save data");
-        if (await nameDialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        var saveDialog = new EditPropertyDialog(ScriptInfo, "Save data");
+        if (await saveDialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
         {
             NotifyPropertyChanged(nameof(Title));
 
@@ -267,7 +288,7 @@ internal class MainViewModel : BaseModel
 
             if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
             {
-                var scriptInfo = DataHelper.Load(dialog.FileName);
+                var scriptInfo = DataHelper.Load<ScriptInfo>(dialog.FileName);
                 LoadData(scriptInfo);
             }
         });
@@ -327,7 +348,7 @@ internal class MainViewModel : BaseModel
     {
         if (SaveData() && File.Exists(ScriptInfo.GetPath()))
         {
-            var scriptInfo = DataHelper.Load(ScriptInfo.GetPath());
+            var scriptInfo = DataHelper.Load<ScriptInfo>(ScriptInfo.GetPath());
             if (scriptInfo.Is(ScriptInfo))
             {
                 action();

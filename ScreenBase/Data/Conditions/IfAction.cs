@@ -4,23 +4,20 @@ using AE.Core;
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Conditions;
 
 [AESerializable]
 public class IfAction : BaseGroupElseAction<IfAction>
 {
     public override ActionType Type => ActionType.If;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"If ({(Not ? "<P>!</P>" : "")}{GetResultString(ValueVariable)})";
-    public override string GetDebugTitle(IScriptExecutor executor) 
+    public override string GetDebugTitle(IScriptExecutor executor)
         => $"If ({(Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(false, ValueVariable))})";
 
     [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string ValueVariable { get; set; }
-
-    [ComboBoxEditProperty(1, source: ComboBoxEditPropertySource.Boolean)]
-    public bool Not { get; set; }
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
@@ -30,7 +27,7 @@ public class IfAction : BaseGroupElseAction<IfAction>
 
             if (Not)
                 value = !value;
-            
+
             if (NeedElse)
             {
                 var index = Items.FindIndex(a => a.Type == ActionType.Else);
@@ -41,7 +38,7 @@ public class IfAction : BaseGroupElseAction<IfAction>
                     else
                         executor.Execute(Items.Skip(index + 1));
                 }
-            } 
+            }
             else if (value)
                 executor.Execute(Items);
         }
