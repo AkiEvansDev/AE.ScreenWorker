@@ -18,7 +18,8 @@ public class LogAction : BaseAction<LogAction>
     [ComboBoxEditProperty(1, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.None)]
     public string Variable { get; set; }
 
-    [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Boolean)]
+    [CheckBoxEditProperty(2)]
+    //[ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Boolean)]
     public bool NeedDisplay { get; set; }
 
     public LogAction()

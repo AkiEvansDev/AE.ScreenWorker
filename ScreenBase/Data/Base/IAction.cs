@@ -312,11 +312,13 @@ public abstract class BaseGroupAction<T> : BaseAction<T>, IGroupAction
 public abstract class BaseGroupElseAction<T> : BaseGroupAction<T>, IElseAction
     where T : class, IAction, IGroupAction, IElseAction
 {
-    [ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
-    public bool NeedElse { get; set; }
-
-    [ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
+    [CheckBoxEditProperty(1001)]
+    //[ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
     public bool Not { get; set; }
+
+    [CheckBoxEditProperty(1001)]
+    //[ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
+    public bool NeedElse { get; set; }
 
     public BaseGroupElseAction()
     {

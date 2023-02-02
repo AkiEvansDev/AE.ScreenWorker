@@ -48,11 +48,12 @@ public class IsColorAction : BaseAction<IsColorAction>
     [NumberEditProperty(4, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
     public double Accuracy { get; set; }
 
-    [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Boolean)]
-    public bool Not { get; set; }
-
     [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
+
+    [CheckBoxEditProperty(6)]
+    //[ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Boolean)]
+    public bool Not { get; set; }
 
     public IsColorAction()
     {

@@ -112,7 +112,11 @@ public partial class EditPropertyDialog : ContentDialog
         {
             result = GetVariableEditControl(property, clone, vAttr);
         }
-        else if ((property.PropertyType == typeof(string) || property.PropertyType == typeof(bool) || property.PropertyType.IsEnum) && attr is ComboBoxEditPropertyAttribute cAttr)
+        else if (property.PropertyType == typeof(bool) && attr is CheckBoxEditPropertyAttribute checkAttr)
+        {
+            result = GetCheckBoxEditControl(property, clone, checkAttr);
+        }
+        else if ((property.PropertyType == typeof(bool) || property.PropertyType == typeof(string) || property.PropertyType.IsEnum) && attr is ComboBoxEditPropertyAttribute cAttr)
         {
             result = GetComboBoxEditControl(property, clone, cAttr);
         }
@@ -137,6 +141,7 @@ public partial class EditPropertyDialog : ContentDialog
             Header = nAttr.Title == "-" ? null : nAttr.Title ?? property.Name,
             FocusVisualStyle = null
         };
+
         clone.NeedUpdate += () => control.Value = (double)Convert.ChangeType(property.GetValue(clone), typeof(double));
 
         if (nAttr.SmallChange > 0)
@@ -164,6 +169,7 @@ public partial class EditPropertyDialog : ContentDialog
                 Spacing = Container.Spacing,
             };
             var panel2 = new Grid();
+
             panel2.ColumnDefinitions.Add(new ColumnDefinition());
             panel2.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Container.Spacing) });
             panel2.ColumnDefinitions.Add(new ColumnDefinition());
@@ -325,11 +331,12 @@ public partial class EditPropertyDialog : ContentDialog
         {
             FocusVisualStyle = null
         };
-        clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
 
-        control.TextChanged += (s, e) => property.SetValue(clone, control.Text);
         if (tAttr.Title != "-")
             ControlHelper.SetHeader(control, tAttr.Title ?? property.Name);
+
+        clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
+        control.TextChanged += (s, e) => property.SetValue(clone, control.Text);
 
         return control;
     }
@@ -386,9 +393,9 @@ public partial class EditPropertyDialog : ContentDialog
         var cb = new CheckBox
         {
             Content = vAttr.Title ?? $"Use variable for {vAttr.PropertyName}",
-            FocusVisualStyle = null,
-            IsChecked = null
+            FocusVisualStyle = null
         };
+
         clone.NeedUpdate += () => cb.IsChecked = !((string)property.GetValue(clone)).IsNull();
 
         cb.Checked += (s, e) =>
@@ -440,6 +447,7 @@ public partial class EditPropertyDialog : ContentDialog
             ItemsSource = new string[] { "-" }.Concat(MainViewModel.Current.Variables.Select(v => v.Name)),
             FocusVisualStyle = null
         };
+
         clone.NeedUpdate += () => cb1.SelectedValue = ((string)property.GetValue(clone)).IsNull() ? "-" : GetPart((string)property.GetValue(clone), 0);
 
         cb1.SelectionChanged += (s, e) =>
@@ -495,6 +503,22 @@ public partial class EditPropertyDialog : ContentDialog
         Grid.SetColumn(cb2, 2);
         Grid.SetRow(cb2, 1);
         control.Children.Add(cb2);
+
+        return control;
+    }
+
+    private UIElement GetCheckBoxEditControl(PropertyInfo property, IEditProperties clone, CheckBoxEditPropertyAttribute checkAttr)
+    {
+        var control = new CheckBox
+        {
+            Content = checkAttr.Title != "-" ? checkAttr.Title ?? property.Name : "",
+            FocusVisualStyle = null
+        };
+
+        clone.NeedUpdate += () => control.IsChecked = (bool)property.GetValue(clone);
+
+        control.Checked += (s, e) => property.SetValue(clone, true);
+        control.Unchecked += (s, e) => property.SetValue(clone, false);
 
         return control;
     }

@@ -249,7 +249,12 @@ internal class MainViewModel : BaseModel
             SelectedItem.Tab.AddAction(action);
     }
 
-    private async void OnSave()
+    private void OnSave()
+    {
+        OnSave(null);
+    }
+
+    private async void OnSave(Action action)
     {
         var saveDialog = new EditPropertyDialog(ScriptInfo, "Save data");
         if (await saveDialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
@@ -265,6 +270,7 @@ internal class MainViewModel : BaseModel
                 try
                 {
                     DataHelper.Save(ScriptInfo.GetPath(), ScriptInfo);
+                    action?.Invoke();
                 }
                 catch (Exception ex)
                 {
@@ -357,9 +363,9 @@ internal class MainViewModel : BaseModel
         }
 
         if (!ScriptInfo.IsEmpty() && await ShowMessage("Save data before open new script?") == ContentDialogResult.Primary)
-            OnSave();
-
-        action();
+            OnSave(action);
+        else
+            action();
     }
 
     private static async void ShowError(string message)

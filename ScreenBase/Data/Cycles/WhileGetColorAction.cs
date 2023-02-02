@@ -18,9 +18,6 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
 
     private ScreenPoint point;
 
-    [ComboBoxEditProperty(-1, source: ComboBoxEditPropertySource.Boolean)]
-    public bool Not { get; set; }
-
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X { get => point.X; set => point.X = value; }
 
@@ -65,6 +62,10 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
 
     [NumberEditProperty(10, $"{nameof(Timeout)} (second)", minValue: 0, smallChange: 1, largeChange: 10)]
     public int Timeout { get; set; }
+
+    [CheckBoxEditProperty(11)]
+    //[ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Boolean)]
+    public bool Not { get; set; }
 
     public WhileGetColorAction()
     {

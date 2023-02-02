@@ -59,6 +59,11 @@ public class TextEditPropertyAttribute : EditPropertyAttribute
     public TextEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
 }
 
+public class CheckBoxEditPropertyAttribute : EditPropertyAttribute
+{
+    public CheckBoxEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
+}
+
 public class PathEditPropertyAttribute : EditPropertyAttribute
 {
     public string NameProperty { get; set; }
