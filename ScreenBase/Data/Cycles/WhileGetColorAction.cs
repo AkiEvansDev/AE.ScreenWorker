@@ -12,9 +12,9 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
     public override ActionType Type => ActionType.WhileGetColor;
 
     public override string GetTitle()
-        => $"While (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) {(Not ? "!" : "=")}= {GetValueString(ColorPoint.GetColor(), ColorVariable)}){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
+        => $"While (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) {(Not ? "!" : "=")}= {GetValueString(ColorPoint.GetColor(), ColorVariable)} with {GetValueString(Accuracy)} accuracy){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
     public override string GetDebugTitle(IScriptExecutor executor)
-        => $"While (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) {(Not ? "!" : "=")}= {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))}){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
+        => $"While (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) {(Not ? "!" : "=")}= {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))} with {GetValueString(Accuracy)} accuracy){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
 
     private ScreenPoint point;
 

@@ -12,9 +12,9 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
     public override ActionType Type => ActionType.IfGetColor;
 
     public override string GetTitle()
-        => $"If (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) {(Not ? "<P>!=</P>" : "==")} {GetValueString(ColorPoint.GetColor(), ColorVariable)}) =<AL></AL> {GetResultString(Result)}";
+        => $"If (GetColor({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}) {(Not ? "<P>!=</P>" : "==")} {GetValueString(ColorPoint.GetColor(), ColorVariable)} with {GetValueString(Accuracy)} accuracy) =<AL></AL> {GetResultString(Result)}";
     public override string GetDebugTitle(IScriptExecutor executor)
-        => $"If (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) {(Not ? "<P>!=</P>" : "==")} {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))}) =<AL></AL> {GetResultString(Result)}";
+        => $"If (GetColor({GetValueString(executor.GetValue(X, XVariable))}, {executor.GetValue(GetValueString(Y, YVariable))}) {(Not ? "<P>!=</P>" : "==")} {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))} with {GetValueString(Accuracy)} accuracy) =<AL></AL> {GetResultString(Result)}";
 
     private ScreenPoint point;
 
