@@ -77,6 +77,7 @@ public partial class EditPropertyDialog : ContentDialog
         }
 
         clone.NeedUpdateInvoke();
+
         Closing += (s, e) =>
         {
             if (e.Result == ContentDialogResult.Primary)
@@ -396,24 +397,35 @@ public partial class EditPropertyDialog : ContentDialog
             FocusVisualStyle = null
         };
 
-        clone.NeedUpdate += () => cb.IsChecked = !((string)property.GetValue(clone)).IsNull();
-
-        cb.Checked += (s, e) =>
+        void Checked()
         {
             foreach (var prop in vAttr.PropertyNames)
                 controls[prop].Visibility = Visibility.Collapsed;
 
             cb1.Visibility = Visibility.Visible;
-        };
+        }
 
-        cb.Unchecked += (s, e) =>
+        void Unchecked()
         {
             foreach (var prop in vAttr.PropertyNames)
                 controls[prop].Visibility = Visibility.Visible;
 
             cb1.SelectedItem = "-";
             cb1.Visibility = Visibility.Collapsed;
+        }
+
+        clone.NeedUpdate += () =>
+        {
+            cb.IsChecked = !((string)property.GetValue(clone)).IsNull();
+
+            if (cb.IsChecked == true)
+                Checked();
+            else
+                Unchecked();
         };
+
+        cb.Checked += (s, e) => Checked();
+        cb.Unchecked += (s, e) => Unchecked();
 
         Grid.SetColumn(cb, 0);
         Grid.SetRow(cb, 0);

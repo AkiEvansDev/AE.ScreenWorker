@@ -6,13 +6,12 @@ using System.Reflection;
 
 using AE.Core;
 
-using Microsoft.VisualBasic;
-
 using ModernWpf.Controls;
 
 using ScreenBase.Data;
 using ScreenBase.Data.Base;
 using ScreenBase.Data.Variable;
+
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;
@@ -187,13 +186,13 @@ internal class FunctionViewModelBase : BaseModel
         return Items.Any(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else);
     }
 
-    protected void OnEdit()
+    protected virtual void OnEdit()
     {
         var item = Items.FirstOrDefault(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else);
         item?.Edit.Execute(null);
     }
 
-    protected void OnDelete()
+    protected virtual void OnDelete()
     {
         var itemsForRemove = Items.Where(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else).ToList();
         OnDelete(itemsForRemove);
@@ -214,13 +213,13 @@ internal class FunctionViewModelBase : BaseModel
         item.Parent?.UpdateBorderVisibolity();
     }
 
-    protected void OnCut()
+    protected virtual void OnCut()
     {
         OnCopy();
         OnDelete();
     }
 
-    protected void OnCopy()
+    protected virtual void OnCopy()
     {
         OnCopy(ToCopy, Items.Where(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else));
     }
@@ -255,7 +254,7 @@ internal class FunctionViewModelBase : BaseModel
         return item.Action.Clone();
     }
 
-    protected void OnPaste()
+    protected virtual void OnPaste()
     {
         ActionItem target = null;
         if (SelectedIndex > -1)
@@ -306,7 +305,7 @@ internal class FunctionViewModelBase : BaseModel
         };
     }
 
-    protected async void OnEdit(ActionItem item)
+    protected virtual async void OnEdit(ActionItem item)
     {
         var dialog = new EditPropertyDialog(item.Action, $"Edit {item.Action.Type.Name()}");
         if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
@@ -352,15 +351,15 @@ internal class VariablesViewModel : FunctionViewModelBase
         }
     }
 
-    protected override ActionItem CreateItem(IList<ActionItem> to, IAction action, bool isSelected)
-    {
-        var item = base.CreateItem(to, action, isSelected);
-        item.Edit = new RelayCommand(() => OnEdit(item));
+    //protected override ActionItem CreateItem(IList<ActionItem> to, IAction action, bool isSelected)
+    //{
+    //    var item = base.CreateItem(to, action, isSelected);
+    //    item.Edit = new RelayCommand(() => OnEdit(item));
 
-        return item;
-    }
+    //    return item;
+    //}
 
-    private async void OnEdit(ActionItem editItem)
+    protected override async void OnEdit(ActionItem editItem)
     {
         var action = editItem.Action as VariableAction;
         var clone = action.Clone() as VariableAction;
@@ -381,11 +380,19 @@ internal class VariablesViewModel : FunctionViewModelBase
                     var properties = item.Action
                         .GetType()
                         .GetProperties()
-                        .Where(p => p.GetCustomAttribute<VariableEditPropertyAttribute>() != null)
+                        .Where(p => p.GetCustomAttribute<EditPropertyAttribute>() != null)
                         .ToList();
 
                     foreach (var property in properties)
                     {
+                        var attr = property.GetCustomAttribute<EditPropertyAttribute>();
+
+                        if (attr is not VariableEditPropertyAttribute && attr is not ComboBoxEditPropertyAttribute)
+                            continue;
+
+                        if (attr is ComboBoxEditPropertyAttribute cAttr && cAttr.Source != ComboBoxEditPropertySource.Variables)
+                            continue;
+
                         var value = (string)property.GetValue(item.Action);
 
                         if (!value.IsNull() && value.Contains("."))
@@ -427,11 +434,19 @@ internal class VariablesViewModel : FunctionViewModelBase
                     var properties = item.Action
                         .GetType()
                         .GetProperties()
-                        .Where(p => p.GetCustomAttribute<VariableEditPropertyAttribute>() != null)
+                        .Where(p => p.GetCustomAttribute<EditPropertyAttribute>() != null)
                         .ToList();
 
                     foreach (var property in properties)
                     {
+                        var attr = property.GetCustomAttribute<EditPropertyAttribute>();
+
+                        if (attr is not VariableEditPropertyAttribute && attr is not ComboBoxEditPropertyAttribute)
+                            continue;
+
+                        if (attr is ComboBoxEditPropertyAttribute cAttr && cAttr.Source != ComboBoxEditPropertySource.Variables)
+                            continue;
+
                         var value = (string)property.GetValue(item.Action);
 
                         if (!value.IsNull() && value.Contains("."))
