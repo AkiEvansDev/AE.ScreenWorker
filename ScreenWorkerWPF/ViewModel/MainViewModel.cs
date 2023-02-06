@@ -318,6 +318,9 @@ internal class MainViewModel : BaseModel
                         if (action is ICoordinateAction coordinateAction)
                             coordinateAction.OptimizeCoordinate(scriptInfo.Width, scriptInfo.Height, size.Width, size.Height);
                     }
+
+                    scriptInfo.Width = size.Width;
+                    scriptInfo.Height = size.Height;
                 }
 
                 LoadData(scriptInfo);
