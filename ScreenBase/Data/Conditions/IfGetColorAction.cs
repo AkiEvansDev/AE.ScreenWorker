@@ -7,7 +7,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Conditions;
 
 [AESerializable]
-public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
+public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.IfGetColor;
 
@@ -67,6 +67,7 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
     {
         point = new ScreenPoint();
         Accuracy = 0.8;
+        UseOptimizeCoordinate = true;
     }
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
@@ -102,5 +103,20 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>
         }
         else if (result)
             executor.Execute(Items);
+    }
+
+    [CheckBoxEditProperty(100)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        if (X != 0)
+            X = X * newWidth / oldWidth;
+
+        if (Y != 0)
+            Y = Y * newHeight / oldHeight;
     }
 }

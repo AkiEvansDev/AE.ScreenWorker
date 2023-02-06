@@ -8,7 +8,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data;
 
 [AESerializable]
-public class ExtractTextAction : BaseDelayAction<ExtractTextAction>
+public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.ExtractText;
 
@@ -70,6 +70,11 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>
     [ComboBoxEditProperty(10, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Result { get; set; }
 
+    public ExtractTextAction()
+    {
+        UseOptimizeCoordinate = true;
+    }
+
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var x1 = executor.GetValue(X1, X1Variable);
@@ -77,7 +82,7 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>
         var x2 = executor.GetValue(X2, X2Variable);
         var y2 = executor.GetValue(Y2, Y2Variable);
 
-        if (x1 < x1 || y2 < y1)
+        if (x2 < x1 || y2 < y1)
         {
             executor.Log($"<E>Second position must be greater than the first</E>");
             return;
@@ -97,5 +102,26 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>
         else
             executor.Log($"<E>ExtractText ignored</E>");
 
+    }
+
+    [CheckBoxEditProperty(100)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        if (X1 != 0)
+            X1 = X1 * newWidth / oldWidth;
+
+        if (X2 != 0)
+            X2 = X2 * newWidth / oldWidth;
+
+        if (Y1 != 0)
+            Y1 = Y1 * newHeight / oldHeight;
+
+        if (Y2 != 0)
+            Y2 = Y2 * newHeight / oldHeight;
     }
 }

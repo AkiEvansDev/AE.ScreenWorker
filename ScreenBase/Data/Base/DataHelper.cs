@@ -27,6 +27,9 @@ public class ScriptInfo : IEditProperties
     public IAction[] Main { get; set; }
     public Dictionary<string, IAction[]> Data { get; set; }
 
+    public int Width { get; set; }
+    public int Height { get; set; }
+
     public ScriptInfo()
     {
         Name = "New Script";

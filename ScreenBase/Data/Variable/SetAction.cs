@@ -7,7 +7,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Variable;
 
 [AESerializable]
-public class SetNumberAction : BaseAction<SetNumberAction>
+public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.SetNumber;
 
@@ -25,12 +25,41 @@ public class SetNumberAction : BaseAction<SetNumberAction>
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Number)]
     public string Result { get; set; }
 
+    public SetNumberAction()
+    {
+        CoordinateType = CoordinateType.X;
+    }
+
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
         else
             executor.Log($"<E>SetNumber ignored</E>");
+    }
+
+    [CheckBoxEditProperty(100)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    [ComboBoxEditProperty(101)]
+    public CoordinateType CoordinateType { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        switch (CoordinateType)
+        {
+            case CoordinateType.X:
+                if (Value != 0)
+                    Value = Value * newWidth / oldWidth;
+                break;
+            case CoordinateType.Y:
+                if (Value != 0)
+                    Value = Value * newHeight / oldHeight;
+                break;
+        }
     }
 }
 

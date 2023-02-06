@@ -7,7 +7,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Cycles;
 
 [AESerializable]
-public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
+public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.WhileGetColor;
 
@@ -72,6 +72,7 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
         point = new ScreenPoint();
         Accuracy = 0.8;
         Timeout = 0;
+        UseOptimizeCoordinate = true;
     }
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
@@ -112,5 +113,20 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>
                 }
             }
         }
+    }
+
+    [CheckBoxEditProperty(100)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        if (X != 0)
+            X = X * newWidth / oldWidth;
+
+        if (Y != 0)
+            Y = Y * newHeight / oldHeight;
     }
 }

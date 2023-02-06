@@ -5,7 +5,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Mouse;
 
 [AESerializable]
-public class MouseMoveAction : BaseDelayAction<MouseMoveAction>
+public class MouseMoveAction : BaseDelayAction<MouseMoveAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.MouseMove;
 
@@ -39,8 +39,28 @@ public class MouseMoveAction : BaseDelayAction<MouseMoveAction>
         }
     }
 
+    public MouseMoveAction()
+    {
+        UseOptimizeCoordinate = true;
+    }
+
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseMove(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
+    }
+
+    [CheckBoxEditProperty(100)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        if (X != 0)
+            X = X * newWidth / oldWidth;
+
+        if (Y != 0)
+            Y = Y * newHeight / oldHeight;
     }
 }

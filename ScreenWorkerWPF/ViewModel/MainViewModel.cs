@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 
 using AE.Core;
 
@@ -18,6 +19,9 @@ using ScreenBase.Data.Cycles;
 using ScreenBase.Data.Keyboard;
 using ScreenBase.Data.Mouse;
 using ScreenBase.Data.Variable;
+
+using ScreenWindows;
+
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;
@@ -233,8 +237,11 @@ internal class MainViewModel : BaseModel
 
     private void New()
     {
+        var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
+        var size = WindowsHelper.GetMonitorSize(hwnd);
+
         SelectedItem = MainMenuItem;
-        LoadData(new ScriptInfo());
+        LoadData(new ScriptInfo() { Width = size.Width, Height = size.Height });
     }
 
     private async void OnSettings()
@@ -295,6 +302,24 @@ internal class MainViewModel : BaseModel
             if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
             {
                 var scriptInfo = DataHelper.Load<ScriptInfo>(dialog.FileName);
+
+                var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
+                var size = WindowsHelper.GetMonitorSize(hwnd);
+
+                if (scriptInfo.Width == 0 && scriptInfo.Height == 0)
+                {
+                    scriptInfo.Width = size.Width;
+                    scriptInfo.Height = size.Height;
+                }
+                else if (scriptInfo.Width != size.Width || scriptInfo.Height != size.Height)
+                {
+                    foreach (var action in ScriptInfo.Main.Concat(ScriptInfo.Data.SelectMany(f => f.Value)))
+                    {
+                        if (action is ICoordinateAction coordinateAction)
+                            coordinateAction.OptimizeCoordinate(scriptInfo.Width, scriptInfo.Height, size.Width, size.Height);
+                    }
+                }
+
                 LoadData(scriptInfo);
             }
         });

@@ -190,6 +190,12 @@ public enum RangeType
     Vertical = 2,
 }
 
+public enum CoordinateType
+{
+    X = 1,
+    Y = 2,
+}
+
 public interface IAction : IEditProperties<IAction>
 {
     ActionType Type { get; }
@@ -198,6 +204,13 @@ public interface IAction : IEditProperties<IAction>
     string GetDebugTitle(IScriptExecutor executor);
 
     void Do(IScriptExecutor executor, IScreenWorker worker);
+}
+
+public interface ICoordinateAction
+{
+    bool UseOptimizeCoordinate { get; set; }
+
+    void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight);
 }
 
 public interface IDelayAction

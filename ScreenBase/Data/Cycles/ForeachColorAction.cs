@@ -5,7 +5,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Cycles;
 
 [AESerializable]
-public class ForeachColorAction : BaseGroupAction<ForeachColorAction>
+public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.ForeachColor;
 
@@ -70,6 +70,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>
     {
         RangeType = RangeType.Horizontal;
         Step = 1;
+        UseOptimizeCoordinate = true;
     }
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
@@ -88,6 +89,39 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>
                 executor.SetVariable(Result, color);
 
             executor.Execute(Items);
+        }
+    }
+
+    [CheckBoxEditProperty(100)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        switch (RangeType)
+        {
+            case RangeType.Horizontal:
+                if (RangeStart != 0)
+                    RangeStart = RangeStart * newWidth / oldWidth;
+
+                if (RangeEnd != 0)
+                    RangeEnd = RangeEnd * newWidth / oldWidth;
+
+                if (RangeValue != 0)
+                    RangeValue = RangeValue * newHeight / oldHeight;
+                break;
+            case RangeType.Vertical:
+                if (RangeStart != 0)
+                    RangeStart = RangeStart * newHeight / oldHeight;
+
+                if (RangeEnd != 0)
+                    RangeEnd = RangeEnd * newHeight / oldHeight;
+
+                if (RangeValue != 0)
+                    RangeValue = RangeValue * newWidth / oldWidth;
+                break;
         }
     }
 }
