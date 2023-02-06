@@ -353,7 +353,18 @@ public partial class EditPropertyDialog : ContentDialog
             IsReadOnly = true,
             FocusVisualStyle = null
         };
-        clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
+        clone.NeedUpdate += () =>
+        {
+            var path = (string)property.GetValue(clone);
+
+            if (!Directory.Exists(path))
+            {
+                path = ScriptInfo.GetDefaultPath();
+                property.SetValue(clone, path);
+            }
+
+            control.Text = path;
+        };
 
         control.PreviewMouseLeftButtonUp += (s, e) =>
         {

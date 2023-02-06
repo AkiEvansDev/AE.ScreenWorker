@@ -49,7 +49,7 @@ public class ScriptInfo : IEditProperties
         return Path.Combine(Folder, $"{Name}.sw");
     }
 
-    public string GetDefaultPath()
+    public static string GetDefaultPath()
     {
         return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Scripts");
     }
