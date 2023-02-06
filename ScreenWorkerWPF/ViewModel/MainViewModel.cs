@@ -287,9 +287,9 @@ internal class MainViewModel : BaseModel
         }
     }
 
-    private void OnOpen()
+    private async void OnOpen()
     {
-        NeedSaveBeforeAction(() =>
+        NeedSaveBeforeAction(async () =>
         {
             var dialog = new Ookii.Dialogs.Wpf.VistaOpenFileDialog
             {
@@ -313,19 +313,33 @@ internal class MainViewModel : BaseModel
                 }
                 else if (scriptInfo.Width != size.Width || scriptInfo.Height != size.Height)
                 {
-                    foreach (var action in ScriptInfo.Main.Concat(ScriptInfo.Data.SelectMany(f => f.Value)))
+                    if (await ShowMessage($"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size. Optimize for {size.Width}x{size.Height}?") == ContentDialogResult.Primary)
                     {
-                        if (action is ICoordinateAction coordinateAction)
-                            coordinateAction.OptimizeCoordinate(scriptInfo.Width, scriptInfo.Height, size.Width, size.Height);
-                    }
+                        foreach (var action in scriptInfo.Main.Concat(scriptInfo.Data.SelectMany(f => f.Value)))
+                        {
+                            OptimizeCoordinate(action, scriptInfo.Width, scriptInfo.Height, size.Width, size.Height);
+                        }
 
-                    scriptInfo.Width = size.Width;
-                    scriptInfo.Height = size.Height;
+                        scriptInfo.Width = size.Width;
+                        scriptInfo.Height = size.Height;
+                    }
                 }
 
                 LoadData(scriptInfo);
             }
         });
+    }
+
+    private void OptimizeCoordinate(IAction action, int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (action is ICoordinateAction coordinateAction)
+            coordinateAction.OptimizeCoordinate(oldWidth, oldHeight, newWidth, newHeight);
+
+        if (action is IGroupAction group)
+        {
+            foreach (var item in group.Items)
+                OptimizeCoordinate(item, oldWidth, oldHeight, newWidth, newHeight);
+        } 
     }
 
     private bool SaveData()
