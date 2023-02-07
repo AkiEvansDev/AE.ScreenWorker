@@ -1,0 +1,28 @@
+name: Release to MSI
+
+on:
+  release:
+    types: [published]
+    
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: Setup Windows SDK
+      uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.5
+    - name: Build
+      run: dotnet build -c Release
+    - name: Test
+      run: dotnet test -c Release --no-build
+    - name: Upload msi to release
+      uses: actions/upload-artifact@v3
+      with:
+        name: ScreenWorkerInstaller.msi
+        path: /ScreenWorkerInstaller/Release/ScreenWorkerInstaller.msi
