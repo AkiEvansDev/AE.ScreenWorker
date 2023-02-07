@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AE.CoreWPF" Version="3.0.0" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AE.CoreWPF\AE.CoreWPF\AE.CoreWPF.csproj" />
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
   </ItemGroup>
 
