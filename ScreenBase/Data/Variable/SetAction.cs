@@ -38,6 +38,7 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
             executor.Log($"<E>SetNumber ignored</E>");
     }
 
+    [Separator]
     [CheckBoxEditProperty(100)]
     public bool UseOptimizeCoordinate { get; set; }
 

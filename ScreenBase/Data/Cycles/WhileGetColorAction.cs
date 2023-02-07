@@ -115,6 +115,7 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
         }
     }
 
+    [Separator]
     [CheckBoxEditProperty(100)]
     public bool UseOptimizeCoordinate { get; set; }
 

@@ -104,6 +104,7 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
 
     }
 
+    [Separator]
     [CheckBoxEditProperty(100)]
     public bool UseOptimizeCoordinate { get; set; }
 

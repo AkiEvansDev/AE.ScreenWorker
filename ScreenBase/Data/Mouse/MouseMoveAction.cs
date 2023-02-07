@@ -49,6 +49,7 @@ public class MouseMoveAction : BaseDelayAction<MouseMoveAction>, ICoordinateActi
         worker.MouseMove(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
     }
 
+    [Separator]
     [CheckBoxEditProperty(100)]
     public bool UseOptimizeCoordinate { get; set; }
 

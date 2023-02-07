@@ -92,6 +92,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
         }
     }
 
+    [Separator]
     [CheckBoxEditProperty(100)]
     public bool UseOptimizeCoordinate { get; set; }
 
