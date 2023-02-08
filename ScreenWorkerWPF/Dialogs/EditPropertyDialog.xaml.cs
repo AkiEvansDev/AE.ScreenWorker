@@ -40,13 +40,25 @@ public partial class EditPropertyDialog : ContentDialog
             .OrderBy(g => g.Key)
             .ToList();
 
+        var isLastCB = false;
         foreach (var group in properties)
         {
+            if (group.First().GetCustomAttribute<SeparatorAttribute>() != null)
+            {
+                Container.Children.Add(new Separator());
+            }
+
             if (group.Count() == 1)
             {
                 var control = GetControl(group.First(), clone);
                 if (control != null)
+                {
+                    if (isLastCB && control is CheckBox checkBox)
+                        checkBox.Margin = new Thickness(0, -Container.Spacing, 0, 0);
+
                     Container.Children.Add(control);
+                    isLastCB = control is CheckBox;
+                }
             }
             else
             {
@@ -72,7 +84,11 @@ public partial class EditPropertyDialog : ContentDialog
                     }
                 }
 
+                if (isLastCB && panel.Children[0] is CheckBox)
+                    panel.Margin = new Thickness(0, -Container.Spacing, 0, 0);
+
                 Container.Children.Add(panel);
+                isLastCB = panel.Children[0] is CheckBox;
             }
         }
 

@@ -66,8 +66,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
         worker.MouseUp(Event);
     }
 
-    [Separator]
-    [CheckBoxEditProperty(100)]
+    [CheckBoxEditProperty(2000)]
     public bool UseOptimizeCoordinate { get; set; }
 
     public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)

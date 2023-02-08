@@ -105,8 +105,7 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
             executor.Execute(Items);
     }
 
-    [Separator]
-    [CheckBoxEditProperty(100)]
+    [CheckBoxEditProperty(2000)]
     public bool UseOptimizeCoordinate { get; set; }
 
     public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)

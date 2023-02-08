@@ -38,11 +38,10 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
             executor.Log($"<E>SetNumber ignored</E>");
     }
 
-    [Separator]
-    [CheckBoxEditProperty(100)]
+    [CheckBoxEditProperty(2000)]
     public bool UseOptimizeCoordinate { get; set; }
 
-    [ComboBoxEditProperty(101)]
+    [ComboBoxEditProperty(2001)]
     public CoordinateType CoordinateType { get; set; }
 
     public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
