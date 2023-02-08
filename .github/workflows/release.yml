@@ -25,7 +25,8 @@ jobs:
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
     - name: Build the Installer
       run: DevEnv AE.ScreenWorker.sln /project ScreenWorkerInstaller/ScreenWorkerInstaller.vdproj /rebuild Release
-    - uses: kzrnm/get-net-sdk-project-versions-action@v1
+    - name: Get version
+      uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-version
       with:
         proj-path: ./ScreenWorkerWPF/ScreenWorkerWPF.csproj
