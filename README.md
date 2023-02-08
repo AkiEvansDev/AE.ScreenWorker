@@ -5,7 +5,7 @@ Download [here](https://github.com/AkiEvansDev/AE.ScreenWorker/releases)
 
 ## Scripts
 
-[Fishing](https://raw.githubusercontent.com/AkiEvansDev/AE.ScreenWorker/blob/master/Scripts/Fishing2.0.zip)
+[Fishing](https://github.com/AkiEvansDev/AE.ScreenWorker/blob/master/Scripts/Fishing2.0.zip)
 
 ## Function description
 
