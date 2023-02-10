@@ -29,6 +29,8 @@ using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.Windows;
 
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+
 namespace ScreenWorkerWPF.ViewModel;
 
 internal class MainViewModel : BaseModel
@@ -96,7 +98,7 @@ internal class MainViewModel : BaseModel
     public IEnumerable<NavigationMenuItem> CustomFunctions => MainMenuItem.Items.OfType<CustomFunctionNavigationMenuItem>();
     public IEnumerable<NavigationMenuItem> Functions => Items.OfType<MainNavigationMenuItem>().Concat(CustomFunctions);
 
-    public MainViewModel()
+    public MainViewModel(string path)
     {
         Current = this;
 
@@ -193,7 +195,7 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
-        New();
+        OnOpen(path);
     }
 
     public void DeleteFunction(NavigationMenuItem removeItem)
@@ -307,7 +309,7 @@ internal class MainViewModel : BaseModel
 
     private void OnOpen()
     {
-        NeedSaveBeforeAction(async () =>
+        NeedSaveBeforeAction(() =>
         {
             var dialog = new Ookii.Dialogs.Wpf.VistaOpenFileDialog
             {
@@ -320,33 +322,52 @@ internal class MainViewModel : BaseModel
 
             if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
             {
-                var scriptInfo = DataHelper.Load<ScriptInfo>(dialog.FileName);
+                OnOpen(dialog.FileName);
+            }
+        });
+    }
 
-                var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
-                var size = WindowsHelper.GetMonitorSize(hwnd);
+    private async void OnOpen(string path)
+    {
+        if (path.IsNull() || !File.Exists(path))
+            New();
+        else
+        {
+            ScriptInfo scriptInfo = null;
+            try
+            {
+                scriptInfo = DataHelper.Load<ScriptInfo>(path);
+            }
+            catch
+            {
+                New();
+                return;
+            }
 
-                if (scriptInfo.Width == 0 && scriptInfo.Height == 0)
+            var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
+            var size = WindowsHelper.GetMonitorSize(hwnd);
+
+            if (scriptInfo.Width == 0 && scriptInfo.Height == 0)
+            {
+                scriptInfo.Width = size.Width;
+                scriptInfo.Height = size.Height;
+            }
+            else if (scriptInfo.Width != size.Width || scriptInfo.Height != size.Height)
+            {
+                if (await ShowMessage($"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size. Optimize for {size.Width}x{size.Height}?") == ContentDialogResult.Primary)
                 {
+                    foreach (var action in scriptInfo.Main.Concat(scriptInfo.Data.SelectMany(f => f.Value)))
+                    {
+                        OptimizeCoordinate(action, scriptInfo.Width, scriptInfo.Height, size.Width, size.Height);
+                    }
+
                     scriptInfo.Width = size.Width;
                     scriptInfo.Height = size.Height;
                 }
-                else if (scriptInfo.Width != size.Width || scriptInfo.Height != size.Height)
-                {
-                    if (await ShowMessage($"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size. Optimize for {size.Width}x{size.Height}?") == ContentDialogResult.Primary)
-                    {
-                        foreach (var action in scriptInfo.Main.Concat(scriptInfo.Data.SelectMany(f => f.Value)))
-                        {
-                            OptimizeCoordinate(action, scriptInfo.Width, scriptInfo.Height, size.Width, size.Height);
-                        }
-
-                        scriptInfo.Width = size.Width;
-                        scriptInfo.Height = size.Height;
-                    }
-                }
-
-                LoadData(scriptInfo);
             }
-        });
+
+            LoadData(scriptInfo);
+        }
     }
 
     private void OptimizeCoordinate(IAction action, int oldWidth, int oldHeight, int newWidth, int newHeight)

@@ -145,6 +145,29 @@
         }
         "FileType"
         {
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_4784545380EA4ED5837AB68A0726BDE6"
+            {
+            "Name" = "8:ScreenWorker"
+            "Description" = "8:"
+            "Extensions" = "8:sw"
+            "MIME" = "8:"
+            "Icon" = "8:_06C946F794234E11822126631A118441"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_0E53B9EB3092486B92CAC77C2E45F4D3"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_4FC6BEBEEB894E148BAB451F725A1F31"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
         }
         "Folder"
         {
@@ -198,15 +221,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{AA43DED8-5935-4610-8379-2C27C452CF5C}"
-        "PackageCode" = "8:{9FD97110-41E3-4BA6-B151-1B81A26185D1}"
+        "ProductCode" = "8:{4E51C9E3-ADCD-4D9B-B594-FE16A8250947}"
+        "PackageCode" = "8:{C0956A3A-F622-47D1-B762-0DF63B750A46}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:3.3.1002"
+        "ProductVersion" = "8:3.3.1003"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

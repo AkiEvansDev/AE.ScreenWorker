@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -19,7 +20,7 @@ public partial class App : Application
     private GlobalKeyboardHook globalKeyboardHook;
     private readonly List<Key> keysPressed = new();
 
-    protected override void OnStartup(StartupEventArgs e)
+    private void OnStartup(object sender, StartupEventArgs e)
     {
         if (File.Exists("settings.data"))
             CurrentSettings = DataHelper.Load<ScriptSettings>("settings.data");
@@ -29,7 +30,10 @@ public partial class App : Application
         globalKeyboardHook = new GlobalKeyboardHook();
         globalKeyboardHook.KeyboardPressed += OnKeyboardPressed;
 
-        base.OnStartup(e);
+        var path = e.Args?.FirstOrDefault();
+        var mainWindow = new MainWindow(path);
+
+        mainWindow.Show();
     }
 
     protected override void OnExit(ExitEventArgs e)

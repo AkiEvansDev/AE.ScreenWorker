@@ -16,20 +16,10 @@ public partial class MainWindow : Window
 {
     private MainViewModel ViewModel => DataContext as MainViewModel;
 
-    public MainWindow()
+    public MainWindow(string path)
     {
         InitializeComponent();
-        DataContext = new MainViewModel();
-
-        //var s = new  SimpleStackPanel();
-
-        //foreach (var symb in Enum.GetValues(typeof(Symbol)))
-        //{
-        //    s.Children.Add(new System.Windows.Controls.TextBlock() { Text = symb.ToString() });
-        //    s.Children.Add(new SymbolIcon { Symbol = (Symbol)symb });
-        //}
-
-        //Content= new System.Windows.Controls.ScrollViewer() { Content = s };
+        DataContext = new MainViewModel(path);
     }
 
     private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
