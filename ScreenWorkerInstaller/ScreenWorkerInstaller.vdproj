@@ -15,13 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_06C946F794234E11822126631A118441"
+        "MsmKey" = "8:_06AD19BE20EF4087B3B5032F2244D5AD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C53AC200E3A14CB2A3106734126F3D34"
+        "MsmKey" = "8:_06C946F794234E11822126631A118441"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -169,6 +169,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_38D06A60BAB34B249D86614B7643EA37"
+                    {
+                    "Name" = "8:Console"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_BAEAFB6D248E49299BC88CDD6E6995CE"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_3C0C5908C92B415DB9DF9A3B559C39B9"
@@ -198,15 +209,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{BA9BEEE7-B9AA-4D06-AFEC-EB8137EADED0}"
-        "PackageCode" = "8:{FE6B05FE-5251-4C65-A88E-04BB8E9FE9B8}"
+        "ProductCode" = "8:{1B22074A-CBEF-4E6A-832C-ED42E93AB760}"
+        "PackageCode" = "8:{BB9C197A-D831-44F3-8235-8A7697A968CD}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:3.0.1"
+        "ProductVersion" = "8:3.0.2"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -327,7 +338,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_C53AC200E3A14CB2A3106734126F3D34"
+            "Target" = "8:_0E53B9EB3092486B92CAC77C2E45F4D3"
             "Folder" = "8:_3C0C5908C92B415DB9DF9A3B559C39B9"
             "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Icon" = "8:_06C946F794234E11822126631A118441"
@@ -732,9 +743,37 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C53AC200E3A14CB2A3106734126F3D34"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_06AD19BE20EF4087B3B5032F2244D5AD"
             {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_38D06A60BAB34B249D86614B7643EA37"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{13A91869-93DB-4D15-86B9-1F490807779C}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0E53B9EB3092486B92CAC77C2E45F4D3"
+            {
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -752,7 +791,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
+            "OutputConfiguration" = "8:Release|Any CPU"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{7427F90D-67FC-4D53-A297-D61396E54A04}"
             "ShowKeyOutput" = "11:TRUE"
