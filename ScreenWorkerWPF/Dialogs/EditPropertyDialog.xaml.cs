@@ -98,7 +98,7 @@ public partial class EditPropertyDialog : ContentDialog
 
         if (source is ScriptSettings)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
             Container.Children.Add(new TextBlock
             {
                 FontSize = 12,
