@@ -126,13 +126,13 @@ internal class FunctionViewModelBase : BaseModel
         return result;
     }
 
-    public void BeboreDrag()
+    public virtual void BeboreDrag()
     {
         ToDrag.Clear();
         ToDrag.AddRange(Items.Where(i => i.IsSelected && !i.IsSelectedParent() && i.Action.Type != ActionType.End));
     }
 
-    public bool DragStart(ActionItem actionItem)
+    public virtual bool DragStart(ActionItem actionItem)
     {
         if ((actionItem.Action.Type == ActionType.End || actionItem.Action.Type == ActionType.Else) && !ToDrag.Contains(actionItem.Parent))
         {
@@ -156,13 +156,13 @@ internal class FunctionViewModelBase : BaseModel
         return ToDrag.Any();
     }
 
-    public void DragEnd()
+    public virtual void DragEnd()
     {
         foreach (var item in ToDrag)
             item.Opacity = 1;
     }
 
-    public void Drop(ActionItem target, bool top)
+    public virtual void Drop(ActionItem target, bool top)
     {
         target.IsSelected = false;
 
@@ -451,9 +451,22 @@ internal class VariablesViewModel : FunctionViewModelBase
         }
     }
 
+    private bool isDrop = false;
+    public override void Drop(ActionItem target, bool top)
+    {
+        isDrop = true;
+
+        base.Drop(target, top);
+
+        isDrop = false;
+    }
+
     protected override void OnDelete(IEnumerable<ActionItem> items)
     {
         base.OnDelete(items);
+
+        if (isDrop)
+            return;
 
         foreach (var variable in items.Select(i => i.Action).OfType<VariableAction>())
             foreach (var menuItem in MainViewModel.Current.Functions)

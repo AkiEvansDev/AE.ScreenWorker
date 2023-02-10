@@ -95,8 +95,11 @@ public abstract class BaseAction<T> : IAction
             if (value is Enum @enum)
                 return $"<P>{@enum.Name()}</P>";
 
+            if (value == null && useEmptyStringDisplay)
+                value = "";
+
             if (value is string str)
-                return $"<T>\"{GetTextForDisplay(useEmptyStringDisplay ? (str.IsNull() ? "..." : str) : str)}\"</T>";
+                return $"<T>\"{GetTextForDisplay(useEmptyStringDisplay ? (str.IsNull() ? "" : str) : str)}\"</T>";
 
             return $"<P>{value}</P>";
         }
