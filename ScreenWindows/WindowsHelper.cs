@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 using ScreenBase;
 
@@ -10,9 +11,11 @@ public static class WindowsHelper
 {
     #region User32
 
+    internal const int MONITOR_DEFAULTTONEAREST = 0x00000002;
     internal const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
     internal const uint KEYEVENTF_KEYUP = 0x0002;
-    internal const int MONITOR_DEFAULTTONEAREST = 0x00000002;
+    internal const uint SWP_NOSIZE = 0x0001;
+    internal const uint SWP_NOZORDER = 0x0004;
 
     [DllImport("user32.dll")]
     internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
@@ -33,6 +36,15 @@ public static class WindowsHelper
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
     internal static extern void keybd_event(uint bVk, uint bScan, uint dwFlags, uint dwExtraInfo);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    internal static extern IntPtr FindWindow(IntPtr className, string windowName);
+
+    [DllImport("user32.dll")]
+    internal static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
     internal class MONITORINFO
@@ -126,5 +138,16 @@ public static class WindowsHelper
         catch { }
 
         return screen;
+    }
+
+    public static void SetWindowPos(string windowName, int x, int y)
+    {
+        var hWnd = FindWindow(IntPtr.Zero, windowName);
+
+        if (hWnd != IntPtr.Zero)
+        {
+            SetForegroundWindow(hWnd);
+            SetWindowPos(hWnd, IntPtr.Zero, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        }
     }
 }

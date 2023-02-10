@@ -18,7 +18,9 @@ using ScreenBase.Data.Conditions;
 using ScreenBase.Data.Cycles;
 using ScreenBase.Data.Keyboard;
 using ScreenBase.Data.Mouse;
+using ScreenBase.Data.Table;
 using ScreenBase.Data.Variable;
+using ScreenBase.Data.Windows;
 
 using ScreenWindows;
 
@@ -148,6 +150,7 @@ internal class MainViewModel : BaseModel
                 new SetPointAction(),
                 new SetColorAction(),
                 new SetTextAction(),
+                new ConcatAction(),
             }),
             new ActionNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnClick, new List<IAction>
             {
@@ -161,10 +164,23 @@ internal class MainViewModel : BaseModel
                 new ExtractTextAction(),
                 new ParseNumberAction(),
             }),
+            new ActionNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnClick, new List<IAction>
+            {
+                new CopyAction(),
+                new PasteAction(),
+                new SetWindowPositionAction(),
+            }),
+            new ActionNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnClick, new List<IAction>
+            {
+                new OpenFileTableAction(),
+                new GetFileTableLengthAction(), 
+                new GetFileTableValueAction(),
+            }),
             new ActionNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new DelayAction(),
                 new ExecuteAction(),
+                new StartProcessAction(),
                 new LogAction(),
                 new CommentAction(),
             }),
@@ -287,7 +303,7 @@ internal class MainViewModel : BaseModel
         }
     }
 
-    private async void OnOpen()
+    private void OnOpen()
     {
         NeedSaveBeforeAction(async () =>
         {
@@ -296,6 +312,7 @@ internal class MainViewModel : BaseModel
                 CheckPathExists = true,
                 CheckFileExists = true,
                 Filter = "ScreenWorker (*.sw)|*.sw",
+                FileName = ScriptInfo.GetPath(),
                 InitialDirectory = ScriptInfo.GetDefaultPath(),
             };
 

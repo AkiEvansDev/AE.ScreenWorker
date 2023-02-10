@@ -4,14 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 
-using AE.Core;
-
-using ModernWpf.Controls;
-
 using ScreenBase.Data.Base;
 
 using ScreenWorkerWPF.Common;
-using ScreenWorkerWPF.Dialogs;
 
 namespace ScreenWorkerWPF.Model;
 
@@ -138,6 +133,22 @@ internal class ActionItem : BaseModel
         }
     }
 
+    public Visibility IsEnabledVisibility
+        => Action.Type == ActionType.Else || Action.Type == ActionType.End
+            ? Visibility.Collapsed
+        : Visibility.Visible;
+
+    public bool IsEnabled
+    {
+        get => !Action.Disabled;
+        set
+        {
+            Action.Disabled = !value;
+
+            UpdateOpacity();
+        }
+    }
+
     private bool isSelected;
     public bool IsSelected
     {
@@ -166,7 +177,7 @@ internal class ActionItem : BaseModel
     private double opacity = 1;
     public double Opacity
     {
-        get => opacity;
+        get => opacity == 1 && (Action.Disabled || IsDisabledParent()) ? 0.5 : opacity;
         set
         {
             opacity = value;
@@ -236,10 +247,32 @@ internal class ActionItem : BaseModel
         return false;
     }
 
+    public bool IsDisabledParent()
+    {
+        var item = Parent;
+
+        while (item != null)
+        {
+            if (item.Action.Disabled)
+                return true;
+
+            item = item.Parent;
+        }
+
+        return false;
+    }
+
     public void UpdateTitle()
     {
         NotifyPropertyChanged(nameof(Title));
         NotifyPropertyChanged(nameof(Subtitle));
+    }
+
+    public void UpdateOpacity()
+    {
+        NotifyPropertyChanged(nameof(Opacity));
+
+        foreach (var item in Children) item.UpdateOpacity();
     }
 
     public void UpdateBorderVisibolity()

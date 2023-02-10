@@ -64,13 +64,35 @@ public class CheckBoxEditPropertyAttribute : EditPropertyAttribute
     public CheckBoxEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
 }
 
-public class PathEditPropertyAttribute : EditPropertyAttribute
+public class FilePathEditPropertyAttribute : EditPropertyAttribute
+{
+    public string Filter { get; set; }
+
+    public FilePathEditPropertyAttribute(int order = 0, string title = null, string filter = null) : base(order, title)
+    {
+        Filter = filter;
+    }
+}
+
+public class LoadEditPropertyAttribute : FilePathEditPropertyAttribute
 {
     public string NameProperty { get; set; }
+    public string DefaultName { get; set; }
 
-    public PathEditPropertyAttribute(int order = 0, string title = null, string nameProperty = null) : base(order, title) 
+    public LoadEditPropertyAttribute(int order = 0, string title = null, string defaultName = null, string nameProperty = null, string filter = null) : base(order, title, filter)
     {
         NameProperty = nameProperty;
+        DefaultName = defaultName;
+    }
+}
+
+public class SaveEditPropertyAttribute : LoadEditPropertyAttribute
+{
+    public string DefaultExt { get; set; }
+
+    public SaveEditPropertyAttribute(int order = 0, string title = null, string defaultExt = null, string defaultName = null, string nameProperty = null, string filter = null) : base(order, title, defaultName, nameProperty, filter) 
+    {
+        DefaultExt = defaultExt;
     }
 }
 

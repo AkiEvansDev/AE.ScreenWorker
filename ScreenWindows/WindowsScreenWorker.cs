@@ -1,8 +1,11 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
 
 using ScreenBase;
+
+using TextCopy;
 
 using static ScreenWindows.WindowsHelper;
 
@@ -135,13 +138,47 @@ public class WindowsScreenWorker : IScreenWorker
         MouseUp(type);
     }
 
-    public void KeyDown(KeyFlags key)
+    public void KeyDown(KeyFlags key, bool extended)
     {
-        keybd_event((uint)key, 0, 0, 0);
+        if (extended)
+            keybd_event((uint)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+        else
+            keybd_event((uint)key, 0, 0, 0);
     }
 
     public void KeyUp(KeyFlags key)
     {
-        keybd_event((uint)key, 0, KEYEVENTF_KEYUP, 0);
+        keybd_event((uint)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    }
+
+    public void StartProcess(string path, string arguments)
+    {
+        var proc = new Process
+        {
+            StartInfo = new ProcessStartInfo(path, arguments)
+            {
+                UseShellExecute = true
+            }
+        };
+        proc.Start();
+    }
+
+    public void SetWindowPosition(string windowName, int x, int y)
+    {
+        SetWindowPos(windowName, x, y);
+    }
+
+    public void Copy(string value)
+    {
+        ClipboardService.SetText(value ?? "");
+    }
+
+    public void Paste()
+    {
+        KeyDown(KeyFlags.KeyLeftControl, true);
+        KeyDown(KeyFlags.KeyV, true);
+
+        KeyUp(KeyFlags.KeyV);
+        KeyUp(KeyFlags.KeyLeftControl);
     }
 }

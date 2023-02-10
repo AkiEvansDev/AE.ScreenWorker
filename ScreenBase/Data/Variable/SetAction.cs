@@ -41,7 +41,7 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
     [CheckBoxEditProperty(2000)]
     public bool UseOptimizeCoordinate { get; set; }
 
-    [ComboBoxEditProperty(2001)]
+    [ComboBoxEditProperty(2001, source: ComboBoxEditPropertySource.Enum)]
     public CoordinateType CoordinateType { get; set; }
 
     public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
@@ -193,7 +193,7 @@ public class SetTextAction : BaseAction<SetTextAction>
     [TextEditProperty(1, "-")]
     public string Value { get; set; }
 
-    [VariableEditProperty(nameof(Value), VariableType.Number, 0)]
+    [VariableEditProperty(nameof(Value), VariableType.Text, 0)]
     public string ValueVariable { get; set; }
 
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]

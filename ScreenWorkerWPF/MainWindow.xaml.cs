@@ -20,6 +20,16 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new MainViewModel();
+
+        //var s = new  SimpleStackPanel();
+
+        //foreach (var symb in Enum.GetValues(typeof(Symbol)))
+        //{
+        //    s.Children.Add(new System.Windows.Controls.TextBlock() { Text = symb.ToString() });
+        //    s.Children.Add(new SymbolIcon { Symbol = (Symbol)symb });
+        //}
+
+        //Content= new System.Windows.Controls.ScrollViewer() { Content = s };
     }
 
     private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

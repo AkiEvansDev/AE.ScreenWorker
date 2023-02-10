@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace ScreenBase;
 
@@ -14,7 +13,11 @@ public interface IScreenWorker
     void MouseDown(MouseEventType type = MouseEventType.Left);
     void MouseUp(MouseEventType type = MouseEventType.Left);
     void MouseClick(int x, int y, MouseEventType type = MouseEventType.Left);
-    void KeyDown(KeyFlags key);
+    void KeyDown(KeyFlags key, bool extended);
     void KeyUp(KeyFlags key);
+    void StartProcess(string path, string arguments);
+    void SetWindowPosition(string windowName, int x, int y);
+    void Copy(string value);
+    void Paste();
 }
 

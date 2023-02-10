@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 using AE.Core;
 
@@ -13,6 +14,8 @@ public class SeparatorAttribute : Attribute
 
 public interface IAction : IEditProperties<IAction>
 {
+    bool Disabled { get; set; }
+
     ActionType Type { get; }
 
     string GetTitle();
@@ -48,6 +51,8 @@ public interface IElseAction : IGroupAction
 public abstract class BaseAction<T> : IAction
     where T : class, IAction
 {
+    public bool Disabled { get; set; }
+
     public event Action NeedUpdate;
     public void NeedUpdateInvoke()
     {
@@ -66,6 +71,9 @@ public abstract class BaseAction<T> : IAction
         if (text.IsNull())
             return "";
 
+        if (text.Length > 80)
+            text = text.Substring(0, 39) + "..." + string.Concat(text.Reverse().Take(39).Reverse());
+
         return text.Replace("<", "<AR></AR>").Replace(">", "<AL></AL>");
     }
 
@@ -74,7 +82,7 @@ public abstract class BaseAction<T> : IAction
         return result.IsNull() ? "<V>...</V>" : $"<V>{result}</V>";
     }
 
-    public static string GetValueString(object value, string variable = null)
+    public static string GetValueString(object value, string variable = null, bool useEmptyStringDisplay = false)
     {
         if (variable.IsNull())
         {
@@ -87,8 +95,8 @@ public abstract class BaseAction<T> : IAction
             if (value is Enum @enum)
                 return $"<P>{@enum.Name()}</P>";
 
-            if (value is string)
-                return $"<T>\"{value}\"</T>";
+            if (value is string str)
+                return $"<T>\"{GetTextForDisplay(useEmptyStringDisplay ? (str.IsNull() ? "..." : str) : str)}\"</T>";
 
             return $"<P>{value}</P>";
         }

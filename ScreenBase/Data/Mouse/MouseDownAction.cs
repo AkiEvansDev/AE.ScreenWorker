@@ -12,7 +12,7 @@ public class MouseDownAction : BaseDelayAction<MouseDownAction>
     public override string GetTitle() => $"MouseDown({GetValueString(Event)});";
     public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
 
-    [ComboBoxEditProperty]
+    [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Enum)]
     public MouseEventType Event { get; set; }
 
     public MouseDownAction()

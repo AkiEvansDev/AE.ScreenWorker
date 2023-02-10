@@ -17,7 +17,7 @@ public class VariableAction : BaseAction<VariableAction>
     [TextEditProperty(0)]
     public string Name { get; set; }
 
-    [ComboBoxEditProperty(1, "Type")]
+    [ComboBoxEditProperty(1, "Type", source: ComboBoxEditPropertySource.Enum)]
     public VariableType VariableType { get; set; }
 
     public VariableAction()

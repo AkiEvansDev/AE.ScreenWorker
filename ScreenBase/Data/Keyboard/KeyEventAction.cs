@@ -14,11 +14,14 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
     public override string GetTitle() => $"Key{Event.Name().Substring(3)}(<P>{(Key != 0 ? Key.Name().Substring(3) : "...")}</P>);";
     public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
 
-    [ComboBoxEditProperty(0, trimStart: "Key")]
+    [ComboBoxEditProperty(0, trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
     public KeyFlags Key { get; set; }
 
-    [ComboBoxEditProperty(0)]
+    [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Enum)]
     public KeyEventType Event { get; set; }
+
+    [CheckBoxEditProperty(1)]
+    public bool Extended { get; set; }
 
     [NumberEditProperty(1000)]
     public int PressDelay { get; set; }
@@ -36,13 +39,13 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
             switch (Event)
             {
                 case KeyEventType.KeyDown:
-                    worker.KeyDown(Key);
+                    worker.KeyDown(Key, Extended);
                     break;
                 case KeyEventType.KeyUp:
                     worker.KeyUp(Key);
                     break;
                 case KeyEventType.KeyPress:
-                    worker.KeyDown(Key);
+                    worker.KeyDown(Key, Extended);
                     if (PressDelay > 0)
                         Thread.Sleep(PressDelay);
                     worker.KeyUp(Key);

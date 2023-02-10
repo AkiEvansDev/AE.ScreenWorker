@@ -20,7 +20,7 @@ public class ScriptInfo : IEditProperties
     [TextEditProperty]
     public string Name { get; set; }
 
-    [PathEditProperty(1, nameProperty: nameof(Name))]
+    [SaveEditProperty(1, defaultExt: ".sw", defaultName: "Script", nameProperty: nameof(Name), filter: "ScreenWorker (*.sw)|*.sw")]
     public string Folder { get; set; }
 
     public VariableAction[] Variables { get; set; }
@@ -89,13 +89,13 @@ public class ScriptSettings : IEditProperties
         NeedUpdate?.Invoke();
     }
 
-    [ComboBoxEditProperty(0, "Ctrl + Alt + {key} to start", trimStart: "Key")]
+    [ComboBoxEditProperty(0, "Ctrl + Alt + {key} to start", trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
     public KeyFlags StartKey { get; set; }
 
-    [ComboBoxEditProperty(1, "Ctrl + Alt + {key} to stop", trimStart: "Key")]
+    [ComboBoxEditProperty(1, "Ctrl + Alt + {key} to stop", trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
     public KeyFlags StopKey { get; set; }
 
-    [ComboBoxEditProperty(2, "Execute window location")]
+    [ComboBoxEditProperty(2, "Execute window location", source: ComboBoxEditPropertySource.Enum)]
     public ExecuteWindowLocation ExecuteWindowLocation { get; set; }
 
     [NumberEditProperty(3, "Execute window margin")]

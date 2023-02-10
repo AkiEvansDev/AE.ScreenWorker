@@ -2,9 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-	<Version>3.0.1</Version>
+	<Version>3.0.2</Version>
 	<Authors>AkiEvans</Authors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TextCopy" Version="6.2.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ScreenBase\ScreenBase.csproj" />

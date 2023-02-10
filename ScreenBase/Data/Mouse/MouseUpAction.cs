@@ -12,7 +12,7 @@ public class MouseUpAction : BaseDelayAction<MouseUpAction>
     public override string GetTitle() => $"MouseUp({GetValueString(Event)});";
     public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
 
-    [ComboBoxEditProperty]
+    [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Enum)]
     public MouseEventType Event { get; set; }
 
     public MouseUpAction()

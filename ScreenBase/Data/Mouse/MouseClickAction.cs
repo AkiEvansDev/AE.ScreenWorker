@@ -42,7 +42,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
         }
     }
 
-    [ComboBoxEditProperty(5)]
+    [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Enum)]
     public MouseEventType Event { get; set; }
 
     [NumberEditProperty(1000)]

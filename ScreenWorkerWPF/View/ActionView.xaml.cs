@@ -26,6 +26,8 @@ public partial class ActionView : UserControl
                 Menu2.Visibility = Visibility.Collapsed;
                 Menu3.Visibility = Visibility.Collapsed;
                 Menu4.Visibility = Visibility.Collapsed;
+                Menu5.Visibility = Visibility.Collapsed;
+                Menu6.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -34,6 +36,8 @@ public partial class ActionView : UserControl
                 Menu2.Visibility = Visibility.Visible;
                 Menu3.Visibility = Visibility.Visible;
                 Menu4.Visibility = Visibility.Visible;
+                Menu5.Visibility = Visibility.Visible;
+                Menu6.Visibility = Visibility.Visible;
             }
         };
     }

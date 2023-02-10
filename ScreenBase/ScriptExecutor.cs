@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 using AE.Core;
@@ -21,10 +23,17 @@ public interface IScriptExecutor
 
     void Start(ScriptInfo script, IScreenWorker worker, bool isDebug = false);
     void Stop(bool force = true);
+
     void Execute(IEnumerable<IAction> actions);
+
     T GetValue<T>(T value, string variable = null);
     object GetVariable(string name);
     void SetVariable(string name, object value);
+
+    void SetFileTable(string name, List<string[]> table);
+    int GetFileTableLength(string name, FileTableLengthType lengthType);
+    string GetFileTableValue(string name, int row, int column);
+
     bool IsColor(Color color1, Color color2, double accuracy = 0.8);
     void Log(string message, bool needDisplay = false);
 }
@@ -41,6 +50,7 @@ public class ScriptExecutor : IScriptExecutor
     private bool IsDebug;
     private IScreenWorker Worker;
     private Dictionary<string, object> Variables;
+    private Dictionary<string, List<string[]>> Tables;
 
     public IReadOnlyDictionary<string, IAction[]> Functions { get; private set; }
 
@@ -52,6 +62,7 @@ public class ScriptExecutor : IScriptExecutor
         IsDebug = isDebug;
         Worker = worker;
         Variables = new Dictionary<string, object>();
+        Tables = new Dictionary<string, List<string[]>>();
 
         Functions = script.Data;
 
@@ -115,9 +126,12 @@ public class ScriptExecutor : IScriptExecutor
                                 break;
                             default:
                                 if (IsDebug)
-                                    Log(action.GetDebugTitle(this));
+                                    Log($"{action.GetDebugTitle(this)}{(action.Disabled ? " <E>disabled</E>" : "")}");
                                 break;
                         }
+
+                        if (action.Disabled)
+                            continue;
 
                         if (action is IGroupAction)
                             space++;
@@ -177,6 +191,9 @@ public class ScriptExecutor : IScriptExecutor
     {
         if (variable.IsNull())
             return value;
+
+        if (typeof(T) == typeof(string))
+            return (T)(object)GetVariable(variable).ToString();
 
         return (T)GetVariable(variable);
     }
@@ -276,6 +293,48 @@ public class ScriptExecutor : IScriptExecutor
         }
 
         return Variables[name];
+    }
+
+    public void SetFileTable(string name, List<string[]> table)
+    {
+        if (Tables.ContainsKey(name))
+            Tables[name] = table;
+        else
+            Tables.Add(name, table);
+    }
+
+    public int GetFileTableLength(string name, FileTableLengthType lengthType)
+    {
+        if (Tables.ContainsKey(name))
+        {
+            switch (lengthType)
+            {
+                case FileTableLengthType.Row:
+                    return Tables[name].Count;
+                case FileTableLengthType.Column:
+                    return Tables[name].Max(r => r.Length);
+            }
+        }
+
+        return -1;
+    }
+
+    public string GetFileTableValue(string name, int row, int column)
+    {
+        if (Tables.ContainsKey(name))
+        {
+            var table = Tables[name];
+
+            if (row < table.Count)
+            {
+                var rowData = table[row];
+
+                if (column < rowData.Length)
+                    return rowData[column];
+            }
+        }
+
+        return null;
     }
 
     public bool IsColor(Color color1, Color color2, double accuracy = 0.8)

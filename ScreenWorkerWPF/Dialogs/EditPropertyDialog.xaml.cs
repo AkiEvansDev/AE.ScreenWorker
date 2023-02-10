@@ -10,8 +10,12 @@ using System.Windows.Media;
 using AE.Core;
 using AE.CoreWPF;
 
+using Microsoft.Win32;
+
 using ModernWpf.Controls;
 using ModernWpf.Controls.Primitives;
+
+using Ookii.Dialogs.Wpf;
 
 using ScreenBase.Data.Base;
 
@@ -121,9 +125,13 @@ public partial class EditPropertyDialog : ContentDialog
         {
             result = GetTextEditControl(property, clone, tAttr);
         }
-        else if (property.PropertyType == typeof(string) && attr is PathEditPropertyAttribute pathAttr)
+        else if (property.PropertyType == typeof(string) && attr is LoadEditPropertyAttribute pathAttr)
         {
             result = GetPathEditControl(property, clone, pathAttr);
+        }
+        else if (property.PropertyType == typeof(string) && attr is FilePathEditPropertyAttribute fPathAttr)
+        {
+            result = GetFilePathEditControl(property, clone, fPathAttr);
         }
         else if (property.PropertyType == typeof(string) && attr is VariableEditPropertyAttribute vAttr)
         {
@@ -358,17 +366,18 @@ public partial class EditPropertyDialog : ContentDialog
         return control;
     }
 
-    private UIElement GetPathEditControl(PropertyInfo property, IEditProperties clone, PathEditPropertyAttribute pathAttr)
+    private UIElement GetPathEditControl(PropertyInfo property, IEditProperties clone, LoadEditPropertyAttribute lAttr)
     {
         PropertyInfo nameProperty = null;
-        if (!pathAttr.NameProperty.IsNull())
-            nameProperty = clone.GetType().GetProperty(pathAttr.NameProperty);
+        if (!lAttr.NameProperty.IsNull())
+            nameProperty = clone.GetType().GetProperty(lAttr.NameProperty);
 
         var control = new TextBox()
         {
             IsReadOnly = true,
             FocusVisualStyle = null
         };
+
         clone.NeedUpdate += () =>
         {
             var path = (string)property.GetValue(clone);
@@ -384,25 +393,65 @@ public partial class EditPropertyDialog : ContentDialog
 
         control.PreviewMouseLeftButtonUp += (s, e) =>
         {
-            var dialog = new Ookii.Dialogs.Wpf.VistaSaveFileDialog
-            {
-                CheckPathExists = true,
-                Filter = "ScreenWorker (*.sw)|*.sw",
-                DefaultExt = ".sw",
-                FileName = Path.Combine(control.Text, nameProperty == null ? "Script" : (string)nameProperty.GetValue(clone)),
-            };
+            VistaFileDialog dialog;
+
+            if (lAttr is SaveEditPropertyAttribute sAttr)
+                dialog = new VistaSaveFileDialog
+                {
+                    CheckPathExists = true,
+                    Filter = sAttr.Filter,
+                    DefaultExt = sAttr.DefaultExt,
+                    FileName = Path.Combine(control.Text, nameProperty == null ? sAttr.DefaultName : (string)nameProperty.GetValue(clone)),
+                };
+            else
+                dialog = new VistaOpenFileDialog
+                {
+                    Filter = lAttr.Filter,
+                    FileName = Path.Combine(control.Text, nameProperty == null ? lAttr.DefaultName : (string)nameProperty.GetValue(clone)),
+                };
+
             if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
             {
                 property.SetValue(clone, Path.GetDirectoryName(dialog.FileName));
-                if (nameProperty != null)
-                    nameProperty.SetValue(clone, Path.GetFileNameWithoutExtension(dialog.FileName));
+                nameProperty?.SetValue(clone, Path.GetFileNameWithoutExtension(dialog.FileName));
 
                 clone.NeedUpdateInvoke();
             }
         };
 
-        if (pathAttr.Title != "-")
-            ControlHelper.SetHeader(control, pathAttr.Title ?? property.Name);
+        if (lAttr.Title != "-")
+            ControlHelper.SetHeader(control, lAttr.Title ?? property.Name);
+
+        return control;
+    }
+    
+    private UIElement GetFilePathEditControl(PropertyInfo property, IEditProperties clone, FilePathEditPropertyAttribute fPathAttr)
+    {
+        var control = new TextBox()
+        {
+            IsReadOnly = true,
+            FocusVisualStyle = null
+        };
+
+        clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
+
+        control.PreviewMouseLeftButtonUp += (s, e) =>
+        {
+            var dialog = new VistaOpenFileDialog
+            {
+                Filter = fPathAttr.Filter,
+                FileName = control.Text,
+            };
+
+            if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
+            {
+                property.SetValue(clone, dialog.FileName);
+                clone.NeedUpdateInvoke();
+            }
+        };
+
+        if (fPathAttr.Title != "-")
+            ControlHelper.SetHeader(control, fPathAttr.Title ?? property.Name);
 
         return control;
     }
@@ -508,7 +557,7 @@ public partial class EditPropertyDialog : ContentDialog
 
                     property.SetValue(clone, $"{cb1.SelectedItem}.{cb2.SelectedItem}");
                 }
-                else if (variable.VariableType == vAttr.Target)
+                else if (variable.VariableType == vAttr.Target || vAttr.Target == VariableType.Text)
                 {
                     property.SetValue(clone, $"{cb1.SelectedItem}");
                 }

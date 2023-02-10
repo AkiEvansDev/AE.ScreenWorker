@@ -57,7 +57,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
     [VariableEditProperty(nameof(RangeValue), VariableType.Number, 4)]
     public string RangeValueVariable { get; set; }
 
-    [ComboBoxEditProperty(6)]
+    [ComboBoxEditProperty(6, source: ComboBoxEditPropertySource.Enum)]
     public RangeType RangeType { get; set; }
 
     [NumberEditProperty(7, minValue: 1)]

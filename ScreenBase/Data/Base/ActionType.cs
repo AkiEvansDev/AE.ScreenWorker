@@ -20,6 +20,7 @@ public enum ActionType
     End = 40,
 
     Execute = 50,
+    StartProcess = 51,
 
     If = 60,
     IfColor = 61,
@@ -32,6 +33,7 @@ public enum ActionType
     SetPoint = 82,
     SetColor = 83,
     SetText = 84,
+    Concat = 85,
 
     CalculationNumber = 90,
     CalculationBoolean = 91,
@@ -41,7 +43,15 @@ public enum ActionType
     Log = 100,
 
     ExtractText = 200,
-    ParseNumber = 201
+    ParseNumber = 201,
+
+    SetWindowPosition = 300,
+    Copy = 310,
+    Paste = 311,
+
+    OpenFileTable = 400,
+    GetFileTableLength = 401,
+    GetFileTableValue = 402,
 }
 
 public enum VariableType
@@ -93,4 +103,10 @@ public enum CoordinateType
 {
     X = 1,
     Y = 2,
+}
+
+public enum FileTableLengthType
+{
+    Row = 1,
+    Column = 2
 }

@@ -1,4 +1,7 @@
-﻿using AE.Core;
+﻿using System.Diagnostics;
+using System.IO;
+
+using AE.Core;
 
 using ScreenBase.Data.Base;
 
@@ -21,5 +24,28 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
             executor.Execute(executor.Functions[Function]);
         else
             executor.Log($"<E>Execute ignored</E>");
+    }
+}
+
+[AESerializable]
+public class StartProcessAction : BaseDelayAction<StartProcessAction>
+{
+    public override ActionType Type => ActionType.StartProcess;
+
+    public override string GetTitle() => $"StartProcess({GetValueString(Path, useEmptyStringDisplay: true)});";
+    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+
+    [FilePathEditProperty(0, filter: "Execute files (*.exe)|*.exe|Internet Shortcut (*.url)|*.url")]
+    public string Path { get; set; }
+
+    [TextEditProperty(1)]
+    public string Arguments { get; set; }
+
+    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    {
+        if (!Path.IsNull() && File.Exists(Path))
+            worker.StartProcess(Path, Arguments);
+        else
+            executor.Log($"<E>StartProcess ignored</E>");
     }
 }

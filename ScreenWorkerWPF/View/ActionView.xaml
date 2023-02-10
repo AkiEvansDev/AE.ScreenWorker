@@ -48,6 +48,23 @@
                 <ui:ContextFlyoutService.ContextFlyout>
                     <ui:MenuFlyout>
                         <MenuItem
+                            x:Name="Menu5"
+                            Command="{Binding Enable}"
+                            Header="Enable">
+                            <MenuItem.Icon>
+                                <ui:FontIcon Glyph="&#xF16C;" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            x:Name="Menu6"
+                            Command="{Binding Disable}"
+                            Header="Disable">
+                            <MenuItem.Icon>
+                                <ui:FontIcon Glyph="&#xF16B;" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem
                             Command="{Binding Edit}"
                             Header="Edit">
                             <MenuItem.Icon>

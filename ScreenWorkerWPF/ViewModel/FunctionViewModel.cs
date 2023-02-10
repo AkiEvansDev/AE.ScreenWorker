@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 
 using AE.Core;
 
@@ -36,6 +37,8 @@ internal class FunctionViewModelBase : BaseModel
 
     public ObservableCollection<ActionItem> Items { get; }
 
+    public RelayCommand Enable { get; }
+    public RelayCommand Disable { get; }
     public RelayCommand Edit { get; }
     public RelayCommand Delete { get; }
     public RelayCommand Cut { get; }
@@ -55,6 +58,9 @@ internal class FunctionViewModelBase : BaseModel
 
         if (canCopyPaste)
         {
+            Enable = new RelayCommand(OnEnable, IsSelectDisable);
+            Disable = new RelayCommand(OnDisable, IsSelectEnable);
+
             if (canEdit)
                 Cut = new RelayCommand(OnCut, IsSelect);
             
@@ -184,6 +190,28 @@ internal class FunctionViewModelBase : BaseModel
     protected bool IsSelect()
     {
         return Items.Any(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else);
+    }
+
+    protected bool IsSelectEnable()
+    {
+        return Items.Any(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else && i.IsEnabled);
+    }
+
+    protected bool IsSelectDisable()
+    {
+        return Items.Any(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else && !i.IsEnabled);
+    }
+
+    protected virtual void OnEnable()
+    {
+        foreach (var item in Items.Where(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else && !i.IsEnabled))
+            item.IsEnabled = true;
+    }
+
+    protected virtual void OnDisable()
+    {
+        foreach (var item in Items.Where(i => i.IsSelected && i.Action.Type != ActionType.End && i.Action.Type != ActionType.Else && i.IsEnabled))
+            item.IsEnabled = false;
     }
 
     protected virtual void OnEdit()
