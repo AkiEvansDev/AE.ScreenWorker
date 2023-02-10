@@ -96,6 +96,18 @@ public partial class EditPropertyDialog : ContentDialog
             }
         }
 
+        if (source is ScriptSettings)
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Container.Children.Add(new TextBlock
+            {
+                FontSize = 12,
+                Opacity = 0.6,
+                Margin = new Thickness(0, Container.Spacing * 2, 0, 0),
+                Text = $"Ver.: {version}"
+            });
+        }
+
         clone.NeedUpdateInvoke();
 
         Closing += (s, e) =>
