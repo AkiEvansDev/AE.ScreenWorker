@@ -11,7 +11,7 @@ public class MouseMoveAction : BaseDelayAction<MouseMoveAction>, ICoordinateActi
 
     public override string GetTitle()
         => $"MouseMove({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"MouseMove({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
     [NumberEditProperty(1, "-", minValue: 0)]

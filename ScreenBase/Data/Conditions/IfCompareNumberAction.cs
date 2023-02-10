@@ -13,7 +13,7 @@ public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
 
     public override string GetTitle()
         => $"If {(Not ? "<P>!</P>" : "")}({GetValueString(Value1, Value1Variable)} {GetSymb()} {GetValueString(Value2, Value2Variable)}) =<AL></AL> {GetResultString(Result)}";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"If {(Not ? "<P>!</P>" : "")}({GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSymb()} {GetValueString(executor.GetValue(Value2, Value2Variable))}) =<AL></AL> {GetResultString(Result)}";
 
     private string GetSymb()

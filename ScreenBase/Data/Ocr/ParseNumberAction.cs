@@ -12,7 +12,7 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
     public override ActionType Type => ActionType.ParseNumber;
 
     public override string GetTitle() => $"{GetResultString(Result)} = ParseNumber({GetResultString(Value)}, {GetValueString(Default)});";
-    public override string GetDebugTitle(IScriptExecutor executor) => $"{GetResultString(Result)} = ParseNumber({GetValueString(executor.GetValue("", Value))}, {GetValueString(Default)});";
+    public override string GetExecuteTitle(IScriptExecutor executor) => $"{GetResultString(Result)} = ParseNumber({GetValueString(executor.GetValue("", Value))}, {GetValueString(Default)});";
 
     [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Value { get; set; }

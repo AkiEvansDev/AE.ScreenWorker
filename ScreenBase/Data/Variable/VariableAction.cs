@@ -12,7 +12,7 @@ public class VariableAction : BaseAction<VariableAction>
     public override ActionType Type => ActionType.Variable;
 
     public override string GetTitle() => $"new {VariableType.Name()}(<V>{Name}</V>);";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]
     public string Name { get; set; }

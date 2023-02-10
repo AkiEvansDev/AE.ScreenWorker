@@ -13,7 +13,7 @@ public class IfAction : BaseGroupElseAction<IfAction>
 
     public override string GetTitle()
         => $"If ({(Not ? "<P>!</P>" : "")}{GetResultString(ValueVariable)})";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"If ({(Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(false, ValueVariable))})";
 
     [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]

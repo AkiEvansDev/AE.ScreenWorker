@@ -11,7 +11,7 @@ public class GetFileTableValueAction : BaseAction<GetFileTableValueAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetResultString(Name)}.[{GetValueString(Row, RowVariable)}][{GetValueString(Column, ColumnVariable)}];";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetResultString(Name)}.[{GetValueString(executor.GetValue(Row, RowVariable))}][{GetValueString(executor.GetValue(Column, ColumnVariable))}];";
 
     [TextEditProperty(0)]

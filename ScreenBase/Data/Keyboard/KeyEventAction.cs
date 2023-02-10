@@ -12,7 +12,7 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
     public override ActionType Type => ActionType.KeyEvent;
 
     public override string GetTitle() => $"Key{Event.Name().Substring(3)}(<P>{(Key != 0 ? Key.Name().Substring(3) : "...")}</P>);";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [ComboBoxEditProperty(0, trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
     public KeyFlags Key { get; set; }

@@ -14,7 +14,7 @@ public class OpenFileTableAction : BaseAction<OpenFileTableAction>
     public override ActionType Type => ActionType.OpenFileTable;
 
     public override string GetTitle() => $"{GetResultString(Name)} = OpenFileTable({GetValueString(Path, useEmptyStringDisplay: true)});";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     public string Name { get; set; }
     public string Folder { get; set; }

@@ -10,7 +10,7 @@ public class WhileAction : BaseGroupAction<WhileAction>
     public override ActionType Type => ActionType.While;
 
     public override string GetTitle() => $"While ({(Not ? "<P>!</P>" : "")}{GetResultString(ValueVariable)})";
-    public override string GetDebugTitle(IScriptExecutor executor) => $"While ({(Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(false, ValueVariable))})";
+    public override string GetExecuteTitle(IScriptExecutor executor) => $"While ({(Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(false, ValueVariable))})";
 
     [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string ValueVariable { get; set; }

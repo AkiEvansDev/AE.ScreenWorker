@@ -34,11 +34,13 @@ public enum ActionType
     SetColor = 83,
     SetText = 84,
     Concat = 85,
+    GetArguments = 86,
 
     CalculationNumber = 90,
     CalculationBoolean = 91,
     CompareNumber = 92,
-    IsColor = 93,
+    CompareText = 93,
+    IsColor = 94,
 
     Log = 100,
 

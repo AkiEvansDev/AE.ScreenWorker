@@ -18,7 +18,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
         return GetTitle(rs, re, rv);
     }
 
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
     {
         var rs = GetValueString(executor.GetValue(RangeStart, RangeStartVariable));
         var re = GetValueString(executor.GetValue(RangeEnd, RangeEndVariable));

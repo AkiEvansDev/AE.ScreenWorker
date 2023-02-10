@@ -11,7 +11,7 @@ public class GetFileTableLengthAction : BaseAction<GetFileTableLengthAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetResultString(Name)}.{GetSymb()};";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     private string GetSymb()
     {

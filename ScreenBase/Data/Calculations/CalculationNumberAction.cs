@@ -11,7 +11,7 @@ public class CalculationNumberAction : BaseAction<CalculationNumberAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} {GetSumb()} {GetValueString(Value2, Value2Variable)};";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSumb()} {GetValueString(executor.GetValue(Value2, Value2Variable))};";
 
     private string GetSumb()

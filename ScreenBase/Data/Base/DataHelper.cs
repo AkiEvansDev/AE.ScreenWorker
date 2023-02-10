@@ -23,6 +23,9 @@ public class ScriptInfo : IEditProperties
     [SaveEditProperty(1, defaultExt: ".sw", defaultName: "Script", nameProperty: nameof(Name), filter: "ScreenWorker (*.sw)|*.sw")]
     public string Folder { get; set; }
 
+    [TextEditProperty(3)]
+    public string Arguments { get; set; }
+
     public VariableAction[] Variables { get; set; }
     public IAction[] Main { get; set; }
     public Dictionary<string, IAction[]> Data { get; set; }
@@ -68,6 +71,7 @@ public class ScriptInfo : IEditProperties
         {
             Name = Name,
             Folder = Folder,
+            Arguments = Arguments,
         };
     }
 }

@@ -12,7 +12,7 @@ public class DelayAction : BaseAction<DelayAction>
     public override ActionType Type => ActionType.Delay;
 
     public override string GetTitle() => $"Delay({GetValueString(Delay, DelayVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor) => $"Delay({GetValueString(executor.GetValue(Delay, DelayVariable))});";
+    public override string GetExecuteTitle(IScriptExecutor executor) => $"Delay({GetValueString(executor.GetValue(Delay, DelayVariable))});";
 
     [NumberEditProperty(1, "-", smallChange: 50, largeChange: 1000)]
     public int Delay { get; set; }

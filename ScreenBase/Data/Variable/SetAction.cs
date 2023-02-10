@@ -13,7 +13,7 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
 
     [NumberEditProperty(1, "-", useXFromScreen: true, useYFromScreen: true)]
@@ -70,7 +70,7 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
 
     [ComboBoxEditProperty(1, "-", source: ComboBoxEditPropertySource.Boolean)]
@@ -98,7 +98,7 @@ public class SetPointAction : BaseAction<SetPointAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = new Point({GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = new Point({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
     [NumberEditProperty(1, "-", minValue: 0)]
@@ -144,7 +144,7 @@ public class SetColorAction : BaseAction<SetColorAction>
     public override ActionType Type => ActionType.SetColor;
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(ColorPoint.GetColor(), ColorVariable)};";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))};";
 
     private ScreenPoint colorPoint;
@@ -187,7 +187,7 @@ public class SetTextAction : BaseAction<SetTextAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
 
     [TextEditProperty(1, "-")]

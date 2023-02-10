@@ -13,7 +13,7 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
     public override ActionType Type => ActionType.Execute;
 
     public override string GetTitle() => $"<F>{(Function.IsNull() ? "..." : Function.Substring(0, Function.Length - 3))}</F>();";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [ComboBoxEditProperty(source: ComboBoxEditPropertySource.Functions)]
     public string Function { get; set; }
@@ -33,7 +33,7 @@ public class StartProcessAction : BaseDelayAction<StartProcessAction>
     public override ActionType Type => ActionType.StartProcess;
 
     public override string GetTitle() => $"StartProcess({GetValueString(Path, useEmptyStringDisplay: true)});";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [FilePathEditProperty(0, filter: "Execute files (*.exe)|*.exe|Internet Shortcut (*.url)|*.url")]
     public string Path { get; set; }

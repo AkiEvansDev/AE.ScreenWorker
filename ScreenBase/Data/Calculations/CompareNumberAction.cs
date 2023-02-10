@@ -11,7 +11,7 @@ public class CompareNumberAction : BaseAction<CompareNumberAction>
 
     public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} {GetSymb()} {GetValueString(Value2, Value2Variable)};";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSymb()} {GetValueString(executor.GetValue(Value2, Value2Variable))};";
 
     private string GetSymb()

@@ -19,7 +19,7 @@ public interface IAction : IEditProperties<IAction>
     ActionType Type { get; }
 
     string GetTitle();
-    string GetDebugTitle(IScriptExecutor executor);
+    string GetExecuteTitle(IScriptExecutor executor);
 
     void Do(IScriptExecutor executor, IScreenWorker worker);
 }
@@ -62,7 +62,7 @@ public abstract class BaseAction<T> : IAction
     public abstract ActionType Type { get; }
 
     public abstract string GetTitle();
-    public abstract string GetDebugTitle(IScriptExecutor executor);
+    public abstract string GetExecuteTitle(IScriptExecutor executor);
 
     public abstract void Do(IScriptExecutor executor, IScreenWorker worker);
 
@@ -169,7 +169,7 @@ public class EndAction : BaseAction<EndAction>
     public override ActionType Type => ActionType.End;
 
     public override string GetTitle() => $"End";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
@@ -183,7 +183,7 @@ public class ElseAction : BaseAction<ElseAction>
     public override ActionType Type => ActionType.Else;
 
     public override string GetTitle() => $"Else";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {

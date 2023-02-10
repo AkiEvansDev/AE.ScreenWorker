@@ -14,7 +14,7 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
 
     public override string GetTitle() 
         => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)});";
-    public override string GetDebugTitle(IScriptExecutor executor) 
+    public override string GetExecuteTitle(IScriptExecutor executor) 
         => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))});";
 
     [NumberEditProperty(1, "-", minValue: 0)]

@@ -143,7 +143,7 @@ internal class MainViewModel : BaseModel
                 new IfGetColorAction(),
                 new IfCompareNumberAction(),
             }),
-            new ActionNavigationMenuItem("Set variable", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionNavigationMenuItem("Variable methods", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new SetNumberAction(),
                 new SetBooleanAction(),
@@ -151,12 +151,14 @@ internal class MainViewModel : BaseModel
                 new SetColorAction(),
                 new SetTextAction(),
                 new ConcatAction(),
+                new GetArgumentsAction(),
             }),
             new ActionNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new CalculationNumberAction(),
                 new CalculationBooleanAction(),
                 new CompareNumberAction(),
+                new CompareTextAction(),
                 new IsColorAction(),
             }),
             new ActionNavigationMenuItem("Ocr", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>

@@ -26,6 +26,7 @@ public interface IScriptExecutor
 
     void Execute(IEnumerable<IAction> actions);
 
+    string GetArguments();
     T GetValue<T>(T value, string variable = null);
     object GetVariable(string name);
     void SetVariable(string name, object value);
@@ -49,6 +50,7 @@ public class ScriptExecutor : IScriptExecutor
 
     private bool IsDebug;
     private IScreenWorker Worker;
+    private string Arguments;
     private Dictionary<string, object> Variables;
     private Dictionary<string, List<string[]>> Tables;
 
@@ -61,6 +63,7 @@ public class ScriptExecutor : IScriptExecutor
 
         IsDebug = isDebug;
         Worker = worker;
+        Arguments = script.Arguments;
         Variables = new Dictionary<string, object>();
         Tables = new Dictionary<string, List<string[]>>();
 
@@ -126,7 +129,7 @@ public class ScriptExecutor : IScriptExecutor
                                 break;
                             default:
                                 if (IsDebug)
-                                    Log($"{action.GetDebugTitle(this)}{(action.Disabled ? " <E>disabled</E>" : "")}");
+                                    Log($"{action.GetExecuteTitle(this)}{(action.Disabled ? " <E>disabled</E>" : "")}");
                                 break;
                         }
 
@@ -185,6 +188,11 @@ public class ScriptExecutor : IScriptExecutor
             Log($"Script stop");
 
         OnStop?.Invoke();
+    }
+
+    public string GetArguments()
+    {
+        return Arguments;
     }
 
     public T GetValue<T>(T value, string variable = null)

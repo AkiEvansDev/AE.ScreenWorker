@@ -13,7 +13,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
 
     public override string GetTitle()
         => $"MouseClick({GetValueString(Event)}, {GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"MouseClick({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
 

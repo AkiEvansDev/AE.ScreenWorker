@@ -2,17 +2,17 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data.Variable;
+namespace ScreenBase.Data.Calculations;
 
 [AESerializable]
-public class ConcatAction : BaseDelayAction<ConcatAction>
+public class CompareTextAction : BaseAction<CompareNumberAction>
 {
-    public override ActionType Type => ActionType.Concat;
+    public override ActionType Type => ActionType.CompareText;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = Concat({GetValueString(Value1, Value1Variable, true)}, {GetValueString(Value2, Value2Variable, true)});";
+        => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} == {GetValueString(Value2, Value2Variable)};";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"{GetResultString(Result)} = Concat({GetValueString(executor.GetValue(Value1, Value1Variable))}, {GetValueString(executor.GetValue(Value2, Value2Variable))});";
+        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} == {GetValueString(executor.GetValue(Value2, Value2Variable))};";
 
     [TextEditProperty(1, "-")]
     public string Value1 { get; set; }
@@ -26,7 +26,7 @@ public class ConcatAction : BaseDelayAction<ConcatAction>
     [VariableEditProperty(nameof(Value2), VariableType.Text, 2)]
     public string Value2Variable { get; set; }
 
-    [ComboBoxEditProperty(4, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    [ComboBoxEditProperty(4, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
@@ -36,9 +36,12 @@ public class ConcatAction : BaseDelayAction<ConcatAction>
             var value1 = executor.GetValue(Value1, Value1Variable);
             var value2 = executor.GetValue(Value2, Value2Variable);
 
-            executor.SetVariable(Result, value1 + value2);
+            if (value1 == null || value2 == null)
+                executor.SetVariable(Result, value1 == value2);
+            else
+                executor.SetVariable(Result, value1.EqualsIgnoreCase(value2));
         }
         else
-            executor.Log($"<E>Concat ignored</E>");
+            executor.Log($"<E>CompareText ignored</E>");
     }
 }

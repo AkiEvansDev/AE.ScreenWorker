@@ -11,7 +11,7 @@ public class SetWindowPositionAction : BaseDelayAction<SetWindowPositionAction>,
 
     public override string GetTitle()
         => $"SetWindowPosition({GetValueString(WindowName, useEmptyStringDisplay: true)}, {GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
         => $"SetWindowPosition({GetValueString(WindowName, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
     [TextEditProperty]

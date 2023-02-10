@@ -15,7 +15,7 @@ public class IfColorAction : BaseGroupElseAction<IfColorAction>
 
     public override string GetTitle()
         => $"If {GetValueString(Color1.GetColor(), Color1Variable)} is{(Not ? " not" : "")} {GetValueString(Color2.GetColor(), Color2Variable)} with {GetValueString(Accuracy)} accuracy =<AL></AL> {GetResultString(Result)}";
-    public override string GetDebugTitle(IScriptExecutor executor)
+    public override string GetExecuteTitle(IScriptExecutor executor)
        => $"If {GetValueString(executor.GetValue(Color1.GetColor(), Color1Variable))} is{(Not ? " not" : "")} {GetValueString(executor.GetValue(Color2.GetColor(), Color2Variable))} with {GetValueString(Accuracy)} accuracy =<AL></AL> {GetResultString(Result)}";
 
     private ScreenPoint color1;

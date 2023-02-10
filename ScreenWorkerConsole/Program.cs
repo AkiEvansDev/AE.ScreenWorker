@@ -28,6 +28,9 @@ else
 
     if (!data.IsEmpty())
     {
+        if (args.Length > 1)
+            data.Arguments = args[1];
+
         Console.WriteLine($"Start {data.Name}, press eny key to stop!");
 
         var hwnd = Process.GetCurrentProcess().MainWindowHandle;

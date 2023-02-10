@@ -10,7 +10,7 @@ public class LogAction : BaseAction<LogAction>
     public override ActionType Type => ActionType.Log;
 
     public override string GetTitle() => $"Log(<T>\"{Message}</T>{{{GetResultString(Variable)}}}<T>\"</T>);";
-    public override string GetDebugTitle(IScriptExecutor executor) => GetTitle();
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]
     public string Message { get; set; }
