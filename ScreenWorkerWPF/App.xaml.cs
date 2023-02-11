@@ -22,13 +22,8 @@ public partial class App : Application
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
-        var settingsPath = Path.Combine(
-            System.Reflection.Assembly.GetEntryAssembly().Location,
-            "settings.data"
-        );
-
-        if (File.Exists(settingsPath))
-            CurrentSettings = DataHelper.Load<ScriptSettings>(settingsPath);
+        if (File.Exists(GetSettingsPath()))
+            CurrentSettings = DataHelper.Load<ScriptSettings>(GetSettingsPath());
         else
             CurrentSettings = new ScriptSettings();
 
@@ -47,7 +42,7 @@ public partial class App : Application
         globalKeyboardHook.Dispose();
         globalKeyboardHook = null;
 
-        DataHelper.Save("settings.data", CurrentSettings);
+        DataHelper.Save(GetSettingsPath(), CurrentSettings);
 
         base.OnExit(e);
     }
@@ -80,5 +75,13 @@ public partial class App : Application
         }
         else if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyUp)
             keysPressed.Remove(key);
+    }
+
+    private string GetSettingsPath()
+    {
+        return Path.Combine(
+            Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location),
+            "settings.data"
+        );
     }
 }
