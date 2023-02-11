@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>3.3.1003</Version>
+	<Version>3.3.1004</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

@@ -22,8 +22,13 @@ public partial class App : Application
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
-        if (File.Exists("settings.data"))
-            CurrentSettings = DataHelper.Load<ScriptSettings>("settings.data");
+        var settingsPath = Path.Combine(
+            System.Reflection.Assembly.GetEntryAssembly().Location,
+            "settings.data"
+        );
+
+        if (File.Exists(settingsPath))
+            CurrentSettings = DataHelper.Load<ScriptSettings>(settingsPath);
         else
             CurrentSettings = new ScriptSettings();
 
