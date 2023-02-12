@@ -55,6 +55,21 @@
                         <ui:ContextFlyoutService.ContextFlyout>
                             <ui:MenuFlyout>
                                 <MenuItem
+                                    Command="{Binding Up}"
+                                    Header="Up">
+                                    <MenuItem.Icon>
+                                        <ui:FontIcon Glyph="&#xE70E;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem
+                                    Command="{Binding Down}"
+                                    Header="Down">
+                                    <MenuItem.Icon>
+                                        <ui:FontIcon Glyph="&#xE70D;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem
                                     Command="{Binding Edit}"
                                     Header="Edit">
                                     <MenuItem.Icon>

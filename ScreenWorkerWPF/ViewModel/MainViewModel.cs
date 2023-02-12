@@ -29,8 +29,6 @@ using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.Windows;
 
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
 namespace ScreenWorkerWPF.ViewModel;
 
 internal class MainViewModel : BaseModel

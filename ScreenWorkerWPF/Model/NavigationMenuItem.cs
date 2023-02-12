@@ -166,6 +166,20 @@ internal class MainNavigationMenuItem : NavigationMenuItem
         Items.Add(new ActionNavigationMenuItem("New function", Symbol.NewFolder, OnAddFunction));
     }
 
+    public void MoveItemUp(int index)
+    {
+        var item = Items[index];
+        Items.RemoveAt(index);
+        Items.Insert(index - 1, item);
+    }
+
+    public void MoveItemDown(int index)
+    {
+        var item = Items[index];
+        Items.RemoveAt(index);
+        Items.Insert(index, item);
+    }
+
     private async void OnAddFunction()
     {
         var func = new CustomFunctionNavigationMenuItem();
@@ -183,7 +197,38 @@ internal class MainNavigationMenuItem : NavigationMenuItem
 
 internal class CustomFunctionNavigationMenuItem : NavigationMenuItem
 {
-    public CustomFunctionNavigationMenuItem() : base(null, Symbol.Page, new CustomFunctionViewModel(), null) { }
+    public RelayCommand Up { get; }
+    public RelayCommand Down { get; }
+
+    public CustomFunctionNavigationMenuItem() : base(null, Symbol.Page, new CustomFunctionViewModel(), null)
+    {
+        Up = new RelayCommand(OnUp, CanUp);
+        Down = new RelayCommand(OnDown, CanDown);
+    }
+
+    private bool CanUp()
+    {
+        return MainViewModel.Current.CustomFunctions.First() != this;
+    }
+
+    private void OnUp()
+    {
+        var index = MainViewModel.Current.CustomFunctions.ToList().IndexOf(this);
+
+        MainViewModel.Current.MainMenuItem.MoveItemUp(index);
+    }
+
+    private bool CanDown()
+    {
+        return MainViewModel.Current.CustomFunctions.Last() != this;
+    }
+
+    private void OnDown()
+    {
+        var index = MainViewModel.Current.CustomFunctions.ToList().IndexOf(this);
+
+        MainViewModel.Current.MainMenuItem.MoveItemDown(index);
+    }
 }
 
 internal class ActionNavigationMenuItem : NavigationMenuItem
