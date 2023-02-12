@@ -177,7 +177,7 @@ internal class MainNavigationMenuItem : NavigationMenuItem
     {
         var item = Items[index];
         Items.RemoveAt(index);
-        Items.Insert(index, item);
+        Items.Insert(index + 1, item);
     }
 
     private async void OnAddFunction()
