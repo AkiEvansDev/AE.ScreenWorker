@@ -12,9 +12,9 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
     public override ActionType Type => ActionType.MouseClick;
 
     public override string GetTitle()
-        => $"MouseClick({GetValueString(Event)}, {GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)});";
+        => $"MouseClick({GetValueString(Event)}, {GetValueString(X, XVariable)}, {GetValueString(Y, YVariable)}){(PressDelay > 100 ? $" with {GetValueString(PressDelay)} press delay" : "")};";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"MouseClick({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
+        => $"MouseClick({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))}){(PressDelay > 100 ? $" with {GetValueString(PressDelay)} press delay" : "")};";
 
 
     [NumberEditProperty(1, "-", minValue: 0)]

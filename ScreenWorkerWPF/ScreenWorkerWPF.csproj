@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>3.3.1005</Version>
+	<Version>3.3.2005</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

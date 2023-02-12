@@ -11,7 +11,7 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
 {
     public override ActionType Type => ActionType.KeyEvent;
 
-    public override string GetTitle() => $"Key{Event.Name().Substring(3)}(<P>{(Key != 0 ? Key.Name().Substring(3) : "...")}</P>);";
+    public override string GetTitle() => $"Key{Event.Name().Substring(3)}(<P>{(Key != 0 ? Key.Name().Substring(3) : "...")}</P>){(Event == KeyEventType.KeyPress && PressDelay > 100 ? $" with {GetValueString(PressDelay)} press delay" : "")};";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [ComboBoxEditProperty(0, trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
