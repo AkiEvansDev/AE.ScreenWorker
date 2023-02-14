@@ -88,7 +88,8 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
             if (!Result.IsNull())
                 executor.SetVariable(Result, color);
 
-            executor.Execute(Items);
+            if (!executor.Execute(Items))
+                break;
         }
     }
 

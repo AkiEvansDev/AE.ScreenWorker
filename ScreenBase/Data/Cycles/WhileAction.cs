@@ -30,7 +30,8 @@ public class WhileAction : BaseGroupAction<WhileAction>
 
             while (value)
             {
-                executor.Execute(Items);
+                if (!executor.Execute(Items))
+                    break;
 
                 value = executor.GetValue(false, ValueVariable);
                 if (Not)

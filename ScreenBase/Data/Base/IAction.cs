@@ -193,3 +193,17 @@ public class ElseAction : BaseAction<ElseAction>
         throw new NotImplementedException();
     }
 }
+
+[AESerializable]
+public class BreakAction : BaseAction<BreakAction>
+{
+    public override ActionType Type => ActionType.Break;
+
+    public override string GetTitle() => $"Break();";
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
+
+    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    {
+        throw new NotImplementedException();
+    }
+}

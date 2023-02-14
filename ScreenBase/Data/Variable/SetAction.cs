@@ -92,7 +92,7 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
 }
 
 [AESerializable]
-public class SetPointAction : BaseAction<SetPointAction>
+public class SetPointAction : BaseAction<SetPointAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.SetPoint;
 
@@ -129,12 +129,32 @@ public class SetPointAction : BaseAction<SetPointAction>
     [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Point)]
     public string Result { get; set; }
 
+    public SetPointAction()
+    {
+        UseOptimizeCoordinate = true;
+    }
+
     public override void Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
             executor.SetVariable(Result, new Point(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable)));
         else
             executor.Log($"<E>SetPoint ignored</E>");
+    }
+
+    [CheckBoxEditProperty(2000)]
+    public bool UseOptimizeCoordinate { get; set; }
+
+    public void OptimizeCoordinate(int oldWidth, int oldHeight, int newWidth, int newHeight)
+    {
+        if (!UseOptimizeCoordinate)
+            return;
+
+        if (X != 0)
+            X = X * newWidth / oldWidth;
+
+        if (Y != 0)
+            Y = Y * newHeight / oldHeight;
     }
 }
 

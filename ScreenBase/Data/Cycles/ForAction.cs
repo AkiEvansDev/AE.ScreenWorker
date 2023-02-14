@@ -44,7 +44,8 @@ public class ForAction : BaseGroupAction<ForAction>
             if (!Result.IsNull())
                 executor.SetVariable(Result, i);
 
-            executor.Execute(Items);
+            if (!executor.Execute(Items))
+                break;
         }
     }
 }

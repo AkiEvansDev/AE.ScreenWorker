@@ -24,7 +24,7 @@ public interface IScriptExecutor
     void Start(ScriptInfo script, IScreenWorker worker, bool isDebug = false);
     void Stop(bool force = true);
 
-    void Execute(IEnumerable<IAction> actions);
+    bool Execute(IEnumerable<IAction> actions);
 
     string GetArguments();
     T GetValue<T>(T value, string variable = null);
@@ -94,20 +94,20 @@ public class ScriptExecutor : IScriptExecutor
         thread.Start();
     }
 
-    public void Execute(IEnumerable<IAction> actions)
+    public bool Execute(IEnumerable<IAction> actions)
     {
         if (!actions.Any())
         {
             if (IsDebug)
                 Log("=<AL></AL> No items;");
 
-            return;
+            return true;
         }
 
         foreach (var action in actions)
         {
             if (needStop)
-                return;
+                return true;
 
             try
             {
@@ -117,6 +117,8 @@ public class ScriptExecutor : IScriptExecutor
                     case ActionType.Else:
                     case ActionType.Comment:
                         break;
+                    case ActionType.Break:
+                        return false;
                     default:
 
                         switch (action.Type)
@@ -145,7 +147,7 @@ public class ScriptExecutor : IScriptExecutor
                             space--;
 
                         if (needStop)
-                            return;
+                            return true;
 
                         if (action is IDelayAction delayAction && delayAction.DelayAfter > 0)
                         {
@@ -165,6 +167,8 @@ public class ScriptExecutor : IScriptExecutor
                     Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}");
             }
         }
+
+        return true;
     }
 
     public void Stop(bool force = true)

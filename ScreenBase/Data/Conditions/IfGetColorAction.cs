@@ -85,8 +85,6 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
         if (Not)
             result = !result;
 
-        executor.Log($"<P>{result}</P> = ColorFromScreen{GetColorString(color1)} == new Color{GetColorString(color2)};");
-
         if (!Result.IsNull())
             executor.SetVariable(Result, result);
 

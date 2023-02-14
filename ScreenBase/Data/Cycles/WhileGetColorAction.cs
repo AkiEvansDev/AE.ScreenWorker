@@ -98,10 +98,11 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
             if (Not)
                 result = !result;
 
-            executor.Log($"<P>{result}</P> = ColorFromScreen{GetColorString(color1)} {(Not ? "!" : "=")}= new Color{GetColorString(color2)};");
-
             if (result)
-                executor.Execute(Items);
+            {
+                if (!executor.Execute(Items))
+                    break;
+            }
 
             if (Timeout != 0)
             {

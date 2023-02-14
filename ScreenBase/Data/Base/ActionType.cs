@@ -5,6 +5,7 @@ public enum ActionType
     Variable = -1,
     Comment = 0,
     Delay = 1,
+    Break = 2,
 
     MouseMove = 10,
     MouseDown = 11,
@@ -33,8 +34,9 @@ public enum ActionType
     SetPoint = 82,
     SetColor = 83,
     SetText = 84,
-    Concat = 85,
-    GetArguments = 86,
+    GetColor = 85,
+    Concat = 86,
+    GetArguments = 87,
 
     CalculationNumber = 90,
     CalculationBoolean = 91,
