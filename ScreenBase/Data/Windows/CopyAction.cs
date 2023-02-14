@@ -18,9 +18,11 @@ public class CopyAction : BaseDelayAction<CopyAction>
     [VariableEditProperty(nameof(Text), VariableType.Text, 0)]
     public string TextVariable { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var text = executor.GetValue(Text, TextVariable);
         worker.Copy(text);
+
+        return ActionResultType.True;
     }
 }

@@ -61,7 +61,7 @@ public class IsColorAction : BaseAction<IsColorAction>
         Accuracy = 0.8;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
         {
@@ -74,8 +74,12 @@ public class IsColorAction : BaseAction<IsColorAction>
                 result = !result;
 
             executor.SetVariable(Result, result);
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>IsColor ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

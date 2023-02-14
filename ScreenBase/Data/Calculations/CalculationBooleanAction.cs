@@ -47,7 +47,7 @@ public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
         Action = CalculationBooleanType.And;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
         {
@@ -63,8 +63,13 @@ public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
                     executor.SetVariable(Result, value1 || value2);
                     break;
             }
+
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>CalculationBoolean ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

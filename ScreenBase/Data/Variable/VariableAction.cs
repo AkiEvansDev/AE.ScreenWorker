@@ -35,8 +35,8 @@ public class VariableAction : BaseAction<VariableAction>
         };
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        throw new System.NotImplementedException();
+        return ActionResultType.True;
     }
 }

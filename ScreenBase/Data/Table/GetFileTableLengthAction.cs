@@ -37,11 +37,17 @@ public class GetFileTableLengthAction : BaseAction<GetFileTableLengthAction>
         LengthType = FileTableLengthType.Row;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
+        { 
             executor.SetVariable(Result, executor.GetFileTableLength(Name, LengthType));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>GetFileTableLength ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

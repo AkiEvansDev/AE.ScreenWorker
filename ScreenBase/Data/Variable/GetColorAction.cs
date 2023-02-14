@@ -49,7 +49,7 @@ public class GetColorAction : BaseAction<GetColorAction>, ICoordinateAction
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
         {
@@ -59,9 +59,13 @@ public class GetColorAction : BaseAction<GetColorAction>, ICoordinateAction
             var y = executor.GetValue(Y, YVariable);
 
             executor.SetVariable(Result, worker.GetColor(x, y));
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>GetColor ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 
     [CheckBoxEditProperty(2000)]

@@ -20,8 +20,9 @@ public class MouseUpAction : BaseDelayAction<MouseUpAction>
         Event = MouseEventType.Left;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseUp(Event);
+        return ActionResultType.True;
     }
 }

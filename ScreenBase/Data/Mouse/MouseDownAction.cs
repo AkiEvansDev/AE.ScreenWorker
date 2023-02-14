@@ -20,8 +20,9 @@ public class MouseDownAction : BaseDelayAction<MouseDownAction>
         Event = MouseEventType.Left;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseDown(Event);
+        return ActionResultType.True;
     }
 }

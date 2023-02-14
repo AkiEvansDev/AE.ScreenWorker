@@ -52,7 +52,7 @@ public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
         Action = CompareType.Equal;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var value1 = executor.GetValue(Value1, Value1Variable);
         var value2 = executor.GetValue(Value2, Value2Variable);
@@ -89,12 +89,14 @@ public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
             if (index > -1)
             {
                 if (result)
-                    executor.Execute(Items.Take(index));
+                    return executor.Execute(Items.Take(index));
                 else
-                    executor.Execute(Items.Skip(index + 1));
+                    return executor.Execute(Items.Skip(index + 1));
             }
         }
         else if (result)
-            executor.Execute(Items);
+            return executor.Execute(Items);
+
+        return ActionResultType.True;
     }
 }

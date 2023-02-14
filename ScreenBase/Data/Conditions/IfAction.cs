@@ -19,7 +19,7 @@ public class IfAction : BaseGroupElseAction<IfAction>
     [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string ValueVariable { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!ValueVariable.IsNull())
         {
@@ -34,15 +34,20 @@ public class IfAction : BaseGroupElseAction<IfAction>
                 if (index > -1)
                 {
                     if (value)
-                        executor.Execute(Items.Take(index));
+                        return executor.Execute(Items.Take(index));
                     else
-                        executor.Execute(Items.Skip(index + 1));
+                        return executor.Execute(Items.Skip(index + 1));
                 }
             }
             else if (value)
-                executor.Execute(Items);
+                return executor.Execute(Items);
+
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>If ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

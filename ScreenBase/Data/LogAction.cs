@@ -28,7 +28,7 @@ public class LogAction : BaseAction<LogAction>
         NeedDisplay = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var message = GetTextForDisplay(Message);
 
@@ -39,5 +39,7 @@ public class LogAction : BaseAction<LogAction>
         }
         else
             executor.Log(message, true);
+
+        return ActionResultType.True;
     }
 }

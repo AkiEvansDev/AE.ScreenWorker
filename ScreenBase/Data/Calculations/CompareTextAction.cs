@@ -29,7 +29,7 @@ public class CompareTextAction : BaseAction<CompareTextAction>
     [ComboBoxEditProperty(4, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
         {
@@ -40,8 +40,13 @@ public class CompareTextAction : BaseAction<CompareTextAction>
                 executor.SetVariable(Result, value1 == value2);
             else
                 executor.SetVariable(Result, value1.EqualsIgnoreCase(value2));
+
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>CompareText ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

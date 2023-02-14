@@ -19,7 +19,7 @@ public class WhileAction : BaseGroupAction<WhileAction>
     //[ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Boolean)]
     public bool Not { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!ValueVariable.IsNull())
         {
@@ -30,15 +30,20 @@ public class WhileAction : BaseGroupAction<WhileAction>
 
             while (value)
             {
-                if (!executor.Execute(Items))
-                    break;
+                if (executor.Execute(Items) == ActionResultType.Break)
+                    return ActionResultType.False;
 
                 value = executor.GetValue(false, ValueVariable);
                 if (Not)
                     value = !value;
             }
+
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>While ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

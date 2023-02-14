@@ -61,7 +61,7 @@ public class IfColorAction : BaseGroupElseAction<IfColorAction>
         Accuracy = 0.8;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var color1 = executor.GetValue(Color1.GetColor(), Color1Variable);
         var color2 = executor.GetValue(Color2.GetColor(), Color2Variable);
@@ -80,12 +80,14 @@ public class IfColorAction : BaseGroupElseAction<IfColorAction>
             if (index > -1)
             {
                 if (result)
-                    executor.Execute(Items.Take(index));
+                    return executor.Execute(Items.Take(index));
                 else
-                    executor.Execute(Items.Skip(index + 1));
+                    return executor.Execute(Items.Skip(index + 1));
             }
         }
         else if (result)
-            executor.Execute(Items);
+            return executor.Execute(Items);
+
+        return ActionResultType.True;
     }
 }

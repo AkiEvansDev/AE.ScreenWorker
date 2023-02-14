@@ -21,7 +21,7 @@ public interface IAction : IEditProperties<IAction>
     string GetTitle();
     string GetExecuteTitle(IScriptExecutor executor);
 
-    void Do(IScriptExecutor executor, IScreenWorker worker);
+    ActionResultType Do(IScriptExecutor executor, IScreenWorker worker);
 }
 
 public interface ICoordinateAction
@@ -64,7 +64,7 @@ public abstract class BaseAction<T> : IAction
     public abstract string GetTitle();
     public abstract string GetExecuteTitle(IScriptExecutor executor);
 
-    public abstract void Do(IScriptExecutor executor, IScreenWorker worker);
+    public abstract ActionResultType Do(IScriptExecutor executor, IScreenWorker worker);
 
     public static string GetTextForDisplay(string text)
     {
@@ -174,9 +174,9 @@ public class EndAction : BaseAction<EndAction>
     public override string GetTitle() => $"End";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        throw new NotImplementedException();
+        return ActionResultType.False;
     }
 }
 
@@ -188,9 +188,9 @@ public class ElseAction : BaseAction<ElseAction>
     public override string GetTitle() => $"Else";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        throw new NotImplementedException();
+        return ActionResultType.False;
     }
 }
 
@@ -202,8 +202,8 @@ public class BreakAction : BaseAction<BreakAction>
     public override string GetTitle() => $"Break();";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        throw new NotImplementedException();
+        return ActionResultType.Break;
     }
 }

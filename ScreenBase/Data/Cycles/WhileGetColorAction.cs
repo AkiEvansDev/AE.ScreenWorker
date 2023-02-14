@@ -75,7 +75,7 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var result = true;
         var sw = new Stopwatch();
@@ -100,8 +100,8 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
 
             if (result)
             {
-                if (!executor.Execute(Items))
-                    break;
+                if (executor.Execute(Items) == ActionResultType.Break)
+                    return ActionResultType.False;
             }
 
             if (Timeout != 0)
@@ -110,10 +110,12 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
                 if (sw.Elapsed.TotalSeconds > Timeout)
                 {
                     executor.Log("<E>Timeout</E>");
-                    return;
+                    return ActionResultType.False;
                 }
             }
         }
+
+        return ActionResultType.True;
     }
 
     [CheckBoxEditProperty(2000)]

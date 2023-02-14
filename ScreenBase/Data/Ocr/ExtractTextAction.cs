@@ -75,7 +75,7 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var x1 = executor.GetValue(X1, X1Variable);
         var y1 = executor.GetValue(Y1, Y1Variable);
@@ -85,7 +85,7 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
         if (x2 < x1 || y2 < y1)
         {
             executor.Log($"<E>Second position must be greater than the first</E>");
-            return;
+            return ActionResultType.False;
         }
 
         if (!Result.IsNull())
@@ -98,9 +98,14 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
 
             var result = api.GetTextFromImage(part).Trim();
             executor.SetVariable(Result, result);
+
+            return ActionResultType.True;
         }
         else
-            executor.Log($"<E>ExtractText ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
 
     }
 

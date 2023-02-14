@@ -73,7 +73,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.Screen();
 
@@ -88,9 +88,11 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
             if (!Result.IsNull())
                 executor.SetVariable(Result, color);
 
-            if (!executor.Execute(Items))
-                break;
+            if (executor.Execute(Items) == ActionResultType.Break)
+                return ActionResultType.False;
         }
+
+        return ActionResultType.True;
     }
 
     [CheckBoxEditProperty(2000)]

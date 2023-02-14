@@ -24,7 +24,7 @@ public interface IScriptExecutor
     void Start(ScriptInfo script, IScreenWorker worker, bool isDebug = false);
     void Stop(bool force = true);
 
-    bool Execute(IEnumerable<IAction> actions);
+    ActionResultType Execute(IEnumerable<IAction> actions);
 
     string GetArguments();
     T GetValue<T>(T value, string variable = null);
@@ -94,20 +94,20 @@ public class ScriptExecutor : IScriptExecutor
         thread.Start();
     }
 
-    public bool Execute(IEnumerable<IAction> actions)
+    public ActionResultType Execute(IEnumerable<IAction> actions)
     {
         if (!actions.Any())
         {
             if (IsDebug)
                 Log("=<AL></AL> No items;");
 
-            return true;
+            return ActionResultType.False;
         }
 
         foreach (var action in actions)
         {
             if (needStop)
-                return true;
+                return ActionResultType.Break;
 
             try
             {
@@ -118,7 +118,7 @@ public class ScriptExecutor : IScriptExecutor
                     case ActionType.Comment:
                         break;
                     case ActionType.Break:
-                        return false;
+                        return ActionResultType.Break;
                     default:
 
                         switch (action.Type)
@@ -141,13 +141,13 @@ public class ScriptExecutor : IScriptExecutor
                         if (action is IGroupAction)
                             space++;
 
-                        action.Do(this, Worker);
+                        var result = action.Do(this, Worker);
 
                         if (action is IGroupAction)
                             space--;
 
                         if (needStop)
-                            return true;
+                            return ActionResultType.Break;
 
                         if (action is IDelayAction delayAction && delayAction.DelayAfter > 0)
                         {
@@ -157,18 +157,26 @@ public class ScriptExecutor : IScriptExecutor
                             Thread.Sleep(delayAction.DelayAfter);
                         }
 
+                        if (IsDebug)
+                            Log($"result: {BaseAction<IAction>.GetValueString(result)}");
+
+                        if (result == ActionResultType.Break)
+                            return result;
+
                         break;
-                }
+                } 
             }
             catch (ThreadInterruptedException) { }
             catch (Exception ex)
             {
                 if (IsDebug)
                     Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}");
+
+                return ActionResultType.False;
             }
         }
 
-        return true;
+        return ActionResultType.True;
     }
 
     public void Stop(bool force = true)

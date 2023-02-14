@@ -18,12 +18,17 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
     [ComboBoxEditProperty(source: ComboBoxEditPropertySource.Functions)]
     public string Function { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Function.IsNull())
-            executor.Execute(executor.Functions[Function]);
+        {
+            return executor.Execute(executor.Functions[Function]);
+        }
         else
-            executor.Log($"<E>Execute ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }
 
@@ -41,11 +46,17 @@ public class StartProcessAction : BaseDelayAction<StartProcessAction>
     [TextEditProperty(1)]
     public string Arguments { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Path.IsNull() && File.Exists(Path))
+        { 
             worker.StartProcess(Path, Arguments);
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>StartProcess ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

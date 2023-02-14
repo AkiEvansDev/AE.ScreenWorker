@@ -44,9 +44,10 @@ public class MouseMoveAction : BaseDelayAction<MouseMoveAction>, ICoordinateActi
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseMove(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
+        return ActionResultType.True;
     }
 
     [CheckBoxEditProperty(2000)]

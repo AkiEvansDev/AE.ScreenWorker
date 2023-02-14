@@ -47,12 +47,18 @@ public class SetWindowPositionAction : BaseDelayAction<SetWindowPositionAction>,
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!WindowName.IsNull())
+        { 
             worker.SetWindowPosition(WindowName, executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>SetWindowPosition ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 
     [CheckBoxEditProperty(2000)]

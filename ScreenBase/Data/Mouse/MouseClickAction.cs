@@ -54,7 +54,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var x = executor.GetValue(X, XVariable);
         var y = executor.GetValue(Y, YVariable);
@@ -64,6 +64,8 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
         if (PressDelay > 0)
             Thread.Sleep(PressDelay);
         worker.MouseUp(Event);
+
+        return ActionResultType.True;
     }
 
     [CheckBoxEditProperty(2000)]

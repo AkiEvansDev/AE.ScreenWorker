@@ -30,12 +30,18 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
         CoordinateType = CoordinateType.X;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
+        { 
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>SetNumber ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 
     [CheckBoxEditProperty(2000)]
@@ -82,12 +88,18 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
+        {
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>SetBoolean ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }
 
@@ -134,12 +146,18 @@ public class SetPointAction : BaseAction<SetPointAction>, ICoordinateAction
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
+        { 
             executor.SetVariable(Result, new Point(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable)));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>SetPoint ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 
     [CheckBoxEditProperty(2000)]
@@ -191,12 +209,18 @@ public class SetColorAction : BaseAction<SetColorAction>
         colorPoint = new ScreenPoint();
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
+        {
             executor.SetVariable(Result, executor.GetValue(ColorPoint.GetColor(), ColorVariable));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>SetColor ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }
 
@@ -219,11 +243,17 @@ public class SetTextAction : BaseAction<SetTextAction>
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Result { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
+        {
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
+            return ActionResultType.True;
+        }
         else
-            executor.Log($"<E>SetText ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

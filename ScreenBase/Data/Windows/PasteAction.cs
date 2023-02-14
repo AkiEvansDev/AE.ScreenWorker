@@ -12,8 +12,9 @@ public class PasteAction : BaseDelayAction<PasteAction>
     public override string GetTitle() => $"Paste();";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.Paste();
+        return ActionResultType.True;
     }
 }

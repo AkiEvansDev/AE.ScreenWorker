@@ -37,15 +37,17 @@ public class ForAction : BaseGroupAction<ForAction>
         Step = 1;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         for (var i = executor.GetValue(From, FromVariable); i < executor.GetValue(To, ToVariable); i += Step)
         {
             if (!Result.IsNull())
                 executor.SetVariable(Result, i);
 
-            if (!executor.Execute(Items))
-                break;
+            if (executor.Execute(Items) == ActionResultType.Break)
+                return ActionResultType.False;
         }
+
+        return ActionResultType.True;
     }
 }

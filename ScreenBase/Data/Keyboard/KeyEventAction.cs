@@ -32,7 +32,7 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
         PressDelay = 100;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (Key != 0)
         {
@@ -51,8 +51,13 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
                     worker.KeyUp(Key);
                     break;
             }
+
+            return ActionResultType.True;
         }
         else
-            executor.Log("<E>KeyEvent ignored</E>");
+        {
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+            return ActionResultType.False;
+        }
     }
 }

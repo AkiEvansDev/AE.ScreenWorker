@@ -70,7 +70,7 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
         UseOptimizeCoordinate = true;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.Screen();
 
@@ -94,13 +94,15 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
             if (index > -1)
             {
                 if (result)
-                    executor.Execute(Items.Take(index));
+                    return executor.Execute(Items.Take(index));
                 else
-                    executor.Execute(Items.Skip(index + 1));
+                    return executor.Execute(Items.Skip(index + 1));
             }
         }
         else if (result)
-            executor.Execute(Items);
+            return executor.Execute(Items);
+
+        return ActionResultType.True;
     }
 
     [CheckBoxEditProperty(2000)]

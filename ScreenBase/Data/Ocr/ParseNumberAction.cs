@@ -23,7 +23,7 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Number)]
     public string Result { get; set; }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Value.IsNull() && !Result.IsNull())
         {
@@ -34,13 +34,17 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
                 executor.SetVariable(Result, result);
             else
                 executor.SetVariable(Result, Default);
+
+            return ActionResultType.True;
         }
         else
         {
-            executor.Log($"<E>ParseNumber ignored</E>");
-
+            executor.Log($"<E>{Type.Name()} ignored</E>");
+        
             if (!Result.IsNull())
                 executor.SetVariable(Result, Default);
+
+            return ActionResultType.False;
         }
     }
 }

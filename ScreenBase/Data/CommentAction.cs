@@ -25,8 +25,8 @@ public class CommentAction : BaseAction<CommentAction>
         Comment = comment;
     }
 
-    public override void Do(IScriptExecutor executor, IScreenWorker worker)
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        throw new System.NotImplementedException();
+        return ActionResultType.False;
     }
 }

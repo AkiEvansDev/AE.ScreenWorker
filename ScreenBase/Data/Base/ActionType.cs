@@ -58,6 +58,13 @@ public enum ActionType
     GetFileTableValue = 402,
 }
 
+public enum ActionResultType
+{
+    False = 0,
+    True = 1,
+    Break = 2,
+}
+
 public enum VariableType
 {
     Number = 1,
