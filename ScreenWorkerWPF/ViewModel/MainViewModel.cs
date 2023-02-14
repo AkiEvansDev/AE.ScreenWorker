@@ -149,6 +149,7 @@ internal class MainViewModel : BaseModel
                 new SetBooleanAction(),
                 new SetPointAction(),
                 new SetColorAction(),
+                new GetColorAction(),
                 new SetTextAction(),
                 new ConcatAction(),
                 new GetArgumentsAction(),
@@ -181,6 +182,7 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new DelayAction(),
+                new BreakAction(),
                 new ExecuteAction(),
                 new StartProcessAction(),
                 new LogAction(),
