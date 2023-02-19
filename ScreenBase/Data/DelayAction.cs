@@ -14,7 +14,7 @@ public class DelayAction : BaseAction<DelayAction>
     public override string GetTitle() => $"Delay({GetValueString(Delay, DelayVariable)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => $"Delay({GetValueString(executor.GetValue(Delay, DelayVariable))});";
 
-    [NumberEditProperty(1, "-", smallChange: 50, largeChange: 1000)]
+    [NumberEditProperty(1, "-", minValue: 50, smallChange: 50, largeChange: 1000)]
     public int Delay { get; set; }
 
     [VariableEditProperty(nameof(Delay), VariableType.Number, 0, $"Use variable for {nameof(Delay)} (ms)")]

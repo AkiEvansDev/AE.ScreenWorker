@@ -45,7 +45,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
     [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Enum)]
     public MouseEventType Event { get; set; }
 
-    [NumberEditProperty(1000)]
+    [NumberEditProperty(1000, minValue: 0)]
     public int PressDelay { get; set; }
 
     public MouseClickAction()

@@ -8,9 +8,7 @@ using AE.Core;
 namespace ScreenBase.Data.Base;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SeparatorAttribute : Attribute
-{
-}
+public class SeparatorAttribute : Attribute { }
 
 public interface IAction : IEditProperties<IAction>
 {
@@ -131,7 +129,7 @@ public abstract class BaseAction<T> : IAction
 public abstract class BaseDelayAction<T> : BaseAction<T>, IDelayAction
     where T : class, IAction, IDelayAction
 {
-    [NumberEditProperty(1000, $"{nameof(DelayAfter)} (ms)", smallChange: 50, largeChange: 1000)]
+    [NumberEditProperty(1000, $"{nameof(DelayAfter)} (ms)", minValue: 0, smallChange: 50, largeChange: 1000)]
     public int DelayAfter { get; set; }
 }
 

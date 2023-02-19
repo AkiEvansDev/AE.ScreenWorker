@@ -76,12 +76,12 @@ public class FilePathEditPropertyAttribute : EditPropertyAttribute
 
 public class LoadEditPropertyAttribute : FilePathEditPropertyAttribute
 {
-    public string NameProperty { get; set; }
+    public string PropertyName { get; set; }
     public string DefaultName { get; set; }
 
-    public LoadEditPropertyAttribute(int order = 0, string title = null, string defaultName = null, string nameProperty = null, string filter = null) : base(order, title, filter)
+    public LoadEditPropertyAttribute(int order = 0, string title = null, string defaultName = null, string propertyName = null, string filter = null) : base(order, title, filter)
     {
-        NameProperty = nameProperty;
+        PropertyName = propertyName;
         DefaultName = defaultName;
     }
 }
@@ -143,6 +143,16 @@ public class VariableEditPropertyAttribute : EditPropertyAttribute
             PropertyNames = propertyNames.Split(';');
         else
             PropertyNames = new string[] { PropertyName };
+    }
+}
+
+public class MoveEditPropertyAttribute : EditPropertyAttribute
+{
+    public string PropertyName { get; }
+
+    public MoveEditPropertyAttribute(string propertyName, int order = 0, string title = null) : base(order, title)
+    {
+        PropertyName = propertyName;
     }
 }
 

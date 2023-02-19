@@ -16,6 +16,7 @@ using ScreenBase.Data.Base;
 using ScreenBase.Data.Calculations;
 using ScreenBase.Data.Conditions;
 using ScreenBase.Data.Cycles;
+using ScreenBase.Data.Game;
 using ScreenBase.Data.Keyboard;
 using ScreenBase.Data.Mouse;
 using ScreenBase.Data.Table;
@@ -166,6 +167,10 @@ internal class MainViewModel : BaseModel
             {
                 new ExtractTextAction(),
                 new ParseNumberAction(),
+            }),
+            new ActionNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
+            {
+                new GameMoveAction(),
             }),
             new ActionNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnClick, new List<IAction>
             {

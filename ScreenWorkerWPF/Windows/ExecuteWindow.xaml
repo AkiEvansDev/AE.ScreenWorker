@@ -6,6 +6,7 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Icon="../icon.ico"
     WindowStyle="None"
     ResizeMode="NoResize"
     WindowStartupLocation="Manual"

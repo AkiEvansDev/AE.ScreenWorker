@@ -1,0 +1,64 @@
+﻿<Window 
+    x:Class="ScreenWorkerWPF.Windows.MovePathWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:ScreenWorkerWPF.Windows"
+    mc:Ignorable="d"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    ui:TitleBar.ExtendViewIntoTitleBar="True"
+    Title="Edit move path"
+    Icon="../icon.ico"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    Height="Auto" Width="814"
+    Padding="2">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer
+            x:Name="Scroll"
+            Padding="0 0 10 10"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Auto"
+            MouseLeftButtonDown="ScrollOnMouseLeftButtonDown"
+            PreviewMouseMove="ScrollOnPreviewMouseMove"
+            PreviewMouseLeftButtonUp="ScrollOnPreviewMouseLeftButtonUp">
+            <Canvas 
+                x:Name="Panel"
+                Width="800" Height="660"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+        </ScrollViewer>
+        <Grid
+            Background="{DynamicResource ContentDialogBackground}"
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom">
+            <Grid
+                Margin="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.5*" />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="1"
+                    Content="Ok"
+                    HorizontalAlignment="Stretch"
+                    Click="OkClick"/>
+                <Button
+                    Grid.Column="3"
+                    Content="Cancel"
+                    HorizontalAlignment="Stretch" 
+                    Click="CancelClick"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

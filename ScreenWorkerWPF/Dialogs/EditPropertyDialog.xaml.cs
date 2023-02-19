@@ -18,6 +18,7 @@ using ModernWpf.Controls.Primitives;
 using Ookii.Dialogs.Wpf;
 
 using ScreenBase.Data.Base;
+using ScreenBase.Data.Game;
 
 using ScreenWorkerWPF.ViewModel;
 using ScreenWorkerWPF.Windows;
@@ -156,6 +157,10 @@ public partial class EditPropertyDialog : ContentDialog
         else if ((property.PropertyType == typeof(bool) || property.PropertyType == typeof(string) || property.PropertyType.IsEnum) && attr is ComboBoxEditPropertyAttribute cAttr)
         {
             result = GetComboBoxEditControl(property, clone, cAttr);
+        }
+        else if (property.PropertyType.IsGenericType && attr is MoveEditPropertyAttribute mAttr)
+        {
+            result = GetMoveEditControl(property, clone, mAttr);
         }
         else
         {
@@ -381,8 +386,8 @@ public partial class EditPropertyDialog : ContentDialog
     private UIElement GetPathEditControl(PropertyInfo property, IEditProperties clone, LoadEditPropertyAttribute lAttr)
     {
         PropertyInfo nameProperty = null;
-        if (!lAttr.NameProperty.IsNull())
-            nameProperty = clone.GetType().GetProperty(lAttr.NameProperty);
+        if (!lAttr.PropertyName.IsNull())
+            nameProperty = clone.GetType().GetProperty(lAttr.PropertyName);
 
         var control = new TextBox()
         {
@@ -603,6 +608,38 @@ public partial class EditPropertyDialog : ContentDialog
         Grid.SetColumn(cb2, 2);
         Grid.SetRow(cb2, 1);
         control.Children.Add(cb2);
+
+        return control;
+    }
+
+    private UIElement GetMoveEditControl(PropertyInfo property, IEditProperties clone, MoveEditPropertyAttribute mAttr)
+    {
+        PropertyInfo displayProperty = null;
+        if (!mAttr.PropertyName.IsNull())
+            displayProperty = clone.GetType().GetProperty(mAttr.PropertyName);
+
+        var control = new TextBox()
+        {
+            IsReadOnly = true,
+            FocusVisualStyle = null
+        };
+
+        clone.NeedUpdate += () => control.Text = (string)displayProperty.GetValue(clone);
+
+        control.PreviewMouseLeftButtonUp += (s, e) =>
+        {
+            var paths = (IEnumerable<MovePart>)property.GetValue(clone);
+
+            var result = MovePathWindow.Show(paths);
+            if (result != null)
+            {
+                property.SetValue(clone, result);
+                clone.NeedUpdateInvoke();
+            }
+        };
+
+        if (mAttr.Title != "-")
+            ControlHelper.SetHeader(control, mAttr.Title ?? property.Name);
 
         return control;
     }

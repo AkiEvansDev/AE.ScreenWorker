@@ -2,10 +2,15 @@
 
 public enum ActionType
 {
-    Variable = -1,
-    Comment = 0,
+    Break = -3,
+    Else = -2,
+    End = -1,
+
+    Variable = 0,
+
     Delay = 1,
-    Break = 2,
+    Comment = 2,
+    Log = 3,
 
     MouseMove = 10,
     MouseDown = 11,
@@ -18,33 +23,32 @@ public enum ActionType
     ForeachColor = 31,
     While = 32,
     WhileGetColor = 33,
-    End = 40,
 
-    Execute = 50,
-    StartProcess = 51,
+    If = 40,
+    IfColor = 41,
+    IfGetColor = 42,
+    IfCompareNumber = 43,
 
-    If = 60,
-    IfColor = 61,
-    IfGetColor = 62,
-    IfCompareNumber = 63,
-    Else = 70,
+    SetNumber = 50,
+    SetBoolean = 51,
+    SetPoint = 52,
+    SetColor = 53,
+    SetText = 54,
+    GetColor = 55,
 
-    SetNumber = 80,
-    SetBoolean = 81,
-    SetPoint = 82,
-    SetColor = 83,
-    SetText = 84,
-    GetColor = 85,
-    Concat = 86,
-    GetArguments = 87,
+    Concat = 56,
+    GetArguments = 57,
 
-    CalculationNumber = 90,
-    CalculationBoolean = 91,
-    CompareNumber = 92,
-    CompareText = 93,
-    IsColor = 94,
+    CalculationNumber = 60,
+    CalculationBoolean = 61,
+    CompareNumber = 62,
+    CompareText = 63,
+    IsColor = 64,
 
-    Log = 100,
+    Execute = 70,
+    StartProcess = 71,
+
+    GameMove = 100,
 
     ExtractText = 200,
     ParseNumber = 201,
@@ -120,4 +124,16 @@ public enum FileTableLengthType
 {
     Row = 1,
     Column = 2
+}
+
+public enum MoveType
+{
+    Forward = 0,
+    ForwardLeft = -45,
+    ForwardRight = 45,
+    Left = -90,
+    Right = 90,
+    Backward = 180,
+    BackwardLeft = -135, 
+    BackwardRight = 135,
 }
