@@ -42,6 +42,11 @@ public partial class ExecuteWindow : Window
                 Top = size.Height - Height - margin;
                 Left = size.Width - Width - margin;
                 break;
+            case ExecuteWindowLocation.Center:
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                Top = margin / 2;
+                Left = margin / 2;
+                break;
         }
 
         Loaded += (s, e) =>

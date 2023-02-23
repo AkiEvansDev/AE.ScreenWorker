@@ -19,6 +19,13 @@ public class GlobalKeyboardHookEventArgs : HandledEventArgs
 
 public class GlobalKeyboardHook : IDisposable
 {
+    public static readonly GlobalKeyboardHook Current;
+
+    static GlobalKeyboardHook()
+    {
+        Current = new GlobalKeyboardHook();
+    }
+
     public event EventHandler<GlobalKeyboardHookEventArgs> KeyboardPressed;
 
     private IntPtr windowsHookHandle;

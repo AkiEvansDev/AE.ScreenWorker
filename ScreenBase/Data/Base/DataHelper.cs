@@ -82,6 +82,7 @@ public enum ExecuteWindowLocation
     RightTop = 2,
     LeftBottom = 3,
     RightBottom = 4,
+    Center = 5,
 }
 
 [AESerializable]

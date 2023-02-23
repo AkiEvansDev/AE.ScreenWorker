@@ -18,6 +18,7 @@ public enum ActionType
     MouseClick = 13,
 
     KeyEvent = 20,
+    AddKeyEvent = 21,
 
     For = 30,
     ForeachColor = 31,
@@ -49,6 +50,8 @@ public enum ActionType
     StartProcess = 71,
 
     GameMove = 100,
+    StartTimer = 101,
+    StopTimer = 102,
 
     ExtractText = 200,
     ParseNumber = 201,

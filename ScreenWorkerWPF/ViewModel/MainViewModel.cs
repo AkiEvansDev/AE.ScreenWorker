@@ -129,6 +129,7 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Keyboard", Symbol.Keyboard, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new KeyEventAction(),
+                new AddKeyEventAction(),
             }),
             new ActionNavigationMenuItem("Сycles", Symbol.Sync, Symbol.Placeholder, OnClick, new List<IAction>
             {
@@ -171,6 +172,8 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new GameMoveAction(),
+                new StartTimerAction(),
+                new StopTimerAction(),
             }),
             new ActionNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnClick, new List<IAction>
             {

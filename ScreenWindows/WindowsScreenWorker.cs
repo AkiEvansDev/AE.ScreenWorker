@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Threading;
 
 using ScreenBase;
+using ScreenBase.Data.Base;
 
 using TextCopy;
 
@@ -11,11 +12,30 @@ using static ScreenWindows.WindowsHelper;
 
 namespace ScreenWindows;
 
-public class WindowsScreenWorker : IScreenWorker
+public class WindowsScreenWorker : IScreenWorker 
 {
+    public event OnKeyEventDelegate OnKeyEvent;
+
     private int width;
     private int height;
     private Bitmap screen = null;
+
+    public WindowsScreenWorker()
+    {
+        GlobalKeyboardHook.Current.KeyboardPressed += OnKeyboardPressed;
+    }
+
+    private void OnKeyboardPressed(object sender, GlobalKeyboardHookEventArgs e)
+    {
+        var key = (KeyFlags)e.KeyboardData.VirtualCode;
+        var keyEvent = KeyEventType.KeyDown;
+
+        if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyUp)
+            keyEvent= KeyEventType.KeyUp;
+
+        if (key != 0)
+            OnKeyEvent?.Invoke(key, keyEvent);
+    }
 
     public void Init(int width = 1920, int height = 1080)
     {
@@ -180,5 +200,10 @@ public class WindowsScreenWorker : IScreenWorker
 
         KeyUp(KeyFlags.KeyV);
         KeyUp(KeyFlags.KeyLeftControl);
+    }
+
+    public void Dispose()
+    {
+        GlobalKeyboardHook.Current.KeyboardPressed -= OnKeyboardPressed;
     }
 }

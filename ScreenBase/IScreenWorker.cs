@@ -1,9 +1,16 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+
+using ScreenBase.Data.Base;
 
 namespace ScreenBase;
 
-public interface IScreenWorker
+public delegate void OnKeyEventDelegate(KeyFlags key, KeyEventType keyEvent);
+
+public interface IScreenWorker : IDisposable
 {
+    event OnKeyEventDelegate OnKeyEvent;
+
     void Init(int width = 1920, int height = 1080);
     void Screen();
     Color GetColor(int x, int y);

@@ -17,7 +17,6 @@ public partial class App : Application
 {
     public static ScriptSettings CurrentSettings { get; private set; }
 
-    private GlobalKeyboardHook globalKeyboardHook;
     private readonly List<Key> keysPressed = new();
 
     private void OnStartup(object sender, StartupEventArgs e)
@@ -27,8 +26,7 @@ public partial class App : Application
         else
             CurrentSettings = new ScriptSettings();
 
-        globalKeyboardHook = new GlobalKeyboardHook();
-        globalKeyboardHook.KeyboardPressed += OnKeyboardPressed;
+        GlobalKeyboardHook.Current.KeyboardPressed += OnKeyboardPressed;
 
         var path = e.Args?.FirstOrDefault();
         var mainWindow = new MainWindow(path);
@@ -38,9 +36,8 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
-        globalKeyboardHook.KeyboardPressed -= OnKeyboardPressed;
-        globalKeyboardHook.Dispose();
-        globalKeyboardHook = null;
+        GlobalKeyboardHook.Current.KeyboardPressed -= OnKeyboardPressed;
+        GlobalKeyboardHook.Current.Dispose();
 
         DataHelper.Save(GetSettingsPath(), CurrentSettings);
 

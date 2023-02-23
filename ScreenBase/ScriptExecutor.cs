@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using AE.Core;
 
@@ -12,37 +11,14 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase;
 
-public delegate void OnMessageDelegate(string message, bool needDisplay);
-
-public interface IScriptExecutor
-{
-    event Action OnStop;
-    event OnMessageDelegate OnMessage;
-
-    IReadOnlyDictionary<string, IAction[]> Functions { get; }
-
-    void Start(ScriptInfo script, IScreenWorker worker, bool isDebug = false);
-    void Stop(bool force = true);
-
-    ActionResultType Execute(IEnumerable<IAction> actions);
-
-    string GetArguments();
-    T GetValue<T>(T value, string variable = null);
-    object GetVariable(string name);
-    void SetVariable(string name, object value);
-
-    void SetFileTable(string name, List<string[]> table);
-    int GetFileTableLength(string name, FileTableLengthType lengthType);
-    string GetFileTableValue(string name, int row, int column);
-
-    bool IsColor(Color color1, Color color2, double accuracy = 0.8);
-    void Log(string message, bool needDisplay = false);
-}
-
 public class ScriptExecutor : IScriptExecutor
 {
     public event Action OnStop;
     public event OnMessageDelegate OnMessage;
+    public event OnVariableChangeDelegate OnVariableChange;
+
+    public ShowDisplayWindowDelegate ShowDisplayWindow { get; set; }
+    public AddDisplayVariableDelegate AddDisplayVariable { get; set; }
 
     private Thread thread;
     private bool needStop;
@@ -53,6 +29,7 @@ public class ScriptExecutor : IScriptExecutor
     private string Arguments;
     private Dictionary<string, object> Variables;
     private Dictionary<string, List<string[]>> Tables;
+    private Dictionary<string, CancellationTokenSource> Timers;
 
     public IReadOnlyDictionary<string, IAction[]> Functions { get; private set; }
 
@@ -66,6 +43,7 @@ public class ScriptExecutor : IScriptExecutor
         Arguments = script.Arguments;
         Variables = new Dictionary<string, object>();
         Tables = new Dictionary<string, List<string[]>>();
+        Timers = new Dictionary<string, CancellationTokenSource>();
 
         Functions = script.Data;
 
@@ -181,6 +159,9 @@ public class ScriptExecutor : IScriptExecutor
 
     public void Stop(bool force = true)
     {
+        foreach (var name in Timers.Keys.ToList())
+            StopTimer(name);
+
         space = 0;
         needStop = true;
 
@@ -263,10 +244,12 @@ public class ScriptExecutor : IScriptExecutor
             }
 
             Variables[name] = obj;
+            OnVariableChange?.Invoke(name, obj);
         }
         else
         {
             Variables[name] = value;
+            OnVariableChange?.Invoke(name, value);
         }
 
         if (IsDebug)
@@ -355,6 +338,38 @@ public class ScriptExecutor : IScriptExecutor
         }
 
         return null;
+    }
+
+    public void StartTimer(string name, int delay, string function)
+    {
+        if (Timers.ContainsKey(name))
+            StopTimer(name);
+
+        var tokenSource = new CancellationTokenSource();
+        var ct = tokenSource.Token;
+
+        Timers.Add(name, tokenSource);
+
+        Task.Run(async () =>
+        {
+            ct.ThrowIfCancellationRequested();
+
+            while (Execute(Functions[function]) != ActionResultType.Break)
+            {
+                await Task.Delay(delay); 
+                
+                ct.ThrowIfCancellationRequested();
+            }
+        }, tokenSource.Token);
+    }
+
+    public void StopTimer(string name)
+    {
+        if (Timers.ContainsKey(name))
+        {
+            Timers[name].Cancel();
+            Timers.Remove(name);
+        }
     }
 
     public bool IsColor(Color color1, Color color2, double accuracy = 0.8)
