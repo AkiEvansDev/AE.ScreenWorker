@@ -36,9 +36,7 @@ else
         var hwnd = Process.GetCurrentProcess().MainWindowHandle;
         var size = WindowsHelper.GetMonitorSize(hwnd); 
         
-        var worker = new WindowsScreenWorker();
-        worker.Init(size.Width, size.Height);
-
+        var worker = new WindowsScreenWorker(size.Width, size.Height);
         var executor = new ScriptExecutor();
 
         executor.OnMessage += (message, needDisplay) =>
