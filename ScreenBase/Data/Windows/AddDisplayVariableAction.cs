@@ -50,6 +50,9 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>
     [ComboBoxEditProperty(6, source: ComboBoxEditPropertySource.Fonts)]
     public string FontFamily { get; set; }
 
+    [ComboBoxEditProperty(6, source: ComboBoxEditPropertySource.Enum)]
+    public FontStyle FontStyle { get; set; }
+
     [CheckBoxEditProperty(7)]
     public bool UpdateOnVariableChange { get; set; }
 
@@ -58,6 +61,7 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>
         colorPoint = new ScreenPoint(0, 0, 255, 255, 255, 255);
         Opacity = 255;
         FontSize = 20;
+        FontStyle = FontStyle.Regular;
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)

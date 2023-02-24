@@ -129,7 +129,7 @@ public partial class DisplayWindow : Window
                     var color = Executor.GetValue(vAction.ColorPoint.GetColor(), vAction.ColorVariable);
                     g.DrawString(
                         $"{vAction.Title}{Executor.GetValue("", vAction.Variable)}",
-                        new Font(vAction.FontFamily, vAction.FontSize),
+                        new Font(vAction.FontFamily, vAction.FontSize, (System.Drawing.FontStyle)vAction.FontStyle),
                         new SolidBrush(Color.FromArgb(vAction.Opacity, color)),
                         new PointF(vAction.Left, vAction.Top)
                     );
