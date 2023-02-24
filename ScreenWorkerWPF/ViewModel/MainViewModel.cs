@@ -248,8 +248,10 @@ internal class MainViewModel : BaseModel
         LogsWindow.IsDebug = debug;
         if (SaveData() && !ScriptInfo.IsEmpty())
         {
-            BaseExecutorWorker<DisplayWindow>.Start(new DisplayWindow(ScriptInfo, debug));
-            //BaseExecutorWorker<ExecuteWindow>.Start(new ExecuteWindow(ScriptInfo, debug));
+            if (ScriptInfo.Main.FirstOrDefault(a => a.Type != ActionType.Comment)?.Type == ActionType.SetupDisplayWindow)
+                BaseExecutorWorker<DisplayWindow>.Start(new DisplayWindow(ScriptInfo, debug));
+            else
+                BaseExecutorWorker<ExecuteWindow>.Start(new ExecuteWindow(ScriptInfo, debug));
         }
     }
 
