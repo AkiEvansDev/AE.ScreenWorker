@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
+using ScreenBase;
 using ScreenBase.Data.Base;
 
 using ScreenWindows;
@@ -17,7 +18,7 @@ public partial class App : Application
 {
     public static ScriptSettings CurrentSettings { get; private set; }
 
-    private readonly List<Key> keysPressed = new();
+    private readonly List<int> keysPressed = new();
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
@@ -46,25 +47,26 @@ public partial class App : Application
 
     private void OnKeyboardPressed(object sender, GlobalKeyboardHookEventArgs e)
     {
-        var key = KeyInterop.KeyFromVirtualKey(e.KeyboardData.VirtualCode);
-
-        if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown && !keysPressed.Contains(key))
+        if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown && !keysPressed.Contains(e.KeyboardData.VirtualCode))
         {
-            keysPressed.Add(key);
+            keysPressed.Add(e.KeyboardData.VirtualCode);
 
-            if (keysPressed.Contains(Key.LeftCtrl) && keysPressed.Contains(Key.LeftAlt))
+            if (keysPressed.Contains((int)KeyFlags.KeyLeftControl) && keysPressed.Contains((int)KeyFlags.KeyLeftAlt))
             {
-                if (e.KeyboardData.VirtualCode == (int)CurrentSettings.StartKey)
+                if (keysPressed.Contains((int)CurrentSettings.StartKey))
                 {
                     e.Handled = true;
-                    keysPressed.Remove(key);
+                    keysPressed.Remove((int)CurrentSettings.StartKey);
+
+                    ExecuteWindow.Worker?.Executor?.Stop();
+                    DisplayWindow.Worker?.Executor?.Stop();
 
                     MainViewModel.Current.OnStart(false);
                 }
-                else if (e.KeyboardData.VirtualCode == (int)CurrentSettings.StopKey)
+                else if (keysPressed.Contains((int)CurrentSettings.StopKey))
                 {
                     e.Handled = true;
-                    keysPressed.Remove(key);
+                    keysPressed.Remove((int)CurrentSettings.StopKey);
 
                     ExecuteWindow.Worker?.Executor?.Stop();
                     DisplayWindow.Worker?.Executor?.Stop();
@@ -72,7 +74,7 @@ public partial class App : Application
             }
         }
         else if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyUp)
-            keysPressed.Remove(key);
+            keysPressed.Remove(e.KeyboardData.VirtualCode);
     }
 
     private string GetSettingsPath()

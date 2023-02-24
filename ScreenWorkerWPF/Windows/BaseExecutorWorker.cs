@@ -56,7 +56,6 @@ internal class BaseExecutorWorker<T>
         LogsWindow.AddLog(message, needDisplay);
     }
 
-
     public static void Start(T window)
     {
         var state = Application.Current.MainWindow.WindowState;
