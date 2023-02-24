@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 
 using ScreenBase.Data.Base;
+using ScreenBase.Data.Windows;
 
 namespace ScreenBase;
 
 public delegate void OnMessageDelegate(string message, bool needDisplay);
 public delegate void OnVariableChangeDelegate(string name, object newValue);
 
-public delegate void ShowDisplayWindowDelegate(IAction action);
-public delegate void AddDisplayVariableDelegate(IAction action);
+public delegate void SetupDisplayWindowDelegate(SetupDisplayWindowAction action);
+public delegate void AddDisplayVariableDelegate(AddDisplayVariableAction action);
+public delegate void AddDisplayImageDelegate(AddDisplayImageAction action);
 
 public interface IScriptExecutor
 {
@@ -18,8 +20,10 @@ public interface IScriptExecutor
     event OnMessageDelegate OnMessage;
     event OnVariableChangeDelegate OnVariableChange;
 
-    ShowDisplayWindowDelegate ShowDisplayWindow { get; set; }
+    SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     AddDisplayVariableDelegate AddDisplayVariable { get; set; }
+    AddDisplayImageDelegate AddDisplayImage { get; set; }
+    Action UpdateDisplay { get; set; }
 
     IReadOnlyDictionary<string, IAction[]> Functions { get; }
 

@@ -96,12 +96,18 @@ public class SaveEditPropertyAttribute : LoadEditPropertyAttribute
     }
 }
 
+public class ImageEditPropertyAttribute : EditPropertyAttribute
+{
+    public ImageEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
+}
+
 public enum ComboBoxEditPropertySource
 {
     Enum = 0,
     Boolean = 1,
     Functions = 2,
     Variables = 3,
+    Fonts = 4,
 }
 
 public enum VariablesFilter

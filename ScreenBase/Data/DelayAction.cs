@@ -31,3 +31,20 @@ public class DelayAction : BaseAction<DelayAction>
         return ActionResultType.True;
     }
 }
+
+[AESerializable]
+public class InfinityDelay : BaseAction<InfinityDelay>
+{
+    public override ActionType Type => ActionType.InfinityDelay;
+
+    public override string GetTitle() => $"InfinityDelay();";
+    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
+
+    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
+    {
+        while (true)
+        {
+            Thread.Sleep(int.MaxValue);
+        }
+    }
+}

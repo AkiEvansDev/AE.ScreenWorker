@@ -9,7 +9,7 @@ public class StopTimerAction : BaseAction<StopTimerAction>
 {
     public override ActionType Type => ActionType.StopTimer;
 
-    public override string GetTitle() => $"StopTimer({GetValueString(Name)});";
+    public override string GetTitle() => $"StopTimer({GetValueString(Name, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]

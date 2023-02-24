@@ -10,7 +10,7 @@ public class CompareTextAction : BaseAction<CompareTextAction>
     public override ActionType Type => ActionType.CompareText;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable, useEmptyStringDisplay: true)} == {GetValueString(Value2, Value2Variable, useEmptyStringDisplay: true)};";
+        => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable, true)} == {GetValueString(Value2, Value2Variable, true)};";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable), useEmptyStringDisplay: true)} == {GetValueString(executor.GetValue(Value2, Value2Variable), useEmptyStringDisplay: true)};";
 

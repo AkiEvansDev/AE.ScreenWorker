@@ -77,7 +77,7 @@ public abstract class BaseAction<T> : IAction
 
     public static string GetResultString(string result)
     {
-        return result.IsNull() ? "<V>...</V>" : $"<V>{result}</V>";
+        return result.IsNull() ? "<V>...</V>" : $"<V>{GetTextForDisplay(result)}</V>";
     }
 
     public static string GetValueString(object value, string variable = null, bool useEmptyStringDisplay = false)

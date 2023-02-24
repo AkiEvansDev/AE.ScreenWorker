@@ -17,8 +17,10 @@ public class ScriptExecutor : IScriptExecutor
     public event OnMessageDelegate OnMessage;
     public event OnVariableChangeDelegate OnVariableChange;
 
-    public ShowDisplayWindowDelegate ShowDisplayWindow { get; set; }
+    public SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     public AddDisplayVariableDelegate AddDisplayVariable { get; set; }
+    public AddDisplayImageDelegate AddDisplayImage { get; set; }
+    public Action UpdateDisplay { get; set; }
 
     private Thread thread;
     private bool needStop;

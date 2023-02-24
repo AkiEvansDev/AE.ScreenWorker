@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 using ScreenBase;
 
@@ -11,11 +11,19 @@ public static class WindowsHelper
 {
     #region User32
 
-    internal const int MONITOR_DEFAULTTONEAREST = 0x00000002;
     internal const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
     internal const uint KEYEVENTF_KEYUP = 0x0002;
     internal const uint SWP_NOSIZE = 0x0001;
     internal const uint SWP_NOZORDER = 0x0004;
+    internal const int MONITOR_DEFAULTTONEAREST = 0x00000002;
+    internal const int GWL_EXSTYLE = -20;
+    internal const int WS_EX_LAYERED = 0x80000;
+    internal const int WS_EX_TRANSPARENT = 0x20;
+    internal const int HTCAPTION = 0x02;
+    internal const int WM_NCHITTEST = 0x84;
+    internal const int ULW_ALPHA = 0x02;
+    internal const byte AC_SRC_OVER = 0x00;
+    internal const byte AC_SRC_ALPHA = 0x01;
 
     [DllImport("user32.dll")]
     internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
@@ -29,7 +37,7 @@ public static class WindowsHelper
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool GetCursorPos(out MousePoint lpMousePoint);
+    internal static extern bool GetCursorPos(out POINT lpMousePoint);
 
     [DllImport("user32.dll")]
     internal static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
@@ -46,6 +54,38 @@ public static class WindowsHelper
     [DllImport("user32.dll")]
     internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+    [DllImport("user32.dll")]
+    internal static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+    [DllImport("user32.dll")]
+    internal static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool UpdateLayeredWindow(IntPtr hwnd, IntPtr hdcDst,
+        ref POINT pptDst, ref SIZE psize, IntPtr hdcSrc, ref POINT pprSrc,
+        int crKey, ref BLENDFUNCTION pblend, int dwFlags);
+
+    [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+    internal static extern IntPtr CreateCompatibleDC(IntPtr hDC);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    internal static extern IntPtr GetDC(IntPtr hWnd);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    internal static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+    [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool DeleteDC(IntPtr hdc);
+
+    [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+    internal static extern IntPtr SelectObject(IntPtr hDC, IntPtr hObject);
+
+    [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool DeleteObject(IntPtr hObject);
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
     internal class MONITORINFO
     {
@@ -53,6 +93,19 @@ public static class WindowsHelper
         internal RECT rcMonitor = new RECT();
         internal RECT rcWork = new RECT();
         internal int dwFlags = 0;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct POINT
+    {
+        public int x;
+        public int y;
+
+        public POINT(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -85,16 +138,25 @@ public static class WindowsHelper
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct MousePoint
+    internal struct SIZE
     {
-        public int X;
-        public int Y;
+        public int cx;
+        public int cy;
 
-        public MousePoint(int x, int y)
-        {
-            X = x;
-            Y = y;
+        public SIZE(int cx, int cy)
+        { 
+            this.cx = cx;
+            this.cy = cy;
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    internal struct BLENDFUNCTION
+    {
+        public byte BlendOp;
+        public byte BlendFlags;
+        public byte SourceConstantAlpha;
+        public byte AlphaFormat;
     }
 
     #endregion
@@ -108,12 +170,12 @@ public static class WindowsHelper
 
     public static Point GetCursorPosition()
     {
-        var gotPoint = GetCursorPos(out MousePoint currentMousePoint);
+        var gotPoint = GetCursorPos(out POINT currentMousePoint);
 
         if (!gotPoint)
-            currentMousePoint = new MousePoint(0, 0);
+            currentMousePoint = new POINT(0, 0);
 
-        return new Point(currentMousePoint.X, currentMousePoint.Y);
+        return new Point(currentMousePoint.x, currentMousePoint.y);
     }
 
     public static Size GetMonitorSize(IntPtr window)
@@ -148,6 +210,52 @@ public static class WindowsHelper
         {
             SetForegroundWindow(hWnd);
             SetWindowPos(hWnd, IntPtr.Zero, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        }
+    }
+
+    public static void SetClickThrough(IntPtr window)
+    {
+        var style = GetWindowLong(window, GWL_EXSTYLE);
+        _ = SetWindowLong(window, GWL_EXSTYLE, style | WS_EX_LAYERED | WS_EX_TRANSPARENT);
+    }
+
+    public static void SelectBitmap(IntPtr window, Bitmap bitmap, int left, int top, byte opacity = 255)
+    {
+        if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
+            throw new ApplicationException("The bitmap must be 32bpp with alpha-channel.");
+
+        var screenDc = GetDC(IntPtr.Zero);
+        var memDc = CreateCompatibleDC(screenDc);
+        var hBitmap = IntPtr.Zero;
+        var hOldBitmap = IntPtr.Zero;
+
+        try
+        {
+            hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
+            hOldBitmap = SelectObject(memDc, hBitmap);
+
+            var newSize = new SIZE(bitmap.Width, bitmap.Height);
+            var sourceLocation = new POINT(0, 0);
+            var newLocation = new POINT(left, top);
+            var blend = new BLENDFUNCTION
+            {
+                BlendOp = AC_SRC_OVER,
+                BlendFlags = 0,
+                SourceConstantAlpha = opacity,
+                AlphaFormat = AC_SRC_ALPHA
+            };
+
+            var q = UpdateLayeredWindow(window, screenDc, ref newLocation, ref newSize, memDc, ref sourceLocation, 0, ref blend, ULW_ALPHA);
+        }
+        finally
+        {
+            _ = ReleaseDC(IntPtr.Zero, screenDc);
+            if (hBitmap != IntPtr.Zero)
+            {
+                _ = SelectObject(memDc, hOldBitmap);
+                DeleteObject(hBitmap);
+            }
+            DeleteDC(memDc);
         }
     }
 }

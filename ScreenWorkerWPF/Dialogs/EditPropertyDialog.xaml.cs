@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using AE.Core;
 using AE.CoreWPF;
-
-using Microsoft.Win32;
 
 using ModernWpf.Controls;
 using ModernWpf.Controls.Primitives;
@@ -22,6 +22,8 @@ using ScreenBase.Data.Game;
 
 using ScreenWorkerWPF.ViewModel;
 using ScreenWorkerWPF.Windows;
+
+using static System.Resources.ResXFileRef;
 
 namespace ScreenWorkerWPF.Dialogs;
 
@@ -149,6 +151,10 @@ public partial class EditPropertyDialog : ContentDialog
         else if (property.PropertyType == typeof(string) && attr is VariableEditPropertyAttribute vAttr)
         {
             result = GetVariableEditControl(property, clone, vAttr);
+        }
+        else if (property.PropertyType == typeof(string) && attr is ImageEditPropertyAttribute iAttr)
+        {
+            result = GetImageEditControl(property, clone, iAttr);
         }
         else if (property.PropertyType == typeof(bool) && attr is CheckBoxEditPropertyAttribute checkAttr)
         {
@@ -369,7 +375,7 @@ public partial class EditPropertyDialog : ContentDialog
 
     private UIElement GetTextEditControl(PropertyInfo property, IEditProperties clone, TextEditPropertyAttribute tAttr)
     {
-        var control = new TextBox()
+        var control = new TextBox
         {
             FocusVisualStyle = null
         };
@@ -389,7 +395,7 @@ public partial class EditPropertyDialog : ContentDialog
         if (!lAttr.PropertyName.IsNull())
             nameProperty = clone.GetType().GetProperty(lAttr.PropertyName);
 
-        var control = new TextBox()
+        var control = new TextBox
         {
             IsReadOnly = true,
             FocusVisualStyle = null
@@ -444,7 +450,7 @@ public partial class EditPropertyDialog : ContentDialog
     
     private UIElement GetFilePathEditControl(PropertyInfo property, IEditProperties clone, FilePathEditPropertyAttribute fPathAttr)
     {
-        var control = new TextBox()
+        var control = new TextBox
         {
             IsReadOnly = true,
             FocusVisualStyle = null
@@ -612,13 +618,95 @@ public partial class EditPropertyDialog : ContentDialog
         return control;
     }
 
+    private UIElement GetImageEditControl(PropertyInfo property, IEditProperties clone, ImageEditPropertyAttribute iAttr)
+    {
+        var control = new TextBox
+        {
+            IsReadOnly = true,
+            FocusVisualStyle = null,
+            Tag = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "/")
+        };
+
+        var image = new Image
+        {
+            FocusVisualStyle = null,
+        };
+
+        clone.NeedUpdate += () =>
+        {
+            var data = (string)property.GetValue(clone);
+
+            if (!data.IsNull())
+            {
+                var bytes = Convert.FromBase64String(data);
+                using var stream = new MemoryStream();
+
+                stream.Write(bytes, 0, bytes.Length);
+                stream.Position = 0;
+
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.StreamSource = stream;
+                bi.EndInit();
+
+                image.Source = bi;
+
+                control.Text = "(image)";
+                control.ToolTip = image;
+            }
+            else
+            {
+                control.Text = "(null)";
+                control.ToolTip = null;
+            }
+        };
+
+        control.PreviewMouseLeftButtonUp += (s, e) =>
+        {
+            var dialog = new VistaOpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;",
+                FileName = (string)control.Tag,
+            };
+
+            if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
+            {
+                control.Tag = dialog.FileName;
+
+                try
+                {
+                    var img = System.Drawing.Image.FromFile(dialog.FileName);
+
+                    using var stream = new MemoryStream();
+                    img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+
+                    var bytes = stream.ToArray();
+                    property.SetValue(clone, Convert.ToBase64String(bytes));
+
+                }
+                catch
+                {
+                    property.SetValue(clone, null);
+                }
+
+                clone.NeedUpdateInvoke();
+            }
+        };
+
+        if (iAttr.Title != "-")
+            ControlHelper.SetHeader(control, iAttr.Title ?? property.Name);
+
+        return control;
+    }
+
     private UIElement GetMoveEditControl(PropertyInfo property, IEditProperties clone, MoveEditPropertyAttribute mAttr)
     {
         PropertyInfo displayProperty = null;
         if (!mAttr.PropertyName.IsNull())
             displayProperty = clone.GetType().GetProperty(mAttr.PropertyName);
 
-        var control = new TextBox()
+        var control = new TextBox
         {
             IsReadOnly = true,
             FocusVisualStyle = null
@@ -702,8 +790,25 @@ public partial class EditPropertyDialog : ContentDialog
             clone.NeedUpdate += () => control.SelectedValue = cAttr.TrimStart.IsNull()
                 ? ((Enum)property.GetValue(clone)).Name()
                 : ((Enum)property.GetValue(clone)).Name()?[cAttr.TrimStart.Length..];
-
             control.SelectionChanged += (s, e) => property.SetValue(clone, Enum.Parse(property.PropertyType, cAttr.TrimStart + (string)control.SelectedItem));
+        }
+        else if (cAttr.Source == ComboBoxEditPropertySource.Fonts)
+        {
+            control.ItemsSource = Fonts.SystemFontFamilies
+                .Select(f => f.Source)
+                .OrderBy(f => f)
+                .ToList();
+
+            clone.NeedUpdate += () =>
+            {
+                var value = (string)property.GetValue(clone);
+
+                if (value.IsNull())
+                    value = control.ItemsSource.OfType<string>().First();
+
+                control.SelectedValue = value;
+            };
+            control.SelectionChanged += (s, e) => property.SetValue(clone, (string)control.SelectedValue);
         }
 
         return control;

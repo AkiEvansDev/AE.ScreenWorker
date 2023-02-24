@@ -11,7 +11,6 @@ public interface IScreenWorker : IDisposable
 {
     event OnKeyEventDelegate OnKeyEvent;
 
-    void Init(int width = 1920, int height = 1080);
     void Screen();
     Color GetColor(int x, int y);
     Bitmap GetPart(int x1, int y1, int x2, int y2);

@@ -1,12 +1,8 @@
 ﻿using System.Windows;
-using System.Windows.Interop;
 
 using AE.Core;
 
-using ScreenBase;
 using ScreenBase.Data.Base;
-
-using ScreenWindows;
 
 using ScreenWorkerWPF.Common;
 
@@ -14,77 +10,59 @@ namespace ScreenWorkerWPF.Windows;
 
 public partial class ExecuteWindow : Window
 {
-    internal static IScriptExecutor Executor { get; private set; }
+    internal class ExecuteWindowWorker : BaseExecutorWorker<ExecuteWindow>
+    {
+        public ExecuteWindowWorker(ExecuteWindow window, ScriptInfo scriptData, bool isDebug) : base(window, scriptData, isDebug) { }
+
+        protected override void OnStart(ScriptInfo scriptData, bool isDebug)
+        {
+            var margin = App.CurrentSettings.ExecuteWindowMargin;
+            switch (App.CurrentSettings.ExecuteWindowLocation)
+            {
+                case WindowLocation.LeftTop:
+                    Window.Left = margin;
+                    Window.Top = margin;
+                    break;
+                case WindowLocation.LeftBottom:
+                    Window.Left = margin;
+                    Window.Top = ScreenSize.Height - Window.Height - margin;
+                    break;
+                case WindowLocation.RightTop:
+                    Window.Left = ScreenSize.Width - Window.Width - margin;
+                    Window.Top = margin;
+                    break;
+                case WindowLocation.RightBottom:
+                    Window.Left = ScreenSize.Width - Window.Width - margin;
+                    Window.Top = ScreenSize.Height - Window.Height - margin;
+                    break;
+                case WindowLocation.Center:
+                    Window.Left = ScreenSize.Width / 2 - Window.Width / 2 + margin;
+                    Window.Top = ScreenSize.Height / 2 - Window.Height / 2 + margin;
+                    break;
+            }
+
+            Window.Info.Text = $"Press Ctrl+Alt+{App.CurrentSettings.StopKey.Name().Substring(3)} to stop";
+
+            base.OnStart(scriptData, isDebug);
+        }
+
+        protected override void OnMessage(string message, bool needDisplay)
+        {
+            base.OnMessage(message, needDisplay);
+
+            if (needDisplay)
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    FormattedTextBlockBehavior.SetFormattedText(Window.Display, message.Trim());
+                });
+        }
+    }
+
+    internal static ExecuteWindowWorker Worker { get; private set; }
 
     public ExecuteWindow(ScriptInfo scriptData, bool isDebug)
     {
         InitializeComponent();
-        
-        var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
-        var size = WindowsHelper.GetMonitorSize(hwnd);
-
-        var margin = App.CurrentSettings.ExecuteWindowMargin;
-        switch (App.CurrentSettings.ExecuteWindowLocation)
-        {
-            case ExecuteWindowLocation.LeftTop:
-                Top = margin;
-                Left = margin;
-                break;
-            case ExecuteWindowLocation.LeftBottom:
-                Top = size.Height - Height - margin;
-                Left = margin;
-                break;
-            case ExecuteWindowLocation.RightTop:
-                Top = margin;
-                Left = size.Width - Width - margin;
-                break;
-            case ExecuteWindowLocation.RightBottom:
-                Top = size.Height - Height - margin;
-                Left = size.Width - Width - margin;
-                break;
-            case ExecuteWindowLocation.Center:
-                WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                Top = margin / 2;
-                Left = margin / 2;
-                break;
-        }
-
-        Loaded += (s, e) =>
-        {
-            Info.Text = $"Press Ctrl+Alt+{App.CurrentSettings.StopKey.Name().Substring(3)} to stop";
-
-            LogsWindow.Clear();
-
-            var worker = new WindowsScreenWorker();
-            worker.Init(size.Width, size.Height);
-
-            Executor = new ScriptExecutor();
-
-            Executor.OnStop += () =>
-            {
-                Application.Current.Dispatcher.Invoke(Close);
-            };
-            Executor.OnMessage += (message, needDisplay) =>
-            {
-                LogsWindow.AddLog(message, needDisplay);
-
-                if (needDisplay)
-                    Application.Current.Dispatcher.Invoke(() => FormattedTextBlockBehavior.SetFormattedText(Display, message.Trim()));
-            };
-
-            Executor.Start(scriptData, worker, isDebug);
-        };
-    }
-
-    public static void Start(ScriptInfo scriptData, bool isDebug)
-    {
-        var state = Application.Current.MainWindow.WindowState;
-        Application.Current.MainWindow.WindowState = WindowState.Minimized;
-
-        var window = new ExecuteWindow(scriptData, isDebug);
-        window.ShowDialog();
-
-        Application.Current.MainWindow.WindowState = state;
-        Application.Current.MainWindow.Activate();
+        Worker = new ExecuteWindowWorker(this, scriptData, isDebug);
     }
 }

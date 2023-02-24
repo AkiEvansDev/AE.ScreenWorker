@@ -16,12 +16,14 @@ public class WindowsScreenWorker : IScreenWorker
 {
     public event OnKeyEventDelegate OnKeyEvent;
 
-    private int width;
-    private int height;
+    private readonly int width;
+    private readonly int height;
     private Bitmap screen = null;
 
-    public WindowsScreenWorker()
+    public WindowsScreenWorker(int width = 1920, int height = 1080)
     {
+        this.width = width;
+        this.height = height;
         GlobalKeyboardHook.Current.KeyboardPressed += OnKeyboardPressed;
     }
 
@@ -35,12 +37,6 @@ public class WindowsScreenWorker : IScreenWorker
 
         if (key != 0)
             OnKeyEvent?.Invoke(key, keyEvent);
-    }
-
-    public void Init(int width = 1920, int height = 1080)
-    {
-        this.width = width;
-        this.height = height;
     }
 
     public void Screen()

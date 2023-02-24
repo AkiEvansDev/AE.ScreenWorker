@@ -76,7 +76,7 @@ public class ScriptInfo : IEditProperties
     }
 }
 
-public enum ExecuteWindowLocation
+public enum WindowLocation
 {
     LeftTop = 1,
     RightTop = 2,
@@ -101,7 +101,7 @@ public class ScriptSettings : IEditProperties
     public KeyFlags StopKey { get; set; }
 
     [ComboBoxEditProperty(2, "Execute window location", source: ComboBoxEditPropertySource.Enum)]
-    public ExecuteWindowLocation ExecuteWindowLocation { get; set; }
+    public WindowLocation ExecuteWindowLocation { get; set; }
 
     [NumberEditProperty(3, "Execute window margin")]
     public int ExecuteWindowMargin { get; set; }
@@ -110,7 +110,7 @@ public class ScriptSettings : IEditProperties
     {
         StartKey = KeyFlags.KeyF1;
         StopKey = KeyFlags.KeyF2;
-        ExecuteWindowLocation = ExecuteWindowLocation.RightBottom;
+        ExecuteWindowLocation = WindowLocation.RightBottom;
         ExecuteWindowMargin = 0;
     }
 
@@ -131,8 +131,15 @@ public static class DataHelper
     public static T Load<T>(string path)
         where T : class
     {
-        var data = File.ReadAllText(path);
-        return data.Deserialize<T>();
+        try
+        {
+            var data = File.ReadAllText(path);
+            return data.Deserialize<T>();
+        }
+        catch
+        {
+            return "".Deserialize<T>();
+        }
     }
 
     public static T Clone<T>(object obj)

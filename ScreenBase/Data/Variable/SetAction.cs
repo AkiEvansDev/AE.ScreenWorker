@@ -230,9 +230,9 @@ public class SetTextAction : BaseAction<SetTextAction>
     public override ActionType Type => ActionType.SetText;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable)};";
+        => $"{GetResultString(Result)} = {GetValueString(Value, ValueVariable, true)};";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable))};";
+        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value, ValueVariable), useEmptyStringDisplay: true)};";
 
     [TextEditProperty(1, "-")]
     public string Value { get; set; }

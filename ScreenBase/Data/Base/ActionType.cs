@@ -9,8 +9,9 @@ public enum ActionType
     Variable = 0,
 
     Delay = 1,
-    Comment = 2,
-    Log = 3,
+    InfinityDelay = 2,
+    Comment = 3,
+    Log = 4,
 
     MouseMove = 10,
     MouseDown = 11,
@@ -59,6 +60,11 @@ public enum ActionType
     SetWindowPosition = 300,
     Copy = 310,
     Paste = 311,
+
+    SetupDisplayWindow = 320,
+    AddDisplayVarible = 321,
+    AddDisplayImage = 322,
+    UpdateDisplay = 323,
 
     OpenFileTable = 400,
     GetFileTableLength = 401,

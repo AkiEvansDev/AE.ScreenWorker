@@ -66,7 +66,8 @@ public partial class App : Application
                     e.Handled = true;
                     keysPressed.Remove(key);
 
-                    ExecuteWindow.Executor?.Stop();
+                    ExecuteWindow.Worker?.Executor?.Stop();
+                    DisplayWindow.Worker?.Executor?.Stop();
                 }
             }
         }

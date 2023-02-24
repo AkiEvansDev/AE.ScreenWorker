@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>3.4.1005</Version>
+	<Version>4.0.0005</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -23,6 +23,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Windows\DisplayWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Windows\DisplayWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

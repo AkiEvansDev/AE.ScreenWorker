@@ -180,6 +180,10 @@ internal class MainViewModel : BaseModel
                 new CopyAction(),
                 new PasteAction(),
                 new SetWindowPositionAction(),
+                new SetupDisplayWindowAction(),
+                new AddDisplayVariableAction(),
+                new AddDisplayImageAction(),
+                new UpdateDisplayAction(),
             }),
             new ActionNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnClick, new List<IAction>
             {
@@ -190,6 +194,7 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new DelayAction(),
+                new InfinityDelay(),
                 new BreakAction(),
                 new ExecuteAction(),
                 new StartProcessAction(),
@@ -243,7 +248,8 @@ internal class MainViewModel : BaseModel
         LogsWindow.IsDebug = debug;
         if (SaveData() && !ScriptInfo.IsEmpty())
         {
-            ExecuteWindow.Start(ScriptInfo, debug);
+            BaseExecutorWorker<DisplayWindow>.Start(new DisplayWindow(ScriptInfo, debug));
+            //BaseExecutorWorker<ExecuteWindow>.Start(new ExecuteWindow(ScriptInfo, debug));
         }
     }
 
