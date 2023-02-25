@@ -10,7 +10,7 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>
     public override ActionType Type => ActionType.AddDisplayVarible;
 
     public override string GetTitle()
-        => $"AddDisplayVarible(<T>\"{GetTextForDisplay(Title)}</T>{{{GetResultString(Variable)}}}<T>\"</T>, {GetValueString(Left)}, {GetValueString(Top)}, {GetValueString(ColorPoint.GetColor(), ColorVariable)});";
+        => $"AddDisplayVarible(<T>\"{GetTextForDisplay(Title)}</T>{{{GetResultString(Variable)}}}<T>\"</T>, {GetValueString(Left)}, {GetValueString(Top)}, {GetValueString(ColorPoint.GetColor(), ColorVariable)}, {GetValueString(FontFamily)}, {GetValueString(FontSize)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
     
     [TextEditProperty(0)]
@@ -73,7 +73,7 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} not available</E>");
+            executor.Log($"<E>{Type.Name()} not available</E>", true);
             return ActionResultType.False;
         }
     }

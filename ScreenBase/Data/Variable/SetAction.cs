@@ -39,7 +39,7 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }
@@ -97,7 +97,7 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }
@@ -155,7 +155,7 @@ public class SetPointAction : BaseAction<SetPointAction>, ICoordinateAction
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }
@@ -218,7 +218,7 @@ public class SetColorAction : BaseAction<SetColorAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }
@@ -252,7 +252,7 @@ public class SetTextAction : BaseAction<SetTextAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }

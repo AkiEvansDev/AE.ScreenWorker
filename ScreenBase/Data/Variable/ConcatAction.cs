@@ -41,7 +41,7 @@ public class ConcatAction : BaseDelayAction<ConcatAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }

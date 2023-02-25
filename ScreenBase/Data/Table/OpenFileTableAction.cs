@@ -76,7 +76,7 @@ public class OpenFileTableAction : BaseAction<OpenFileTableAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }

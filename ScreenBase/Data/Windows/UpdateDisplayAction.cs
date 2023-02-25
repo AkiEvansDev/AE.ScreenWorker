@@ -21,7 +21,7 @@ public class UpdateDisplayAction : BaseAction<UpdateDisplayAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} not available</E>");
+            executor.Log($"<E>{Type.Name()} not available</E>", true);
             return ActionResultType.False;
         }
     }

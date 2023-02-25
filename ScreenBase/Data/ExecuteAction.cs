@@ -26,7 +26,7 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }
@@ -55,7 +55,7 @@ public class StartProcessAction : BaseDelayAction<StartProcessAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
     }

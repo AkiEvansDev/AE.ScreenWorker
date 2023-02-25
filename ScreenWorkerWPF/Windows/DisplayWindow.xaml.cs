@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 using ScreenBase.Data.Base;
 using ScreenBase.Data.Windows;
@@ -15,6 +13,7 @@ using ScreenBase.Data.Windows;
 using ScreenWindows;
 
 using Color = System.Drawing.Color;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Size = System.Drawing.Size;
 
 namespace ScreenWorkerWPF.Windows;

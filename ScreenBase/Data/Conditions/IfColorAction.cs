@@ -2,8 +2,6 @@
 
 using AE.Core;
 
-using Patagames.Ocr;
-
 using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Conditions;

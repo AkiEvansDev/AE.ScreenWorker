@@ -6,10 +6,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+
 using ScreenBase.Data.Base;
+
 using ScreenWindows;
 
 using Point = System.Drawing.Point;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace ScreenWorkerWPF.Windows;
 

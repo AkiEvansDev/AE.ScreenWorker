@@ -47,7 +47,7 @@ public class AddDisplayImageAction : BaseAction<AddDisplayImageAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} not available</E>");
+            executor.Log($"<E>{Type.Name()} not available</E>", true);
             return ActionResultType.False;
         }
     }

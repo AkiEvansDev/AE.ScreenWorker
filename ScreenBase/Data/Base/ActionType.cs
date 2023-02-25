@@ -155,3 +155,15 @@ public enum FontStyle
     Underline = 4,
     Strikeout = 8,
 }
+
+public enum PixelFormat
+{
+    Format16bppRgb555 = 135173,
+    Format16bppRgb565 = 135174,
+    Format24bppRgb = 137224,
+    Format32bppRgb = 139273,
+    Format1bppIndexed = 196865,
+    Format4bppIndexed = 197634,
+    Format8bppIndexed = 198659,
+    Format16bppGrayScale = 1052676,
+}

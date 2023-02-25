@@ -13,8 +13,7 @@ public interface IScreenWorker : IDisposable
 
     void Screen();
     Color GetColor(int x, int y);
-    Bitmap GetPart(int x1, int y1, int x2, int y2);
-    Bitmap GetPalettePart(int x1, int y1, int x2, int y2);
+    Bitmap GetPart(int x1, int y1, int x2, int y2, PixelFormat pixelFormat);
     void MouseMove(int x, int y);
     void MouseDown(MouseEventType type = MouseEventType.Left);
     void MouseUp(MouseEventType type = MouseEventType.Left);

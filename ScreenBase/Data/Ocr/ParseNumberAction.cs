@@ -39,7 +39,7 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
         
             if (!Result.IsNull())
                 executor.SetVariable(Result, Default);

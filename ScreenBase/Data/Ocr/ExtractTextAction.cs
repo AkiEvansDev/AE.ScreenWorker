@@ -1,21 +1,24 @@
-﻿using AE.Core;
+﻿using System.Data;
+using System.IO;
+using System.Linq;
 
-using Patagames.Ocr;
-using Patagames.Ocr.Enums;
+using AE.Core;
 
 using ScreenBase.Data.Base;
+
+using Tesseract;
 
 namespace ScreenBase.Data;
 
 [AESerializable]
-public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinateAction
+public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.ExtractText;
 
     public override string GetTitle() 
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)});";
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(PixelFormat)}, {GetValueString(OcrType)});";
     public override string GetExecuteTitle(IScriptExecutor executor) 
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))});";
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(PixelFormat)}, {GetValueString(OcrType)});";
 
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X1 { get; set; }
@@ -67,12 +70,24 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
         }
     }
 
-    [ComboBoxEditProperty(10, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    [TextEditProperty(10)]
+    public string Arguments { get; set; }
+
+    [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
+    public PixelFormat PixelFormat { get; set; }
+
+    [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
+    public PageSegMode OcrType { get; set; }
+
+    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Result { get; set; }
 
     public ExtractTextAction()
     {
         UseOptimizeCoordinate = true;
+        Arguments = "-tessedit_char_whitelist 0123456789";
+        PixelFormat = PixelFormat.Format32bppRgb;
+        OcrType = PageSegMode.SingleLine;
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
@@ -84,26 +99,51 @@ public class ExtractTextAction : BaseDelayAction<ExtractTextAction>, ICoordinate
 
         if (x2 < x1 || y2 < y1)
         {
-            executor.Log($"<E>Second position must be greater than the first</E>");
+            executor.Log($"<E>Second position must be greater than the first</E>", true);
             return ActionResultType.False;
         }
 
         if (!Result.IsNull())
         {
-            using var api = OcrApi.Create();
-            api.Init(Languages.English);
+            var path = Path.Combine(
+                Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                "tessdata"
+            );
+
+            using var engine = new TesseractEngine(path, "eng", EngineMode.Default);
+
+            if (!Arguments.IsNull())
+            {
+                var args = Arguments
+                    .Split('-')
+                    .Select(a => a.Trim())
+                    .ToList();
+
+                foreach (var arg in args)
+                {
+                    var data = arg.Split(' ');
+                    if (data.Length > 1)
+                    {
+                        var name = data[0].Trim(' ', '-');
+                        var value = data[1].Trim(' ', '-');
+
+                        engine.SetVariable(name, value);
+                    }
+                }
+            }
 
             worker.Screen();
-            var part = worker.GetPalettePart(x1, y1, x2, y2);
+            var part = worker.GetPart(x1, y1, x2, y2, PixelFormat);
 
-            var result = api.GetTextFromImage(part).Trim();
+            using var page = engine.Process(part, OcrType);
+            var result = page.GetText().Trim();
+
             executor.SetVariable(Result, result);
-
             return ActionResultType.True;
         }
         else
         {
-            executor.Log($"<E>{Type.Name()} ignored</E>");
+            executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
 
