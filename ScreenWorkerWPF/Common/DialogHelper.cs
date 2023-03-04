@@ -28,9 +28,14 @@ internal static class DialogHelper
 
     public static bool IsCheckUpdate { get; set; } = false;
 
-    public static string GetVersion()
+    public static string GetVersionString()
     {
-        return Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
+        var ver = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
+
+        if (ver.Length < 8)
+            ver += "0";
+
+        return ver;
     }
 
     public async static Task<bool> Update(bool fromUser = false)
@@ -149,7 +154,7 @@ internal static class DialogHelper
             using var client = GetHttpClient(TimeSpan.FromSeconds(5));
             progress.Report(0.1f);
 
-            var version = GetVersion();
+            var version = GetVersionString();
             var lastVersion = version;
             var assetsUrl = "";
             var title = "";
@@ -191,7 +196,7 @@ internal static class DialogHelper
             }
 
             progress.Report(1);
-            return (fileUrl, lastVersion, title);
+            return (fileUrl, lastVersion.ToString(), title);
         }
         catch (Exception ex)
         {

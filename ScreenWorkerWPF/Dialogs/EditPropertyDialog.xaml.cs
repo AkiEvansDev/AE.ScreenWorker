@@ -141,7 +141,7 @@ public partial class EditPropertyDialog : ContentDialog
                 FontSize = 12,
                 Opacity = 0.6,
                 Margin = new Thickness(0, Container.Spacing * 2, 0, 0),
-                Text = $"Ver.: {DialogHelper.GetVersion()}"
+                Text = $"Ver.: {DialogHelper.GetVersionString()}"
             });
         }
 
