@@ -221,8 +221,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{B3636860-204C-41E1-92CB-11B463858810}"
-        "PackageCode" = "8:{DDAE1268-2CD0-4B7E-81ED-D5B892CA7E62}"
+        "ProductCode" = "8:{7038986B-2D12-4582-B31B-0B94766AAA01}"
+        "PackageCode" = "8:{E6400559-8A89-405C-B955-8CED336957A0}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"

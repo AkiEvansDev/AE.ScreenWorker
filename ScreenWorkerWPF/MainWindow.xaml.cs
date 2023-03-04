@@ -4,6 +4,7 @@ using System.Windows;
 
 using ModernWpf.Controls;
 
+using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.View;
 using ScreenWorkerWPF.ViewModel;
@@ -19,7 +20,7 @@ public partial class MainWindow : Window
     public MainWindow(string path)
     {
         InitializeComponent();
-        DataContext = new MainViewModel(path);
+        CheckUpdateAndLoad(path);
 
         //var s = new System.Windows.Controls.StackPanel
         //{
@@ -43,6 +44,14 @@ public partial class MainWindow : Window
         //{
         //    Content = s
         //};
+    }
+
+    private async void CheckUpdateAndLoad(string path)
+    {
+        IsEnabled = false;
+        DataContext = new MainViewModel(path);
+        await DialogHelper.Update(false);
+        IsEnabled = true;
     }
 
     private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

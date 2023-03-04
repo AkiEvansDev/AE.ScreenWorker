@@ -207,12 +207,11 @@ internal class MainViewModel : BaseModel
 
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
-            new ActionNavigationMenuItem("Check update", Symbol.Refresh, () => DialogHelper.Update(true)),
+            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await DialogHelper.Update(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
         OnOpen(path);
-        DialogHelper.Update(false);
     }
 
     public void DeleteFunction(NavigationMenuItem removeItem)
