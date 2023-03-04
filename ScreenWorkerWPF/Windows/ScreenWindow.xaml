@@ -19,12 +19,22 @@
             x:Name="Img"
             Margin="0"/>
         <Border
-            x:Name="OldHorizontalLine"
+            x:Name="OldHorizontalLine1"
             Visibility="Collapsed"
             BorderThickness="0.5"
             BorderBrush="#88FF0000"/>
         <Border
-            x:Name="OldVerticalLine"
+            x:Name="OldVerticalLine1"
+            Visibility="Collapsed"
+            BorderThickness="0.5"
+            BorderBrush="#88FF0000"/>
+        <Border
+            x:Name="OldHorizontalLine2"
+            Visibility="Collapsed"
+            BorderThickness="0.5"
+            BorderBrush="#88FF0000"/>
+        <Border
+            x:Name="OldVerticalLine2"
             Visibility="Collapsed"
             BorderThickness="0.5"
             BorderBrush="#88FF0000"/>
@@ -36,11 +46,6 @@
             x:Name="VerticalLine"
             BorderThickness="0.5"
             BorderBrush="#66FFFFFF"/>
-        <Border
-            x:Name="BorderElement"
-            Visibility="Collapsed"
-            BorderThickness="1"
-            BorderBrush="White"/>
         <Border
             x:Name="MoveElement"
             CornerRadius="75"

@@ -7,9 +7,6 @@ using AE.Core;
 
 namespace ScreenBase.Data.Base;
 
-[AttributeUsage(AttributeTargets.Property)]
-public class SeparatorAttribute : Attribute { }
-
 public interface IAction : IEditProperties<IAction>
 {
     bool Disabled { get; set; }
@@ -156,12 +153,6 @@ public abstract class BaseGroupElseAction<T> : BaseGroupAction<T>, IElseAction
     [CheckBoxEditProperty(1001)]
     //[ComboBoxEditProperty(1000, source: ComboBoxEditPropertySource.Boolean)]
     public bool NeedElse { get; set; }
-
-    public BaseGroupElseAction()
-    {
-        NeedElse = true;
-        Not = false;
-    }
 }
 
 [AESerializable]

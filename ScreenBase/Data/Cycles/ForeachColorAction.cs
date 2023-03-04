@@ -29,7 +29,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
 
     private string GetTitle(string rs, string re, string rv)
     {
-        var title = $"Foreach {GetResultString(Result)} in Screen.GetRange(";
+        var title = $"Foreach {GetResultString(Result)} in Screen.GetColorRange(";
 
         if (RangeType == RangeType.Horizontal)
             title += $"X1: {rs}, Y1: {rv}, X2: {re}, Y2: {rv}";

@@ -3,6 +3,22 @@
 namespace ScreenBase.Data.Base;
 
 [AttributeUsage(AttributeTargets.Property)]
+public class SeparatorAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Property)]
+public class GroupAttribute : Attribute
+{
+    public int Group { get; }
+    public int Position { get; }
+
+    public GroupAttribute(int group = 0, int position = 0)
+    {
+        Group = group;
+        Position = position;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Property)]
 public class EditPropertyAttribute : Attribute
 {
     public int Order { get; }
@@ -15,6 +31,7 @@ public class EditPropertyAttribute : Attribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class NumberEditPropertyAttribute : EditPropertyAttribute
 {
     public bool UseXFromScreen { get; }
@@ -30,7 +47,7 @@ public class NumberEditPropertyAttribute : EditPropertyAttribute
         double minValue = double.MinValue, double maxValue = double.MaxValue,
         double smallChange = -1, double largeChange = -1,
         bool useXFromScreen = false, bool useYFromScreen = false,
-        string xFromScreenTitle = "Get X from screen", string yFromScreenTitle = "Get Y from screen"
+        string xFromScreenTitle = "Get X", string yFromScreenTitle = "Get Y"
     ) : base(order, title)
     {
         MinValue = minValue;
@@ -44,26 +61,38 @@ public class NumberEditPropertyAttribute : EditPropertyAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class ScreenPointEditPropertyAttribute : EditPropertyAttribute
 {
     public bool ShowColorBox { get; set; }
+    public string ColorRangeProperty { get; set; }
 
-    public ScreenPointEditPropertyAttribute(int order = 0, string title = "Get X and Y from screen", bool showColorBox = false) : base(order, title)
+    public ScreenPointEditPropertyAttribute(int order = 0, string title = "Get X and Y", bool showColorBox = false, string colorRangeProperty = null) : base(order, title)
     {
         ShowColorBox = showColorBox;
+        ColorRangeProperty = colorRangeProperty;
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
+public class ScreenRangeEditPropertyAttribute : EditPropertyAttribute
+{
+    public ScreenRangeEditPropertyAttribute(int order = 0, string title = "Get range") : base(order, title) { }
+}
+
+[AttributeUsage(AttributeTargets.Property)]
 public class TextEditPropertyAttribute : EditPropertyAttribute
 {
     public TextEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class CheckBoxEditPropertyAttribute : EditPropertyAttribute
 {
     public CheckBoxEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class FilePathEditPropertyAttribute : EditPropertyAttribute
 {
     public string Filter { get; set; }
@@ -74,6 +103,7 @@ public class FilePathEditPropertyAttribute : EditPropertyAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class LoadEditPropertyAttribute : FilePathEditPropertyAttribute
 {
     public string PropertyName { get; set; }
@@ -86,6 +116,7 @@ public class LoadEditPropertyAttribute : FilePathEditPropertyAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class SaveEditPropertyAttribute : LoadEditPropertyAttribute
 {
     public string DefaultExt { get; set; }
@@ -96,6 +127,7 @@ public class SaveEditPropertyAttribute : LoadEditPropertyAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class ImageEditPropertyAttribute : EditPropertyAttribute
 {
     public ImageEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
@@ -120,6 +152,7 @@ public enum VariablesFilter
     Text = 5
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class ComboBoxEditPropertyAttribute : EditPropertyAttribute
 {
     public string TrimStart { get; }
@@ -134,6 +167,7 @@ public class ComboBoxEditPropertyAttribute : EditPropertyAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class VariableEditPropertyAttribute : EditPropertyAttribute
 {
     public string PropertyName { get; }
@@ -152,6 +186,7 @@ public class VariableEditPropertyAttribute : EditPropertyAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class MoveEditPropertyAttribute : EditPropertyAttribute
 {
     public string PropertyName { get; }

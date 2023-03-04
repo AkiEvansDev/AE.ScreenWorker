@@ -17,15 +17,19 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
         => $"MouseClick({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))}){(PressDelay > 100 ? $" with {GetValueString(PressDelay)} press delay" : "")};";
 
 
+    [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X { get; set; }
 
+    [Group(0, 0)]
     [VariableEditProperty(nameof(X), VariableType.Number, 0)]
     public string XVariable { get; set; }
 
+    [Group(0, 1)]
     [NumberEditProperty(3, "-", minValue: 0)]
     public int Y { get; set; }
 
+    [Group(0, 1)]
     [VariableEditProperty(nameof(Y), VariableType.Number, 2)]
     public string YVariable { get; set; }
 

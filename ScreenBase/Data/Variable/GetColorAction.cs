@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-using AE.Core;
+﻿using AE.Core;
 
 using ScreenBase.Data.Base;
 
@@ -16,15 +14,19 @@ public class GetColorAction : BaseAction<GetColorAction>, ICoordinateAction
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = GetColor({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
+    [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X { get; set; }
 
+    [Group(0, 0)]
     [VariableEditProperty(nameof(X), VariableType.Number, 0)]
     public string XVariable { get; set; }
 
+    [Group(0, 1)]
     [NumberEditProperty(3, "-", minValue: 0)]
     public int Y { get; set; }
 
+    [Group(0, 1)]
     [VariableEditProperty(nameof(Y), VariableType.Number, 2)]
     public string YVariable { get; set; }
 

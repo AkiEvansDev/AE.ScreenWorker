@@ -17,15 +17,19 @@ public class SetWindowPositionAction : BaseDelayAction<SetWindowPositionAction>,
     [TextEditProperty]
     public string WindowName { get; set; }
 
+    [Group(0, 0)]
     [NumberEditProperty(3, "-", minValue: 0)]
     public int X { get; set; }
 
+    [Group(0, 0)]
     [VariableEditProperty(nameof(X), VariableType.Number, 2)]
     public string XVariable { get; set; }
 
+    [Group(0, 1)]
     [NumberEditProperty(5, "-", minValue: 0)]
     public int Y { get; set; }
 
+    [Group(0, 1)]
     [VariableEditProperty(nameof(Y), VariableType.Number, 4)]
     public string YVariable { get; set; }
 

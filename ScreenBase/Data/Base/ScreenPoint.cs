@@ -78,6 +78,25 @@ public class ScreenPoint
 }
 
 [AESerializable]
+public class ScreenRange
+{
+    public ScreenPoint Point1 { get; set; }
+    public ScreenPoint Point2 { get; set; }
+
+    public ScreenRange()
+    {
+        Point1 = new ScreenPoint();
+        Point2 = new ScreenPoint();
+    }
+
+    public ScreenRange(ScreenPoint point1, ScreenPoint point2)
+    {
+        Point1 = point1;
+        Point2 = point2;
+    }
+}
+
+[AESerializable]
 public class ScreenPart
 {
     public ScreenPoint[,] Points { get; set; }

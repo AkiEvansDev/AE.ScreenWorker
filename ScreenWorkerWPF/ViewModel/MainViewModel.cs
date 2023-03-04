@@ -135,6 +135,7 @@ internal class MainViewModel : BaseModel
             {
                 new WhileAction(),
                 new WhileGetColorAction(),
+                new WhileGetColorCountAction(),
                 new ForAction(),
                 new ForeachColorAction(),
             }),
@@ -143,6 +144,7 @@ internal class MainViewModel : BaseModel
                 new IfAction(),
                 new IfColorAction(),
                 new IfGetColorAction(),
+                new IfGetColorCountAction(),
                 new IfCompareNumberAction(),
             }),
             new ActionNavigationMenuItem("Variable methods", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
@@ -152,6 +154,7 @@ internal class MainViewModel : BaseModel
                 new SetPointAction(),
                 new SetColorAction(),
                 new GetColorAction(),
+                new GetColorCountAction(),
                 new SetTextAction(),
                 new ConcatAction(),
                 new GetArgumentsAction(),

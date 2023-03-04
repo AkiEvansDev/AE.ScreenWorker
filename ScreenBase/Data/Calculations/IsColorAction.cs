@@ -17,7 +17,7 @@ public class IsColorAction : BaseAction<IsColorAction>
     private ScreenPoint color1;
     private ScreenPoint color2;
 
-    [ScreenPointEditProperty(1, $"Get {nameof(Color1)} from screen", true)]
+    [ScreenPointEditProperty(1, $"Get {nameof(Color1)}", true)]
     public ScreenPoint Color1
     {
         get => color1;
@@ -31,7 +31,7 @@ public class IsColorAction : BaseAction<IsColorAction>
     [VariableEditProperty(nameof(Color1), VariableType.Color, 0)]
     public string Color1Variable { get; set; }
 
-    [ScreenPointEditProperty(3, $"Get {nameof(Color2)} from screen", true)]
+    [ScreenPointEditProperty(3, $"Get {nameof(Color2)}", true)]
     public ScreenPoint Color2
     {
         get => color2;

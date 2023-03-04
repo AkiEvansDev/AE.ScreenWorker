@@ -11,44 +11,58 @@ using ScreenBase.Data.Base;
 
 using ScreenWindows;
 
-using Point = System.Drawing.Point;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Point = System.Drawing.Point;
 
 namespace ScreenWorkerWPF.Windows;
 
 public partial class ScreenWindow : Window
 {
     private readonly Bitmap Src;
-    private Point? Result = null;
+    private readonly int MaxStep;
 
-    public ScreenWindow(Bitmap image, ScreenPoint oldPosition = null, bool isPart = false)
+    private int Step;
+    private Point? Result1 = null;
+    private Point? Result2 = null;
+
+    public ScreenWindow(Bitmap image, ScreenPoint oldPosition1 = null, ScreenPoint oldPosition2 = null, int maxStep = 1)
     {
         InitializeComponent();
 
-        Img.Width = Width = HorizontalLine.Width = OldHorizontalLine.Width = image.Width;
-        Img.Height = Height = VerticalLine.Height = OldVerticalLine.Height = image.Height;
+        Step = 0;
+        MaxStep = maxStep;
 
-        if (oldPosition != null)
+        Img.Width = Width = HorizontalLine.Width = OldHorizontalLine1.Width = OldHorizontalLine2.Width = image.Width;
+        Img.Height = Height = VerticalLine.Height = OldVerticalLine1.Height = OldVerticalLine2.Height = image.Height;
+
+        if (oldPosition1 != null)
         {
-            if (oldPosition.X > 0)
+            if (oldPosition1.X > 0)
             {
-                Canvas.SetLeft(OldVerticalLine, oldPosition.X);
-                OldVerticalLine.Visibility = Visibility.Visible;
+                Canvas.SetLeft(OldVerticalLine1, oldPosition1.X);
+                OldVerticalLine1.Visibility = Visibility.Visible;
             }
 
-            if (oldPosition.Y > 0)
+            if (oldPosition1.Y > 0)
             {
-                Canvas.SetTop(OldHorizontalLine, oldPosition.Y);
-                OldHorizontalLine.Visibility = Visibility.Visible;
+                Canvas.SetTop(OldHorizontalLine1, oldPosition1.Y);
+                OldHorizontalLine1.Visibility = Visibility.Visible;
             }
         }
 
-        if (isPart)
+        if (oldPosition2 != null)
         {
-            BorderElement.Visibility = Visibility.Visible;
-            BorderElement.Width = Width - 16;
-            BorderElement.Height = Height - 16;
-            BorderElement.Margin = new Thickness(8);
+            if (oldPosition2.X > 0)
+            {
+                Canvas.SetLeft(OldVerticalLine2, oldPosition2.X);
+                OldVerticalLine2.Visibility = Visibility.Visible;
+            }
+
+            if (oldPosition2.Y > 0)
+            {
+                Canvas.SetTop(OldHorizontalLine2, oldPosition2.Y);
+                OldHorizontalLine2.Visibility = Visibility.Visible;
+            }
         }
 
         Img.Source = BitmapToImageSource(Src = image);
@@ -64,49 +78,13 @@ public partial class ScreenWindow : Window
     private void OnMove()
     {
         var position = WindowsHelper.GetCursorPosition();
-        Bitmap bmp = null;
 
-        if (BorderElement.Visibility == Visibility.Visible)
+        try
         {
-            var border = 8;
-            if (position.X > Src.Width - border)
-                position.X = Src.Width - border;
-            else if (position.X < border)
-                position.X = border;
-
-            if (position.Y > Src.Height - border)
-                position.Y = Src.Height - border;
-            else if (position.Y < border)
-                position.Y = border;
-
-            try
-            {
-                bmp = Src.Clone(new Rectangle(position.X - 10, position.Y - 10, 21, 21), PixelFormat.Format16bppRgb555);
-                using var g = Graphics.FromImage(bmp);
-
-                var customColor = Color.FromArgb(150, Color.White);
-                var shadowBrush = new SolidBrush(customColor);
-                var pen = new Pen(shadowBrush, 0.1f);
-
-                g.DrawRectangle(pen, new Rectangle(2, 2, 16, 16));
-            }
-            catch { }
+            var bmp = Src.Clone(new Rectangle(position.X - 10, position.Y - 10, 21, 21), PixelFormat.Format16bppRgb555);
+            ImgPart.Source = BitmapToImageSource(bmp);
         }
-        else
-        {
-            try
-            {
-                bmp = Src.Clone(new Rectangle(position.X - 10, position.Y - 10, 21, 21), PixelFormat.Format16bppRgb555);
-            }
-            catch { }
-        }
-
-        if (bmp != null)
-            try
-            {
-                ImgPart.Source = BitmapToImageSource(bmp);
-            }
-            catch { }
+        catch { }
 
         Canvas.SetLeft(VerticalLine, position.X);
         Canvas.SetTop(HorizontalLine, position.Y);
@@ -117,45 +95,95 @@ public partial class ScreenWindow : Window
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.RightButton != MouseButtonState.Pressed)
-            Result = WindowsHelper.GetCursorPosition();
+        if (e.RightButton == MouseButtonState.Pressed && Step >= 0)
+        {
+            switch (Step)
+            {
+                case 0:
+                    Close();
+                    return;
+                case 1:
+                    OldVerticalLine1.Visibility = Visibility.Collapsed;
+                    OldHorizontalLine1.Visibility = Visibility.Collapsed;
+                    Result2 = null;
+                    break;
+            }
 
-        Close();
+            Step--;
+        }
+        else if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            var position = WindowsHelper.GetCursorPosition();
+
+            switch (Step)
+            {
+                case 0:
+                    OldVerticalLine1.Visibility = Visibility.Visible;
+                    OldHorizontalLine1.Visibility = Visibility.Visible;
+                    OldVerticalLine2.Visibility = Visibility.Collapsed;
+                    OldHorizontalLine2.Visibility = Visibility.Collapsed;
+                    Result1 = position;
+                    Canvas.SetLeft(OldVerticalLine1, position.X);
+                    Canvas.SetTop(OldHorizontalLine1, position.Y);
+                    break;
+                case 1:
+                    OldVerticalLine2.Visibility = Visibility.Visible;
+                    OldHorizontalLine2.Visibility = Visibility.Visible;
+                    Result2 = position;
+                    Canvas.SetLeft(OldVerticalLine2, position.X);
+                    Canvas.SetTop(OldHorizontalLine2, position.Y);
+                    break;
+            }
+
+            Step++;
+        }
+
+        if (Step == MaxStep)
+            Close();
     }
 
     #region Static
 
-    public static ScreenPoint GetPoint(ScreenPoint oldPosition = null)
+    public static ScreenPoint GetPoint(ScreenPoint oldPosition, ScreenRange display = null)
     {
         var bitmap = GetBitmap();
-        var window = new ScreenWindow(bitmap, oldPosition);
+        var window = new ScreenWindow(bitmap, display?.Point1 ?? oldPosition, display?.Point2, 1);
+
         window.ShowDialog();
 
-        if (window.Result != null)
+        if (window.Result1 != null)
         {
-            var point = window.Result.Value;
-            return new ScreenPoint(window.Result.Value, bitmap.GetPixel(point.X, point.Y));
+            var point1 = window.Result1.Value;
+            return window.Result1 == null ? null : new ScreenPoint(point1, bitmap.GetPixel(point1.X, point1.Y));
         }
 
         return null;
     }
 
-    public static ScreenPart GetPart()
+    public static ScreenRange GetRange(ScreenRange old)
     {
         var bitmap = GetBitmap();
-        var window = new ScreenWindow(bitmap, null, true);
+        var window = new ScreenWindow(bitmap, old.Point1, old.Point2, 2);
+
         window.ShowDialog();
 
-        if (window.Result != null)
+
+        if (window.Result1 != null && window.Result2 != null)
         {
-            var point = window.Result.Value;
-            var part = new ScreenPoint[15,15];
+            var point1 = window.Result1.Value;
+            var point2 = window.Result2.Value;
 
-            for (var x = point.X - 7; x <= point.X + 7; ++x)
-                for (var y = point.Y - 7; y <= point.Y + 7; ++y)
-                    part[x - point.X + 7, y - point.Y + 7] = new ScreenPoint(new Point(x, y), bitmap.GetPixel(x, y));
+            if (point2.X < point1.X)
+            {
+                (point1.X, point2.X) = (point2.X, point1.X);
+            }
 
-            return new ScreenPart(part);
+            if (point2.Y < point1.Y)
+            {
+                (point1.Y, point2.Y) = (point2.Y, point1.Y);
+            }
+
+            return new ScreenRange(new ScreenPoint(point1), new ScreenPoint(point2));
         }
 
         return null;

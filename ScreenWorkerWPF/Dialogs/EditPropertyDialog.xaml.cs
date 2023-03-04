@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,8 +22,6 @@ using ScreenBase.Data.Game;
 using ScreenWorkerWPF.ViewModel;
 using ScreenWorkerWPF.Windows;
 
-using static System.Resources.ResXFileRef;
-
 namespace ScreenWorkerWPF.Dialogs;
 
 public partial class EditPropertyDialog : ContentDialog
@@ -43,59 +40,96 @@ public partial class EditPropertyDialog : ContentDialog
             .GetType()
             .GetProperties()
             .Where(p => p.GetCustomAttribute<EditPropertyAttribute>() != null)
-            .GroupBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order, p => p)
-            .OrderBy(g => g.Key)
+            .OrderBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order)
             .ToList();
 
-        var isLastCB = false;
-        foreach (var group in properties)
+        var groups = new List<KeyValuePair<int, List<PropertyInfo>>>();
+
+        var current = new KeyValuePair<int, List<PropertyInfo>>(
+            properties.Min(p => p.GetCustomAttribute<GroupAttribute>()?.Group ?? 0) -1, 
+            new List<PropertyInfo>()
+        );
+        groups.Add(current);
+
+        foreach (var property in properties)
         {
-            if (group.First().GetCustomAttribute<SeparatorAttribute>() != null)
+            var groupAttr = property.GetCustomAttribute<GroupAttribute>();
+            if (groupAttr != null)
             {
-                Container.Children.Add(new Separator());
-            }
-
-            if (group.Count() == 1)
-            {
-                var control = GetControl(group.First(), clone);
-                if (control != null)
+                if (groups.Any(g => g.Key == groupAttr.Group))
                 {
-                    if (isLastCB && control is CheckBox checkBox)
-                        checkBox.Margin = new Thickness(0, -Container.Spacing, 0, 0);
+                    var item = groups.First(g => g.Key == groupAttr.Group);
+                    item.Value.Add(property);
+                }
+                else
+                {
+                    var item = new KeyValuePair<int, List<PropertyInfo>>(
+                        groupAttr.Group,
+                        new List<PropertyInfo> { property }
+                    );
+                    groups.Add(item);
 
-                    Container.Children.Add(control);
-                    isLastCB = control is CheckBox;
+                    current = new KeyValuePair<int, List<PropertyInfo>>(
+                        current.Key - 1,
+                        new List<PropertyInfo>()
+                    );
+                    groups.Add(current);
                 }
             }
             else
+            {
+                current.Value.Add(property);
+            }
+
+        }
+
+        foreach (var group in groups)
+        {
+            var positions = group.Value
+                .GroupBy(p => p.GetCustomAttribute<GroupAttribute>()?.Position ?? 0)
+                .OrderBy(g => g.Key)
+                .ToList();
+
+            if (positions.Count == 1)
+            {
+                DrawGroup(Container, clone, positions
+                    .First()
+                    .GroupBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order, p => p)
+                    .OrderBy(g => g.Key)
+                    .ToList()
+                );
+            }
+            else if (positions.Count > 1)
             {
                 var panel = new Grid();
                 panel.ColumnDefinitions.Add(new ColumnDefinition());
 
                 var index = 0;
-                foreach (var item in group)
+                foreach (var item in positions)
                 {
                     index++;
-
-                    var control = GetControl(item, clone);
-                    if (control != null)
+                    var control = new SimpleStackPanel
                     {
-                        Grid.SetColumn(control, panel.ColumnDefinitions.Count - 1);
-                        panel.Children.Add(control);
+                        Spacing = Container.Spacing,
+                    };
 
-                        if (index != group.Count())
-                        {
-                            panel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(6) });
-                            panel.ColumnDefinitions.Add(new ColumnDefinition());
-                        }
+                    DrawGroup(control, clone, item
+                        .GroupBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order, p => p)
+                        .OrderBy(g => g.Key)
+                        .ToList()
+                    );
+
+                    Grid.SetColumn(control, panel.ColumnDefinitions.Count - 1);
+                    panel.Children.Add(control);
+
+                    if (index != positions.Count)
+                    {
+                        panel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Container.Spacing * 2) });
+                        panel.ColumnDefinitions.Add(new ColumnDefinition());
                     }
                 }
 
-                if (isLastCB && panel.Children[0] is CheckBox)
-                    panel.Margin = new Thickness(0, -Container.Spacing, 0, 0);
-
                 Container.Children.Add(panel);
-                isLastCB = panel.Children[0] is CheckBox;
             }
         }
 
@@ -116,11 +150,66 @@ public partial class EditPropertyDialog : ContentDialog
         Closing += (s, e) =>
         {
             if (e.Result == ContentDialogResult.Primary)
-                foreach (var property in properties.SelectMany(g => g))
+                foreach (var property in properties)
                 {
                     property.SetValue(source, property.GetValue(clone));
                 }
         };
+    }
+
+    private void DrawGroup(Panel container, IEditProperties clone, List<IGrouping<int, PropertyInfo>> properties)
+    {
+        var isLastCB = false;
+        foreach (var order in properties)
+        {
+            if (order.First().GetCustomAttribute<SeparatorAttribute>() != null)
+            {
+                container.Children.Add(new Separator());
+            }
+
+            if (order.Count() == 1)
+            {
+                var control = GetControl(order.First(), clone);
+                if (control != null)
+                {
+                    if (isLastCB && control is CheckBox checkBox)
+                        checkBox.Margin = new Thickness(0, -Container.Spacing, 0, 0);
+
+                    container.Children.Add(control);
+                    isLastCB = control is CheckBox;
+                }
+            }
+            else if (order.Count() > 1)
+            {
+                var panel = new Grid();
+                panel.ColumnDefinitions.Add(new ColumnDefinition());
+
+                var index = 0;
+                foreach (var item in order)
+                {
+                    index++;
+
+                    var control = GetControl(item, clone);
+                    if (control != null)
+                    {
+                        Grid.SetColumn(control, panel.ColumnDefinitions.Count - 1);
+                        panel.Children.Add(control);
+
+                        if (index != order.Count())
+                        {
+                            panel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Container.Spacing) });
+                            panel.ColumnDefinitions.Add(new ColumnDefinition());
+                        }
+                    }
+                }
+
+                if (isLastCB && panel.Children[0] is CheckBox)
+                    panel.Margin = new Thickness(0, -Container.Spacing, 0, 0);
+
+                container.Children.Add(panel);
+                isLastCB = panel.Children[0] is CheckBox;
+            }
+        }
     }
 
     private UIElement GetControl(PropertyInfo property, IEditProperties clone)
@@ -135,6 +224,10 @@ public partial class EditPropertyDialog : ContentDialog
         else if (property.PropertyType == typeof(ScreenPoint) && attr is ScreenPointEditPropertyAttribute pAttr)
         {
             result = GetScreenPointEditControl(property, clone, pAttr);
+        }
+        else if (property.PropertyType == typeof(ScreenRange) && attr is ScreenRangeEditPropertyAttribute rAttr)
+        {
+            result = GetScreenRangeEditControl(property, clone, rAttr);
         }
         else if (property.PropertyType == typeof(string) && attr is TextEditPropertyAttribute tAttr)
         {
@@ -303,7 +396,19 @@ public partial class EditPropertyDialog : ContentDialog
         control.Click += (s, e) =>
         {
             var oldPoint = (ScreenPoint)property.GetValue(clone);
-            var point = ScreenWindow.GetPoint(oldPoint);
+            ScreenRange range = null;
+
+            if (!pAttr.ColorRangeProperty.IsNull())
+            {
+                var rangeProperty = clone
+                    .GetType()
+                    .GetProperty(pAttr.ColorRangeProperty);
+
+                if (rangeProperty != null)
+                    range = (ScreenRange)rangeProperty.GetValue(clone);
+            }
+
+            var point = ScreenWindow.GetPoint(oldPoint, range);
 
             if (point != null)
             {
@@ -371,6 +476,29 @@ public partial class EditPropertyDialog : ContentDialog
         }
         else
             return control;
+    }
+
+    private UIElement GetScreenRangeEditControl(PropertyInfo property, IEditProperties clone, ScreenRangeEditPropertyAttribute rAttr)
+    {
+        var viewColor = new ColorPicker();
+        var control = new Button
+        {
+            Content = rAttr.Title,
+            Margin = new Thickness(0, Container.Spacing, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            FocusVisualStyle = null,
+        };
+
+        control.Click += (s, e) =>
+        {
+            var old = (ScreenRange)property.GetValue(clone);
+            var data = ScreenWindow.GetRange(old);
+
+            if (data != null)
+                property.SetValue(clone, data);
+        };
+
+        return control;
     }
 
     private UIElement GetTextEditControl(PropertyInfo property, IEditProperties clone, TextEditPropertyAttribute tAttr)
@@ -563,6 +691,7 @@ public partial class EditPropertyDialog : ContentDialog
 
         cb1.SelectionChanged += (s, e) =>
         {
+            Grid.SetColumnSpan(cb1, 3);
             cb2.Visibility = Visibility.Collapsed;
             cb2.ItemsSource = null;
 
@@ -574,6 +703,7 @@ public partial class EditPropertyDialog : ContentDialog
 
                 if ((variable.VariableType == VariableType.Point || variable.VariableType == VariableType.Color) && vAttr.Target == VariableType.Number)
                 {
+                    Grid.SetColumnSpan(cb1, 1);
                     cb2.Visibility = Visibility.Visible;
                     cb2.ItemsSource = variable.GetSubValues();
                     cb2.SelectedItem = GetPart((string)property.GetValue(clone), 1, cb2.ItemsSource.OfType<string>());
@@ -586,6 +716,7 @@ public partial class EditPropertyDialog : ContentDialog
                 }
                 else
                 {
+                    Grid.SetColumnSpan(cb1, 1);
                     cb2.Visibility = Visibility.Visible;
                     cb2.ItemsSource = new string[] { "ConvertError!" };
                     cb2.SelectedItem = cb2.ItemsSource.OfType<string>().First();

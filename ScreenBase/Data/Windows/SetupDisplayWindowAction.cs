@@ -30,7 +30,7 @@ public class SetupDisplayWindowAction : BaseAction<SetupDisplayWindowAction>, IC
 
     private ScreenPoint colorPoint;
 
-    [ScreenPointEditProperty(3, "Get bg color from screen", true)]
+    [ScreenPointEditProperty(3, "Get BG color", true)]
     public ScreenPoint ColorPoint
     {
         get => colorPoint;

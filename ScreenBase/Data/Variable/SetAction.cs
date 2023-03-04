@@ -113,15 +113,19 @@ public class SetPointAction : BaseAction<SetPointAction>, ICoordinateAction
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = new Point({GetValueString(executor.GetValue(X, XVariable))}, {GetValueString(executor.GetValue(Y, YVariable))});";
 
+    [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X { get; set; }
 
+    [Group(0, 0)]
     [VariableEditProperty(nameof(X), VariableType.Number, 0)]
     public string XVariable { get; set; }
 
+    [Group(0, 1)]
     [NumberEditProperty(3, "-", minValue: 0)]
     public int Y { get; set; }
 
+    [Group(0, 1)]
     [VariableEditProperty(nameof(Y), VariableType.Number, 2)]
     public string YVariable { get; set; }
 
@@ -187,7 +191,7 @@ public class SetColorAction : BaseAction<SetColorAction>
 
     private ScreenPoint colorPoint;
 
-    [ScreenPointEditProperty(1, "Get color from screen", true)]
+    [ScreenPointEditProperty(1, "Get color", true)]
     public ScreenPoint ColorPoint
     {
         get => colorPoint;

@@ -18,15 +18,19 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
 
     private ScreenPoint point;
 
+    [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
     public int X { get => point.X; set => point.X = value; }
 
+    [Group(0, 0)]
     [VariableEditProperty(nameof(X), VariableType.Number, 0)]
     public string XVariable { get; set; }
 
+    [Group(0, 1)]
     [NumberEditProperty(3, "-", minValue: 0)]
     public int Y { get => point.Y; set => point.Y = value; }
 
+    [Group(0, 1)]
     [VariableEditProperty(nameof(Y), VariableType.Number, 2)]
     public string YVariable { get; set; }
 
@@ -43,7 +47,7 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
         }
     }
 
-    [ScreenPointEditProperty(8, "Get data from screen", true)]
+    [ScreenPointEditProperty(8, "Get data", true)]
     public ScreenPoint ColorPoint
     {
         get => point;

@@ -344,7 +344,10 @@ internal class FunctionViewModelBase : BaseModel
             {
                 if (elseAction.NeedElse && !item.Children.Any(i => i.Action.Type == ActionType.Else))
                 {
-                    var target = item.Children.LastOrDefault(i => i.Action.Type != ActionType.End);
+                    var target = item.Children.SkipLast(1).LastOrDefault();
+                    if (target != null && target.Action is IGroupAction)
+                        target = target.Children.LastOrDefault();
+
                     OnPaste(new List<IAction> { new ElseAction() }, Items, target ?? item, false);
                 }
                 else if (!elseAction.NeedElse)

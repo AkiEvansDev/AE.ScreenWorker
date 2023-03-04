@@ -1,24 +1,20 @@
-﻿using System.Data;
-using System.IO;
-using System.Linq;
-
-using AE.Core;
+﻿using AE.Core;
 
 using ScreenBase.Data.Base;
 
-using Tesseract;
-
-namespace ScreenBase.Data;
+namespace ScreenBase.Data.Variable;
 
 [AESerializable]
-public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateAction
+public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateAction
 {
-    public override ActionType Type => ActionType.ExtractText;
+    public override ActionType Type => ActionType.GetColorCount;
 
-    public override string GetTitle() 
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(PixelFormat)}, {GetValueString(OcrType)});";
-    public override string GetExecuteTitle(IScriptExecutor executor) 
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(PixelFormat)}, {GetValueString(OcrType)});";
+    public override string GetTitle()
+        => $"{GetResultString(Result)} = GetColorCount({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(ColorPoint.GetColor(), ColorVariable)} with {GetValueString(Accuracy)} accuracy);";
+    public override string GetExecuteTitle(IScriptExecutor executor)
+        => $"{GetResultString(Result)} = GetColorCount({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(executor.GetValue(ColorPoint.GetColor(), ColorVariable))} with {GetValueString(Accuracy)} accuracy);";
+
+    private ScreenPoint color;
 
     [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
@@ -95,24 +91,30 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
         }
     }
 
-    [TextEditProperty(10)]
-    public string Arguments { get; set; }
+    [ScreenPointEditProperty(11, "Get color", true, nameof(Range))]
+    public ScreenPoint ColorPoint
+    {
+        get => color;
+        set
+        {
+            color = value;
+            NeedUpdateInvoke();
+        }
+    }
 
-    [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
-    public PixelFormat PixelFormat { get; set; }
+    [VariableEditProperty("Color", VariableType.Color, 10, propertyNames: $"{nameof(ColorPoint)}")]
+    public string ColorVariable { get; set; }
 
-    [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
-    public PageSegMode OcrType { get; set; }
+    [NumberEditProperty(12, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
+    public double Accuracy { get; set; }
 
-    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    [ComboBoxEditProperty(13, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Number)]
     public string Result { get; set; }
 
-    public ExtractTextAction()
+    public GetColorCountAction()
     {
+        color = new ScreenPoint();
         UseOptimizeCoordinate = true;
-        Arguments = "-tessedit_char_whitelist 0123456789";
-        PixelFormat = PixelFormat.Format32bppRgb;
-        OcrType = PageSegMode.SingleLine;
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
@@ -130,40 +132,19 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
 
         if (!Result.IsNull())
         {
-            var path = Path.Combine(
-                Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location),
-                "tessdata"
-            );
-
-            using var engine = new TesseractEngine(path, "eng", EngineMode.Default);
-
-            if (!Arguments.IsNull())
-            {
-                var args = Arguments
-                    .Split('-')
-                    .Select(a => a.Trim())
-                    .ToList();
-
-                foreach (var arg in args)
-                {
-                    var data = arg.Split(' ');
-                    if (data.Length > 1)
-                    {
-                        var name = data[0].Trim(' ', '-');
-                        var value = data[1].Trim(' ', '-');
-
-                        engine.SetVariable(name, value);
-                    }
-                }
-            }
-
+            var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
             worker.Screen();
-            var part = worker.GetPart(x1, y1, x2, y2, PixelFormat);
 
-            using var page = engine.Process(part, OcrType);
-            var result = page.GetText().Trim();
+            var count = 0;
+            for (var x = x1; x < x2; ++x)
+                for (var y = y1; y < y2; ++y)
+                {
+                    var color1 = worker.GetColor(x, y);
+                    if (executor.IsColor(color1, color2, Accuracy))
+                        count++;
+                }
 
-            executor.SetVariable(Result, result);
+            executor.SetVariable(Result, count);
             return ActionResultType.True;
         }
         else
@@ -171,7 +152,6 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
             return ActionResultType.False;
         }
-
     }
 
     [CheckBoxEditProperty(2000)]
@@ -185,11 +165,11 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
         if (X1 != 0)
             X1 = X1 * newWidth / oldWidth;
 
-        if (X2 != 0)
-            X2 = X2 * newWidth / oldWidth;
-
         if (Y1 != 0)
             Y1 = Y1 * newHeight / oldHeight;
+
+        if (X2 != 0)
+            X2 = X2 * newWidth / oldWidth;
 
         if (Y2 != 0)
             Y2 = Y2 * newHeight / oldHeight;

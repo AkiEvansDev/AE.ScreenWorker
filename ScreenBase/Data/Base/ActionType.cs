@@ -25,11 +25,13 @@ public enum ActionType
     ForeachColor = 31,
     While = 32,
     WhileGetColor = 33,
+    WhileGetColorCount = 34,
 
     If = 40,
     IfColor = 41,
     IfGetColor = 42,
-    IfCompareNumber = 43,
+    IfGetColorCount = 43,
+    IfCompareNumber = 44,
 
     SetNumber = 50,
     SetBoolean = 51,
@@ -37,9 +39,10 @@ public enum ActionType
     SetColor = 53,
     SetText = 54,
     GetColor = 55,
+    GetColorCount = 56,
 
-    Concat = 56,
-    GetArguments = 57,
+    Concat = 57,
+    GetArguments = 58,
 
     CalculationNumber = 60,
     CalculationBoolean = 61,
