@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -208,10 +207,12 @@ internal class MainViewModel : BaseModel
 
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
+            new ActionNavigationMenuItem("Check update", Symbol.Refresh, () => DialogHelper.Update(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
         OnOpen(path);
+        DialogHelper.Update(false);
     }
 
     public void DeleteFunction(NavigationMenuItem removeItem)
@@ -266,7 +267,7 @@ internal class MainViewModel : BaseModel
             logs.ShowDialog();
         }
         else
-            ShowError("No logs, start script debug before!");
+            DialogHelper.ShowError("No logs, start script debug before!");
     }
 
     private void OnNew()
@@ -309,7 +310,7 @@ internal class MainViewModel : BaseModel
 
             if (ScriptInfo.Folder.IsNull() || !Directory.Exists(ScriptInfo.Folder))
             {
-                ShowError($"Path `{ScriptInfo.Folder}` not exist");
+                DialogHelper.ShowError($"Path `{ScriptInfo.Folder}` not exist!");
             }
             else if (SaveData())
             {
@@ -320,7 +321,7 @@ internal class MainViewModel : BaseModel
                 }
                 catch (Exception ex)
                 {
-                    ShowError(ex.Message);
+                    DialogHelper.ShowError(ex.Message);
                 }
             }
         }
@@ -373,7 +374,7 @@ internal class MainViewModel : BaseModel
             }
             else if (scriptInfo.Width != size.Width || scriptInfo.Height != size.Height)
             {
-                if (await ShowMessage($"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size. Optimize for {size.Width}x{size.Height}?") == ContentDialogResult.Primary)
+                if (await DialogHelper.ShowMessage($"Optimize for {size.Width}x{size.Height}?", $"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size!") == ContentDialogResult.Primary)
                 {
                     foreach (var action in scriptInfo.Main.Concat(scriptInfo.Data.SelectMany(f => f.Value)))
                     {
@@ -414,7 +415,7 @@ internal class MainViewModel : BaseModel
         }
         catch (Exception ex)
         {
-            ShowError(ex.Message);
+            DialogHelper.ShowError(ex.Message);
             return false;
         }
 
@@ -447,7 +448,7 @@ internal class MainViewModel : BaseModel
         }
         catch (Exception ex)
         {
-            ShowError(ex.Message);
+            DialogHelper.ShowError(ex.Message);
         }
     }
 
@@ -463,36 +464,9 @@ internal class MainViewModel : BaseModel
             }
         }
 
-        if (!ScriptInfo.IsEmpty() && await ShowMessage("Save data before open new script?") == ContentDialogResult.Primary)
+        if (!ScriptInfo.IsEmpty() && await DialogHelper.ShowMessage("Save data before open new script?") == ContentDialogResult.Primary)
             OnSave(action);
         else
             action();
-    }
-
-    private static async void ShowError(string message)
-    {
-        var errorDialog = new ContentDialog
-        {
-            Title = "Error",
-            Content = message,
-            PrimaryButtonText = "OK",
-            IsPrimaryButtonEnabled = true,
-            IsSecondaryButtonEnabled = false,
-        };
-        await errorDialog.ShowAsync(ContentDialogPlacement.Popup);
-    }
-
-    private static Task<ContentDialogResult> ShowMessage(string message)
-    {
-        var messageDialog = new ContentDialog
-        {
-            Title = "Message",
-            Content = message,
-            PrimaryButtonText = "OK",
-            SecondaryButtonText = "Cancel",
-            IsPrimaryButtonEnabled = true,
-            IsSecondaryButtonEnabled = true,
-        };
-        return messageDialog.ShowAsync(ContentDialogPlacement.Popup);
     }
 }

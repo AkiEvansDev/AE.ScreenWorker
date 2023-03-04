@@ -19,6 +19,7 @@ using Ookii.Dialogs.Wpf;
 using ScreenBase.Data.Base;
 using ScreenBase.Data.Game;
 
+using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.ViewModel;
 using ScreenWorkerWPF.Windows;
 
@@ -135,13 +136,12 @@ public partial class EditPropertyDialog : ContentDialog
 
         if (source is ScriptSettings)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
             Container.Children.Add(new TextBlock
             {
                 FontSize = 12,
                 Opacity = 0.6,
                 Margin = new Thickness(0, Container.Spacing * 2, 0, 0),
-                Text = $"Ver.: {version}"
+                Text = $"Ver.: {DialogHelper.GetVersion()}"
             });
         }
 
