@@ -48,10 +48,10 @@ public partial class MainWindow : Window
 
     private async void CheckUpdateAndLoad(string path)
     {
-        IsEnabled = false;
+        MainGrid.IsEnabled = false;
         DataContext = new MainViewModel(path);
         await DialogHelper.Update(false);
-        IsEnabled = true;
+        MainGrid.IsEnabled = true;
     }
 
     private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

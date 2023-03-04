@@ -101,7 +101,7 @@
             </common:MenuItemTemplateSelector.SeparatorTemplate>
         </common:MenuItemTemplateSelector>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding ElementName=Window, Path=(ui:TitleBar.SystemOverlayLeftInset), Converter={StaticResource PixelsToGridLength}}" />
             <ColumnDefinition Width="Auto" />

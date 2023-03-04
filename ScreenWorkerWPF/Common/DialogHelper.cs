@@ -56,13 +56,14 @@ internal static class DialogHelper
 
         var fileUrl = "";
         var lastVersion = "";
+        var title = "";
 
         var progress = new Progress<float>(f => waitDialog.Content = $"Progress: {Math.Round(f * 100)}%");
         if (fromUser)
         {
             waitDialog.Opened += async (s, e) =>
             {
-                (fileUrl, lastVersion) = await GetFileUrl(progress);
+                (fileUrl, lastVersion, title) = await GetLastInfo(progress);
                 waitDialog.Hide();
             };
 
@@ -71,7 +72,7 @@ internal static class DialogHelper
         }
         else
         {
-            (fileUrl, lastVersion) = await GetFileUrl(progress);
+            (fileUrl, lastVersion, title) = await GetLastInfo(progress);
             waitDialog.Hide();
         }
 
@@ -79,7 +80,7 @@ internal static class DialogHelper
 
         if (!fileUrl.IsNull())
         {
-            if (await ShowMessage("Download and install?", $"Update {lastVersion} available!") != ContentDialogResult.Primary)
+            if (await ShowMessage(title, $"Update {lastVersion} available!", "Download") != ContentDialogResult.Primary)
                 return false;
 
             var temp = Path.Combine(Path.GetTempPath(), $"sw{lastVersion}.msi");
@@ -132,7 +133,7 @@ internal static class DialogHelper
                 Application.Current.Shutdown();
             }
         }
-        else if (fromUser && lastVersion != "error")
+        else if (fromUser && title != "error")
         {
             ShowError(null, "No update available!");
             return false;
@@ -141,7 +142,7 @@ internal static class DialogHelper
         return true;
     }
 
-    private async static Task<(string FileUrl, string LastVersion)> GetFileUrl(IProgress<float> progress)
+    private async static Task<(string FileUrl, string LastVersion, string Title)> GetLastInfo(IProgress<float> progress)
     {
         try
         {
@@ -151,6 +152,7 @@ internal static class DialogHelper
             var version = GetVersion();
             var lastVersion = version;
             var assetsUrl = "";
+            var title = "";
 
             var result = await client.GetAsync(RELEASES_URL);
             progress.Report(0.4f);
@@ -164,6 +166,7 @@ internal static class DialogHelper
                     var releas = releases.First();
                     lastVersion = releas.tag_name;
                     assetsUrl = releas.assets_url;
+                    title = releas.name;
 
                     progress.Report(0.5f);
                 }
@@ -188,12 +191,12 @@ internal static class DialogHelper
             }
 
             progress.Report(1);
-            return (fileUrl, lastVersion);
+            return (fileUrl, lastVersion, title);
         }
         catch (Exception ex)
         {
             ShowError(ex.Message);
-            return (null, "error");
+            return (null, null, "error");
         }
     }
 
@@ -210,27 +213,27 @@ internal static class DialogHelper
         return client;
     }
 
-    public static async void ShowError(string message, string title = "Error!")
+    public static async void ShowError(string message, string title = "Error!", string okBtn = "OK")
     {
         var errorDialog = new ContentDialog
         {
             Title = title,
             Content = message,
-            PrimaryButtonText = "OK",
+            PrimaryButtonText = okBtn,
             IsPrimaryButtonEnabled = true,
             IsSecondaryButtonEnabled = false,
         };
         await errorDialog.ShowAsync(ContentDialogPlacement.Popup);
     }
 
-    public static Task<ContentDialogResult> ShowMessage(string message, string title = "Message:")
+    public static Task<ContentDialogResult> ShowMessage(string message, string title = "Message:", string okBtn = "OK", string cancelBtn = "Cancel")
     {
         var messageDialog = new ContentDialog
         {
             Title = title,
             Content = message,
-            PrimaryButtonText = "OK",
-            SecondaryButtonText = "Cancel",
+            PrimaryButtonText = okBtn,
+            SecondaryButtonText = cancelBtn,
             IsPrimaryButtonEnabled = true,
             IsSecondaryButtonEnabled = true,
         };
