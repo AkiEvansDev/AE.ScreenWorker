@@ -9,6 +9,4 @@ Download [here](https://github.com/AkiEvansDev/AE.ScreenWorker/releases)
 
 ## Function description
 
-``
-TODO
-``
+View on [wiki](https://github.com/AkiEvansDev/AE.ScreenWorker/wiki)
