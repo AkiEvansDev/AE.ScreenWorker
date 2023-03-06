@@ -5,7 +5,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Windows;
 
 [AESerializable]
-public class PasteAction : BaseDelayAction<PasteAction>
+public class PasteAction : BaseAction<PasteAction>
 {
     public override ActionType Type => ActionType.Paste;
 

@@ -5,7 +5,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Windows;
 
 [AESerializable]
-public class CopyAction : BaseDelayAction<CopyAction>
+public class CopyAction : BaseAction<CopyAction>
 {
     public override ActionType Type => ActionType.Copy;
 
