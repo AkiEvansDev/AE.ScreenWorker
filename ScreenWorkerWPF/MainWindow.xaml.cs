@@ -137,8 +137,7 @@ public partial class MainWindow : Window
                 viewItem.ToolTip = new ToolTip
                 {
                     Content = textBlock,
-                    MaxWidth = Width / 2,
-                    IsOpen = true,
+                    MaxWidth = Width / 2
                 };
             }
         }
