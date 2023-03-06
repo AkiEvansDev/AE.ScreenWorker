@@ -7,6 +7,7 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:ScreenWorkerWPF.Common"
+    xmlns:helpers="clr-namespace:ScreenWorkerWPF.Common"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     ui:WindowHelper.UseModernWindowStyle="True"
@@ -28,13 +29,26 @@
                         SelectsOnInvoked="{Binding CanSelect}"
                         Content="{Binding Title}"
                         MenuItemsSource="{Binding Items}"
-                        FocusVisualStyle="{x:Null}">
+                        FocusVisualStyle="{x:Null}"
+                        ToolTipOpening="OnNavigationViewItemToolTipOpening">
+                        <ui:NavigationViewItem.Resources>
+                            <Style TargetType="ToolTip" BasedOn="{StaticResource {x:Type ToolTip}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Action}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:NavigationViewItem.Resources>
                         <ui:NavigationViewItem.InputBindings>
                             <MouseBinding Gesture="LeftClick" Command="{Binding Click}"/>
                         </ui:NavigationViewItem.InputBindings>
                         <ui:NavigationViewItem.Icon>
                             <ui:SymbolIcon Symbol="{Binding Glyph, Mode=OneTime}" FontSize="{Binding GlyphSize, Mode=OneTime}" />
                         </ui:NavigationViewItem.Icon>
+                        <ui:NavigationViewItem.ToolTip>
+                            <TextBlock Text="{Binding Title}" />
+                        </ui:NavigationViewItem.ToolTip>
                     </ui:NavigationViewItem>
                 </DataTemplate>
             </common:MenuItemTemplateSelector.ItemTemplate>

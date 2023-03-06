@@ -114,6 +114,7 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
     public GetColorCountAction()
     {
         color = new ScreenPoint();
+        Accuracy = 0.8;
         UseOptimizeCoordinate = true;
     }
 

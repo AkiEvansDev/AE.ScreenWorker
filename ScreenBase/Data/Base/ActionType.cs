@@ -2,7 +2,6 @@
 
 public enum ActionType
 {
-    Break = -3,
     Else = -2,
     End = -1,
 
@@ -10,8 +9,9 @@ public enum ActionType
 
     Delay = 1,
     InfinityDelay = 2,
-    Comment = 3,
-    Log = 4,
+    Break = 3,
+    Comment = 4,
+    Log = 5,
 
     MouseMove = 10,
     MouseDown = 11,

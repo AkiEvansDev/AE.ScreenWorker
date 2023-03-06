@@ -1,22 +1,29 @@
 ﻿using System.Collections.Generic;
 
+using AE.Core;
+
 namespace ScreenBase.Display;
 
 public enum DisplaySpanType
 {
-    Default,
-    LineBreak,
-    LeftArrow,
-    RightArrow,
-    Property,
-    Function,
-    Value,
-    Text,
-    Error,
-    Color,
-    Comment,
+    Default = 0,
+    LineBreak = 1,
+    LeftArrow = 2,
+    RightArrow = 3,
+    Property = 4,
+    Function = 5,
+    Value = 6,
+    Text = 7,
+    Error = 8,
+    Color = 9,
+    Comment = 10,
+    Bold = 11,
+    H1 = 12,
+    H2 = 13,
+    H3 = 14,
 }
 
+[AESerializable]
 public class DisplaySpan
 {
     public string Text { get; set; }
@@ -107,6 +114,34 @@ public class DisplaySpan
                         }
 
                         return c;
+                    case "<B>":
+                        var b = new DisplaySpan
+                        {
+                            Type = DisplaySpanType.Bold
+                        };
+                        b.Inlines.Add(Parse(content));
+                        return b;
+                    case "<H1>":
+                        var h1 = new DisplaySpan
+                        {
+                            Type = DisplaySpanType.H1
+                        };
+                        h1.Inlines.Add(Parse(content));
+                        return h1;
+                    case "<H2>":
+                        var h2 = new DisplaySpan
+                        {
+                            Type = DisplaySpanType.H2
+                        };
+                        h2.Inlines.Add(Parse(content));
+                        return h2;
+                    case "<H3>":
+                        var h3 = new DisplaySpan
+                        {
+                            Type = DisplaySpanType.H3
+                        };
+                        h3.Inlines.Add(Parse(content));
+                        return h3;
                     default:
                         return new DisplaySpan(section);
                 }

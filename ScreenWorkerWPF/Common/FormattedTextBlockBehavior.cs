@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -15,7 +13,10 @@ internal static class FormattedTextBlockBehavior
 {
     public static readonly DependencyProperty FormattedTextProperty =
         DependencyProperty.RegisterAttached("FormattedText", typeof(string), typeof(FormattedTextBlockBehavior), new PropertyMetadata("", FormattedTextChanged));
-   
+
+    public static readonly DependencyProperty FormattedDataProperty =
+        DependencyProperty.RegisterAttached("FormattedData", typeof(DisplaySpan), typeof(FormattedTextBlockBehavior), new PropertyMetadata(null, FormattedDataChanged));
+
     public static string GetFormattedText(DependencyObject obj)
     {
         return (string)obj.GetValue(FormattedTextProperty);
@@ -26,12 +27,33 @@ internal static class FormattedTextBlockBehavior
         obj.SetValue(FormattedTextProperty, value);
     }
 
+    public static DisplaySpan GetFormattedData(DependencyObject obj)
+    {
+        return (DisplaySpan)obj.GetValue(FormattedDataProperty);
+    }
+
+    public static void SetFormattedData(DependencyObject obj, DisplaySpan value)
+    {
+        obj.SetValue(FormattedDataProperty, value);
+    }
+
     private static void FormattedTextChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
         if (sender is TextBlock textBlock)
         {
             textBlock.Inlines.Clear();
-            textBlock.Inlines.Add(Traverse(DisplaySpan.Parse(e.NewValue as string)));
+            if (e.NewValue != null)
+                textBlock.Inlines.Add(Traverse(DisplaySpan.Parse(e.NewValue as string)));
+        }
+    }
+
+    private static void FormattedDataChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is TextBlock textBlock)
+        {
+            textBlock.Inlines.Clear();
+            if (e.NewValue != null)
+                textBlock.Inlines.Add(Traverse(e.NewValue as DisplaySpan));
         }
     }
 
@@ -79,6 +101,25 @@ internal static class FormattedTextBlockBehavior
                 break;
             case DisplaySpanType.Comment:
                 span.SetResourceReference(TextElement.ForegroundProperty, "CommentColor");
+                break;
+            case DisplaySpanType.Bold:
+                span.SetResourceReference(TextElement.ForegroundProperty, "TextControlForeground");
+                span.FontWeight = FontWeights.Bold;
+                break;
+            case DisplaySpanType.H1:
+                span.SetResourceReference(TextElement.ForegroundProperty, "TextControlForeground");
+                span.FontSize = 28;
+                span.FontWeight = FontWeights.Light;
+                break;
+            case DisplaySpanType.H2:
+                span.SetResourceReference(TextElement.ForegroundProperty, "TextControlForeground");
+                span.FontSize = 20;
+                span.FontWeight = FontWeights.Normal;
+                break;
+            case DisplaySpanType.H3:
+                span.SetResourceReference(TextElement.ForegroundProperty, "TextControlForeground");
+                span.FontSize = 20;
+                span.FontWeight = FontWeights.Light;
                 break;
         }
 

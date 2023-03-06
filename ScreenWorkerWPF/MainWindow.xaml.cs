@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 using ModernWpf.Controls;
 
@@ -50,7 +51,7 @@ public partial class MainWindow : Window
     {
         MainGrid.IsEnabled = false;
         DataContext = new MainViewModel(path);
-        await DialogHelper.Update(false);
+        await DialogHelper.UpdateDialog(false);
         MainGrid.IsEnabled = true;
     }
 
@@ -119,6 +120,29 @@ public partial class MainWindow : Window
                 DataContext = menuItem.Tab
             });
         }
+    }
+
+    private async void OnNavigationViewItemToolTipOpening(object sender, ToolTipEventArgs e)
+    {
+        if (sender is NavigationViewItem viewItem && viewItem.DataContext is NavigationMenuItem menuItem && menuItem.Action != null)
+        {
+            var data = await WebHelper.GetHelpInfo(menuItem.Action.Type);
+            if (data != null)
+            {
+                //var panel = new SimpleStackPanel();
+                var textBlock = new TextBlock();
+                FormattedTextBlockBehavior.SetFormattedData(textBlock, data);
+
+                //panel.Children.Add(textBlock);
+                viewItem.ToolTip = new ToolTip
+                {
+                    Content = textBlock,
+                    MaxWidth = Width / 2,
+                    IsOpen = true,
+                };
+            }
+        }
+
     }
 }
 

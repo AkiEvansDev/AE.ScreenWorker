@@ -5,6 +5,7 @@ using System.Linq;
 
 using AE.Core;
 using ScreenBase.Data.Variable;
+using ScreenBase.Display;
 
 namespace ScreenBase.Data.Base;
 
@@ -86,6 +87,14 @@ public enum WindowLocation
 }
 
 [AESerializable]
+public class HelpInfo
+{
+    [AEIgnore]
+    public bool WasUpdate { get; set; }
+    public DisplaySpan Data { get; set; }
+}
+
+[AESerializable]
 public class ScriptSettings : IEditProperties
 {
     public event Action NeedUpdate;
@@ -106,12 +115,15 @@ public class ScriptSettings : IEditProperties
     [NumberEditProperty(3, "Execute window margin")]
     public int ExecuteWindowMargin { get; set; }
 
+    public Dictionary<ActionType, HelpInfo> HelpInfo { get; set; }
+
     public ScriptSettings()
     {
         StartKey = KeyFlags.KeyF1;
         StopKey = KeyFlags.KeyF2;
         ExecuteWindowLocation = WindowLocation.RightBottom;
         ExecuteWindowMargin = 0;
+        HelpInfo = new Dictionary<ActionType, HelpInfo>();
     }
 
     public IEditProperties Clone()

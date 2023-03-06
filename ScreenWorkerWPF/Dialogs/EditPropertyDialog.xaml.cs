@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -35,7 +36,29 @@ public partial class EditPropertyDialog : ContentDialog
         InitializeComponent();
 
         var clone = source.Clone();
-        Title = title;
+        if (clone is IAction action)
+        {
+            Title = new TextBlock { Text = title };
+            _ = Task.Run(async () =>
+            {
+                var data = await WebHelper.GetHelpInfo(action.Type);
+                if (data != null)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        var textBlock = new TextBlock();
+                        FormattedTextBlockBehavior.SetFormattedData(textBlock, data);
+                        (Title as TextBlock).ToolTip = new ToolTip
+                        {
+                            Content = textBlock,
+                            MaxWidth = Application.Current.MainWindow.Width / 2,
+                        };
+                    });
+                }
+            });
+        }
+        else
+            Title = title;
 
         var properties = clone
             .GetType()
@@ -44,93 +67,96 @@ public partial class EditPropertyDialog : ContentDialog
             .OrderBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order)
             .ToList();
 
-        var groups = new List<KeyValuePair<int, List<PropertyInfo>>>();
-
-        var current = new KeyValuePair<int, List<PropertyInfo>>(
-            properties.Min(p => p.GetCustomAttribute<GroupAttribute>()?.Group ?? 0) -1, 
-            new List<PropertyInfo>()
-        );
-        groups.Add(current);
-
-        foreach (var property in properties)
+        if (properties.Any())
         {
-            var groupAttr = property.GetCustomAttribute<GroupAttribute>();
-            if (groupAttr != null)
+            var groups = new List<KeyValuePair<int, List<PropertyInfo>>>();
+
+            var current = new KeyValuePair<int, List<PropertyInfo>>(
+                properties.Min(p => p.GetCustomAttribute<GroupAttribute>()?.Group ?? 0) - 1,
+                new List<PropertyInfo>()
+            );
+            groups.Add(current);
+
+            foreach (var property in properties)
             {
-                if (groups.Any(g => g.Key == groupAttr.Group))
+                var groupAttr = property.GetCustomAttribute<GroupAttribute>();
+                if (groupAttr != null)
                 {
-                    var item = groups.First(g => g.Key == groupAttr.Group);
-                    item.Value.Add(property);
+                    if (groups.Any(g => g.Key == groupAttr.Group))
+                    {
+                        var item = groups.First(g => g.Key == groupAttr.Group);
+                        item.Value.Add(property);
+                    }
+                    else
+                    {
+                        var item = new KeyValuePair<int, List<PropertyInfo>>(
+                            groupAttr.Group,
+                            new List<PropertyInfo> { property }
+                        );
+                        groups.Add(item);
+
+                        current = new KeyValuePair<int, List<PropertyInfo>>(
+                            current.Key - 1,
+                            new List<PropertyInfo>()
+                        );
+                        groups.Add(current);
+                    }
                 }
                 else
                 {
-                    var item = new KeyValuePair<int, List<PropertyInfo>>(
-                        groupAttr.Group,
-                        new List<PropertyInfo> { property }
-                    );
-                    groups.Add(item);
-
-                    current = new KeyValuePair<int, List<PropertyInfo>>(
-                        current.Key - 1,
-                        new List<PropertyInfo>()
-                    );
-                    groups.Add(current);
+                    current.Value.Add(property);
                 }
-            }
-            else
-            {
-                current.Value.Add(property);
+
             }
 
-        }
-
-        foreach (var group in groups)
-        {
-            var positions = group.Value
-                .GroupBy(p => p.GetCustomAttribute<GroupAttribute>()?.Position ?? 0)
-                .OrderBy(g => g.Key)
-                .ToList();
-
-            if (positions.Count == 1)
+            foreach (var group in groups)
             {
-                DrawGroup(Container, clone, positions
-                    .First()
-                    .GroupBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order, p => p)
+                var positions = group.Value
+                    .GroupBy(p => p.GetCustomAttribute<GroupAttribute>()?.Position ?? 0)
                     .OrderBy(g => g.Key)
-                    .ToList()
-                );
-            }
-            else if (positions.Count > 1)
-            {
-                var panel = new Grid();
-                panel.ColumnDefinitions.Add(new ColumnDefinition());
+                    .ToList();
 
-                var index = 0;
-                foreach (var item in positions)
+                if (positions.Count == 1)
                 {
-                    index++;
-                    var control = new SimpleStackPanel
-                    {
-                        Spacing = Container.Spacing,
-                    };
-
-                    DrawGroup(control, clone, item
+                    DrawGroup(Container, clone, positions
+                        .First()
                         .GroupBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order, p => p)
                         .OrderBy(g => g.Key)
                         .ToList()
                     );
-
-                    Grid.SetColumn(control, panel.ColumnDefinitions.Count - 1);
-                    panel.Children.Add(control);
-
-                    if (index != positions.Count)
-                    {
-                        panel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Container.Spacing * 2) });
-                        panel.ColumnDefinitions.Add(new ColumnDefinition());
-                    }
                 }
+                else if (positions.Count > 1)
+                {
+                    var panel = new Grid();
+                    panel.ColumnDefinitions.Add(new ColumnDefinition());
 
-                Container.Children.Add(panel);
+                    var index = 0;
+                    foreach (var item in positions)
+                    {
+                        index++;
+                        var control = new SimpleStackPanel
+                        {
+                            Spacing = Container.Spacing,
+                        };
+
+                        DrawGroup(control, clone, item
+                            .GroupBy(p => p.GetCustomAttribute<EditPropertyAttribute>().Order, p => p)
+                            .OrderBy(g => g.Key)
+                            .ToList()
+                        );
+
+                        Grid.SetColumn(control, panel.ColumnDefinitions.Count - 1);
+                        panel.Children.Add(control);
+
+                        if (index != positions.Count)
+                        {
+                            panel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Container.Spacing * 2) });
+                            panel.ColumnDefinitions.Add(new ColumnDefinition());
+                        }
+                    }
+
+                    Container.Children.Add(panel);
+                }
             }
         }
 
@@ -141,7 +167,7 @@ public partial class EditPropertyDialog : ContentDialog
                 FontSize = 12,
                 Opacity = 0.6,
                 Margin = new Thickness(0, Container.Spacing * 2, 0, 0),
-                Text = $"Ver.: {DialogHelper.GetVersionString()}"
+                Text = $"Ver.: {WebHelper.GetVersionString()}"
             });
         }
 

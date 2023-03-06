@@ -6,7 +6,10 @@ using System.Linq;
 using AE.Core;
 
 using ModernWpf.Controls;
+
 using ScreenBase.Data.Base;
+using ScreenBase.Display;
+
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.ViewModel;

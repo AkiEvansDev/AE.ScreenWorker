@@ -152,9 +152,9 @@ internal class MainViewModel : BaseModel
                 new SetBooleanAction(),
                 new SetPointAction(),
                 new SetColorAction(),
+                new SetTextAction(),
                 new GetColorAction(),
                 new GetColorCountAction(),
-                new SetTextAction(),
                 new ConcatAction(),
                 new GetArgumentsAction(),
             }),
@@ -207,7 +207,7 @@ internal class MainViewModel : BaseModel
 
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
-            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await DialogHelper.Update(true)),
+            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await DialogHelper.UpdateDialog(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 

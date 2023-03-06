@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Reflection;
-using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,29 +10,17 @@ using AE.Core;
 
 using ModernWpf.Controls;
 
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+using ScreenBase.Data.Base;
 
 namespace ScreenWorkerWPF.Common;
 
 internal static class DialogHelper
 {
-    private const string RELEASES_URL = "https://api.github.com/repos/AkiEvansDev/AE.ScreenWorker/releases";
-    private const string TOKEN = "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";
-    private const string USER_AGENT = "ScreenWorker";
-
     public static bool IsCheckUpdate { get; set; } = false;
 
-    public static string GetVersionString()
-    {
-        var ver = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
-
-        if (ver.Length < 8)
-            ver += "0";
-
-        return ver;
-    }
-
-    public async static Task<bool> Update(bool fromUser = false)
+    public async static Task<bool> UpdateDialog(bool fromUser = false)
     {
         var waitDialog = new ContentDialog
         {
@@ -68,7 +50,7 @@ internal static class DialogHelper
         {
             waitDialog.Opened += async (s, e) =>
             {
-                (fileUrl, lastVersion, title) = await GetLastInfo(progress);
+                (fileUrl, lastVersion, title) = await WebHelper.GetLastInfo(progress);
                 waitDialog.Hide();
             };
 
@@ -77,7 +59,7 @@ internal static class DialogHelper
         }
         else
         {
-            (fileUrl, lastVersion, title) = await GetLastInfo(progress);
+            (fileUrl, lastVersion, title) = await WebHelper.GetLastInfo(progress);
             waitDialog.Hide();
         }
 
@@ -109,8 +91,28 @@ internal static class DialogHelper
                     using var file = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None);
                     var progress = new Progress<float>(f => downloadDialog.Content = $"Progress: {Math.Round(f * 100)}%");
 
-                    using var client = GetHttpClient(TimeSpan.FromMinutes(5));
+                    using var client = WebHelper.GetHttpClient(TimeSpan.FromMinutes(5));
                     await client.DownloadAsync(fileUrl, file, progress, cancelTokenSource.Token);
+
+                    downloadDialog.Title = "Downloading help info...";
+                    downloadDialog.Content = "Progress: 0%";
+
+                    var items = ActionType.Variable
+                        .Values()
+                        .Where(v => v > 0)
+                        .ToList();
+
+                    var count = 0.0;
+                    foreach (var item in items)
+                    {
+                        var data = await WebHelper.LoadHelpInfo(item, cancelTokenSource.Token);
+
+                        App.CurrentSettings.HelpInfo.Remove(item);
+                        App.CurrentSettings.HelpInfo.Add(item, data);
+
+                        count++;
+                        downloadDialog.Content = $"Progress: {Math.Round(100 * count / items.Count)}%";
+                    }
 
                     canInstall = true;
                     downloadDialog.IsPrimaryButtonEnabled = true;
@@ -126,7 +128,10 @@ internal static class DialogHelper
             };
 
             if (await downloadDialog.ShowAsync(ContentDialogPlacement.Popup) != ContentDialogResult.Primary)
+            {
+                cancelTokenSource.Cancel();
                 return false;
+            }
 
             if (canInstall)
             {
@@ -145,77 +150,6 @@ internal static class DialogHelper
         }
 
         return true;
-    }
-
-    private async static Task<(string FileUrl, string LastVersion, string Title)> GetLastInfo(IProgress<float> progress)
-    {
-        try
-        {
-            using var client = GetHttpClient(TimeSpan.FromSeconds(5));
-            progress.Report(0.1f);
-
-            var version = GetVersionString();
-            var lastVersion = version;
-            var assetsUrl = "";
-            var title = "";
-
-            var result = await client.GetAsync(RELEASES_URL);
-            progress.Report(0.4f);
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                var json = await result.Content.ReadAsStringAsync();
-                var releases = JsonConvert.DeserializeObject<dynamic>(json) as IEnumerable<dynamic>;
-
-                if (releases.Any())
-                {
-                    var releas = releases.First();
-                    lastVersion = releas.tag_name;
-                    assetsUrl = releas.assets_url;
-                    title = releas.name;
-
-                    progress.Report(0.5f);
-                }
-            }
-
-            string fileUrl = null;
-            if (version != lastVersion)
-            {
-                result = await client.GetAsync(assetsUrl);
-                progress.Report(0.8f);
-                if (result.StatusCode == HttpStatusCode.OK)
-                {
-                    var json = await result.Content.ReadAsStringAsync();
-                    var assets = JsonConvert.DeserializeObject<dynamic>(json) as IEnumerable<dynamic>;
-
-                    if (assets.Any())
-                    {
-                        fileUrl = assets.First().browser_download_url;
-                        progress.Report(0.9f);
-                    }
-                }
-            }
-
-            progress.Report(1);
-            return (fileUrl, lastVersion.ToString(), title);
-        }
-        catch (Exception ex)
-        {
-            ShowError(ex.Message);
-            return (null, null, "error");
-        }
-    }
-
-    private static HttpClient GetHttpClient(TimeSpan timeout)
-    {
-        var client = new HttpClient
-        {
-            Timeout = timeout
-        };
-
-        client.DefaultRequestHeaders.Add("Authorization", TOKEN);
-        client.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-
-        return client;
     }
 
     public static async void ShowError(string message, string title = "Error!", string okBtn = "OK")

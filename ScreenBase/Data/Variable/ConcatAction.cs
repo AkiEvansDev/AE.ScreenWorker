@@ -5,7 +5,7 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Variable;
 
 [AESerializable]
-public class ConcatAction : BaseDelayAction<ConcatAction>
+public class ConcatAction : BaseAction<ConcatAction>
 {
     public override ActionType Type => ActionType.Concat;
 
