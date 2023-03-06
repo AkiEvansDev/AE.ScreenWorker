@@ -22,7 +22,6 @@ internal static class WebHelper
 {
     private const string RELEASES_URL = "https://api.github.com/repos/AkiEvansDev/AE.ScreenWorker/releases";
     private const string RAW_URL = "https://raw.githubusercontent.com/wiki/AkiEvansDev/AE.ScreenWorker/{0}Action.md";
-    private const string TOKEN = "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";
     private const string USER_AGENT = "ScreenWorker";
 
     public async static Task<DisplaySpan> GetHelpInfo(ActionType actionType)
@@ -213,7 +212,7 @@ internal static class WebHelper
             Timeout = timeout
         };
 
-        client.DefaultRequestHeaders.Add("Authorization", TOKEN);
+        client.DefaultRequestHeaders.Add("Authorization", AE.Secrets.SCREEN_WORKER_TOKEN);
         client.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 
         return client;
