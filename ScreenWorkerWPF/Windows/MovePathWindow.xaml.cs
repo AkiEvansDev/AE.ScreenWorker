@@ -58,7 +58,10 @@ public partial class MovePathWindow : Window
 
     public static List<MovePart> Show(IEnumerable<MovePart> parts = null)
     {
-        var dialog = new MovePathWindow(parts);
+        var dialog = new MovePathWindow(parts)
+        {
+            Owner = Application.Current.MainWindow
+        };
         dialog.ShowDialog();
 
         if (dialog.result)

@@ -90,9 +90,7 @@ internal class FunctionViewModelBase : BaseModel
     public async void AddAction(IAction action)
     {
         var clone = action.Clone();
-
-        var dialog = new EditPropertyDialog(clone, $"Add {clone.Type.Name()}");
-        if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(clone, $"Add {clone.Type.Name()}") == ContentDialogResult.Primary)
         {
             ActionItem target = null;
             if (SelectedIndex > -1)
@@ -335,8 +333,7 @@ internal class FunctionViewModelBase : BaseModel
 
     protected virtual async void OnEdit(ActionItem item)
     {
-        var dialog = new EditPropertyDialog(item.Action, $"Edit {item.Action.Type.Name()}");
-        if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(item.Action, $"Edit {item.Action.Type.Name()}") == ContentDialogResult.Primary)
         {
             item.UpdateTitle();
             
@@ -368,9 +365,7 @@ internal class VariablesViewModel : FunctionViewModelBase
     public async void OnAdd()
     {
         var action = new VariableAction { Name = ValidateName(null) };
-
-        var dialog = new EditPropertyDialog(action, "Create variable");
-        if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(action, "Create variable") == ContentDialogResult.Primary)
         {
             action.Name = ValidateName(action.Name);
 
@@ -395,8 +390,7 @@ internal class VariablesViewModel : FunctionViewModelBase
         var action = editItem.Action as VariableAction;
         var clone = action.Clone() as VariableAction;
 
-        var dialog = new EditPropertyDialog(clone, $"Edit {clone.Type.Name()}");
-        if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(clone, $"Edit {clone.Type.Name()}") == ContentDialogResult.Primary)
         {
             var oldName = action.Name;
             var oldType = action.VariableType;

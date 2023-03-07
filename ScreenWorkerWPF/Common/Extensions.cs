@@ -8,7 +8,7 @@ namespace ScreenWorkerWPF.Common;
 
 internal static class Extensions
 {
-    public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
+    public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, Action<float> progress = null, CancellationToken cancellationToken = default)
     {
         using var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         var contentLength = response.Content.Headers.ContentLength;
@@ -21,12 +21,12 @@ internal static class Extensions
             return;
         }
 
-        var relativeProgress = new Progress<long>(totalBytes => progress.Report((float)totalBytes / contentLength.Value));
+        void relativeProgress(long totalBytes) => progress((float)totalBytes / contentLength.Value);
         await download.CopyToAsync(destination, 81920, relativeProgress, cancellationToken);
-        progress.Report(1);
+        progress(1);
     }
 
-    public static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, IProgress<long> progress = null, CancellationToken cancellationToken = default)
+    public static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, Action<long> progress = null, CancellationToken cancellationToken = default)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -51,7 +51,7 @@ internal static class Extensions
         {
             await destination.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
             totalBytesRead += bytesRead;
-            progress?.Report(totalBytesRead);
+            progress?.Invoke(totalBytesRead);
         }
     }
 }

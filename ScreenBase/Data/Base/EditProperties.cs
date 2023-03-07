@@ -83,7 +83,12 @@ public class ScreenRangeEditPropertyAttribute : EditPropertyAttribute
 [AttributeUsage(AttributeTargets.Property)]
 public class TextEditPropertyAttribute : EditPropertyAttribute
 {
-    public TextEditPropertyAttribute(int order = 0, string title = null) : base(order, title) { }
+    public bool IsPassword { get; }
+
+    public TextEditPropertyAttribute(int order = 0, string title = null, bool isPassword = false) : base(order, title)
+    {
+        IsPassword = isPassword;
+    }
 }
 
 [AttributeUsage(AttributeTargets.Property)]

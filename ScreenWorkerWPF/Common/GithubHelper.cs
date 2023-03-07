@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,12 +12,13 @@ using AE.Core;
 using Newtonsoft.Json;
 
 using ScreenBase.Data.Base;
-
 using ScreenBase.Display;
+
+using ScreenWorkerWPF.Windows;
 
 namespace ScreenWorkerWPF.Common;
 
-internal static class WebHelper
+internal static class GithubHelper
 {
     private const string RELEASES_URL = "https://api.github.com/repos/AkiEvansDev/AE.ScreenWorker/releases";
     private const string RAW_URL = "https://raw.githubusercontent.com/wiki/AkiEvansDev/AE.ScreenWorker/{0}Action.md";
@@ -56,22 +56,29 @@ internal static class WebHelper
 
     public async static Task<HelpInfo> LoadHelpInfo(ActionType actionType, CancellationToken token)
     {
-        using var client = GetHttpClient(TimeSpan.FromSeconds(5));
-        var url = string.Format(RAW_URL, actionType.Name());
-
-        var result = await client.GetAsync(url, token);
-        if (result.StatusCode == HttpStatusCode.OK)
+        try
         {
-            var text = await result.Content.ReadAsStringAsync(token);
+            using var client = GetHttpClient(TimeSpan.FromSeconds(5));
+            var url = string.Format(RAW_URL, actionType.Name());
 
-            if (!text.IsNull())
+            var result = await client.GetAsync(url, token);
+            if (result.StatusCode == HttpStatusCode.OK)
             {
-                return new HelpInfo
+                var text = await result.Content.ReadAsStringAsync(token);
+
+                if (!text.IsNull())
                 {
-                    WasUpdate = true,
-                    Data = ConvertMDTextToDisplaySpan(text)
-                };
+                    return new HelpInfo
+                    {
+                        WasUpdate = true,
+                        Data = ConvertMDTextToDisplaySpan(text)
+                    };
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            LogsWindow.AddLog($"<E>[Error]</E> {nameof(LoadHelpInfo)} =<AL></AL><NL></NL>{ex.Message}", true);
         }
 
         return null;
@@ -135,24 +142,24 @@ internal static class WebHelper
             return line;
     }
 
-    public async static Task<(string FileUrl, string LastVersion, string Title)> GetLastInfo(IProgress<float> progress)
+    public async static Task<(string FileUrl, string LastVersion, string Title)> GetLastInfo(Action<float> progress, CancellationToken token)
     {
         try
         {
             using var client = GetHttpClient(TimeSpan.FromSeconds(5));
-            progress.Report(0.1f);
+            progress(0.1f);
 
             var version = GetVersionString();
             var lastVersion = version;
             var assetsUrl = "";
             var title = "";
 
-            var result = await client.GetAsync(RELEASES_URL);
-            progress.Report(0.4f);
+            var result = await client.GetAsync(RELEASES_URL, token);
+            progress(0.4f);
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                var json = await result.Content.ReadAsStringAsync();
+                var json = await result.Content.ReadAsStringAsync(token);
                 var releases = JsonConvert.DeserializeObject<dynamic>(json) as IEnumerable<dynamic>;
 
                 if (releases.Any())
@@ -162,35 +169,35 @@ internal static class WebHelper
                     assetsUrl = releas.assets_url;
                     title = releas.name;
 
-                    progress.Report(0.5f);
+                    progress(0.5f);
                 }
             }
 
             string fileUrl = null;
             if (version != lastVersion)
             {
-                result = await client.GetAsync(assetsUrl);
-                progress.Report(0.8f);
+                result = await client.GetAsync(assetsUrl, token);
+                progress(0.8f);
 
                 if (result.StatusCode == HttpStatusCode.OK)
                 {
-                    var json = await result.Content.ReadAsStringAsync();
+                    var json = await result.Content.ReadAsStringAsync(token);
                     var assets = JsonConvert.DeserializeObject<dynamic>(json) as IEnumerable<dynamic>;
 
                     if (assets.Any())
                     {
                         fileUrl = assets.First().browser_download_url;
-                        progress.Report(0.9f);
+                        progress(0.9f);
                     }
                 }
             }
 
-            progress.Report(1);
+            progress(1);
             return (fileUrl, lastVersion.ToString(), title);
         }
         catch (Exception ex)
         {
-            DialogHelper.ShowError(ex.Message);
+            LogsWindow.AddLog($"<E>[Error]</E> {nameof(GetLastInfo)} =<AL></AL><NL></NL>{ex.Message}", true);
             return (null, null, "error");
         }
     }

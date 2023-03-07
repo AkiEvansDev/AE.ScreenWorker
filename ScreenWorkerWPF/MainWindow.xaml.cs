@@ -5,6 +5,8 @@ using System.Windows.Controls;
 
 using ModernWpf.Controls;
 
+using ScreenBase.Data;
+
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.View;
@@ -21,7 +23,7 @@ public partial class MainWindow : Window
     public MainWindow(string path)
     {
         InitializeComponent();
-        CheckUpdateAndLoad(path);
+        CheckUpdateLoginAndLoad(path);
 
         //var s = new System.Windows.Controls.StackPanel
         //{
@@ -47,12 +49,23 @@ public partial class MainWindow : Window
         //};
     }
 
-    private async void CheckUpdateAndLoad(string path)
+    private async void CheckUpdateLoginAndLoad(string path)
     {
         MainGrid.IsEnabled = false;
         DataContext = new MainViewModel(path);
-        await DialogHelper.UpdateDialog(false);
+
+        await DialogHelper.Update(false);
         MainGrid.IsEnabled = true;
+
+        if (App.CurrentSettings.User != null)
+        {
+            if (await DialogHelper.Login(App.CurrentSettings.User, false))
+            {
+                App.CurrentSettings.User.IsLogin = true;
+                ViewModel.LoginAction.Title = App.CurrentSettings.User.Login;
+                ViewModel.HeaderItems.Add(ViewModel.UploadAction);
+            }
+        }
     }
 
     private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -126,7 +139,7 @@ public partial class MainWindow : Window
     {
         if (sender is NavigationViewItem viewItem && viewItem.DataContext is NavigationMenuItem menuItem && menuItem.Action != null)
         {
-            var data = await WebHelper.GetHelpInfo(menuItem.Action.Type);
+            var data = await GithubHelper.GetHelpInfo(menuItem.Action.Type);
             if (data != null)
             {
                 //var panel = new SimpleStackPanel();

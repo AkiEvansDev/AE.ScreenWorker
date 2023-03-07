@@ -82,9 +82,7 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
     private async void OnEdit()
     {
         var clone = Clone();
-
-        var dialog = new EditPropertyDialog(clone, $"Rename");
-        if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(clone, $"Rename") == ContentDialogResult.Primary)
         {
             var oldTitle = Title;
             Title = ValidateTitle((clone as NavigationMenuItem).Title);
@@ -188,8 +186,7 @@ internal class MainNavigationMenuItem : NavigationMenuItem
         var func = new CustomFunctionNavigationMenuItem();
         func.ValidateTitle();
 
-        var dialog = new EditPropertyDialog(func, "Create function");
-        if (await dialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(func, "Create function") == ContentDialogResult.Primary)
         {
             func.ValidateTitle();
 

@@ -68,6 +68,8 @@ internal class MainViewModel : BaseModel
     }
 
     public AddVaribleAction AddVaribleAction { get; }
+    public ActionNavigationMenuItem LoginAction { get; }
+    public ActionNavigationMenuItem UploadAction { get; }
     public ObservableCollection<NavigationMenuItemBase> HeaderItems { get; }
     public ObservableCollection<NavigationMenuItemBase> Items { get; }
     public ObservableCollection<NavigationMenuItemBase> FooterItems { get; }
@@ -102,6 +104,7 @@ internal class MainViewModel : BaseModel
 
         AddVaribleAction = new AddVaribleAction(OnAddVariable);
 
+        UploadAction = new ActionNavigationMenuItem("Upload", Symbol.Upload, OnUpload);
         HeaderItems = new ObservableCollection<NavigationMenuItemBase>
         {
             new ActionNavigationMenuItem("Start", Symbol.Play, () => OnStart(false)),
@@ -205,9 +208,11 @@ internal class MainViewModel : BaseModel
             }),
         };
 
+        LoginAction = new ActionNavigationMenuItem("Login", Symbol.Contact, OnLogin);
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
-            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await DialogHelper.UpdateDialog(true)),
+            LoginAction,
+            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await DialogHelper.Update(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
@@ -258,17 +263,6 @@ internal class MainViewModel : BaseModel
         }
     }
 
-    private void OnLog()
-    {
-        if (LogsWindow.AnyLog())
-        {
-            var logs = new LogsWindow();
-            logs.ShowDialog();
-        }
-        else
-            DialogHelper.ShowError("No logs, start script debug before!");
-    }
-
     private void OnNew()
     {
         NeedSaveBeforeAction(New);
@@ -283,10 +277,73 @@ internal class MainViewModel : BaseModel
         LoadData(new ScriptInfo() { Width = size.Width, Height = size.Height });
     }
 
+    private void OnLog()
+    {
+        if (LogsWindow.AnyLog())
+        {
+            var logs = new LogsWindow();
+            logs.ShowDialog();
+        }
+        else
+            DialogHelper.ShowError("No logs, start script debug before!", "Warning!");
+    }
+
+    private async void OnUpload()
+    {
+        if (App.CurrentSettings.User != null && App.CurrentSettings.User.IsLogin && SaveData())
+        {
+            var fileInfo = new DriveFileInfo
+            {
+                Name = ScriptInfo.Name,
+                Description = ""
+            };
+
+            if (await EditPropertyDialog.ShowAsync(fileInfo, "Upload script to gallery") == ContentDialogResult.Primary)
+            {
+                var result = await DialogHelper.Upload(ScriptInfo, fileInfo.Name, fileInfo.Description);
+
+                if (result)
+                    await DialogHelper.ShowMessage($"Upload `{fileInfo.Name}` success completed!", cancelBtn: null);
+            }
+        }
+        else
+            DialogHelper.ShowError("Login first!", "Warning!");
+    }
+
     private async void OnSettings()
     {
-        var settingsDialog = new EditPropertyDialog(App.CurrentSettings, "Settings");
-        await settingsDialog.ShowAsync(ContentDialogPlacement.Popup);
+        await EditPropertyDialog.ShowAsync(App.CurrentSettings, "Settings");
+    }
+
+    private async void OnLogin()
+    {
+        if (App.CurrentSettings.User != null && App.CurrentSettings.User.IsLogin)
+        {
+            var gallery = new OnlineScriptsWindow();
+            gallery.ShowDialog();
+        }
+        else
+        {
+            if (DialogHelper.IsCheckLogin)
+            {
+                await DialogHelper.Login(null, true);
+                return;
+            }
+
+            var user = new UserInfo();
+            if (await EditPropertyDialog.ShowAsync(user, "Login") == ContentDialogResult.Primary)
+            {
+                user.EncryptPassword();
+
+                if (await DialogHelper.Login(user, true))
+                {
+                    user.IsLogin = true;
+                    App.CurrentSettings.User = user;
+                    LoginAction.Title = user.Login;
+                    HeaderItems.Add(UploadAction);
+                }
+            }
+        }
     }
 
     private void OnClick(IAction action)
@@ -302,8 +359,7 @@ internal class MainViewModel : BaseModel
 
     private async void OnSave(Action action)
     {
-        var saveDialog = new EditPropertyDialog(ScriptInfo, "Save data");
-        if (await saveDialog.ShowAsync(ContentDialogPlacement.Popup) == ContentDialogResult.Primary)
+        if (await EditPropertyDialog.ShowAsync(ScriptInfo, "Save data") == ContentDialogResult.Primary)
         {
             NotifyPropertyChanged(nameof(Title));
 
@@ -346,23 +402,30 @@ internal class MainViewModel : BaseModel
         });
     }
 
-    private async void OnOpen(string path)
+    private void OnOpen(string path)
     {
         if (path.IsNull() || !File.Exists(path))
             New();
         else
         {
-            ScriptInfo scriptInfo = null;
+            ScriptInfo scriptInfo;
             try
             {
                 scriptInfo = DataHelper.Load<ScriptInfo>(path);
+                OnOpen(scriptInfo);
             }
             catch
             {
                 New();
                 return;
             }
+        }
+    }
 
+    public void OnOpen(ScriptInfo scriptInfo, bool needSave = false)
+    {
+        async void open()
+        {
             var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
             var size = WindowsHelper.GetMonitorSize(hwnd);
 
@@ -387,6 +450,11 @@ internal class MainViewModel : BaseModel
 
             LoadData(scriptInfo);
         }
+
+        if (needSave)
+            NeedSaveBeforeAction(open);
+        else
+            open();
     }
 
     private void OptimizeCoordinate(IAction action, int oldWidth, int oldHeight, int newWidth, int newHeight)

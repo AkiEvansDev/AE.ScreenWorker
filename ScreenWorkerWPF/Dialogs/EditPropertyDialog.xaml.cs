@@ -30,6 +30,12 @@ public partial class EditPropertyDialog : ContentDialog
 {
     private readonly Dictionary<string, UIElement> controls;
 
+    public static Task<ContentDialogResult> ShowAsync(IEditProperties source, string title)
+    {
+        var dialog = new EditPropertyDialog(source, title);
+        return dialog.ShowAsync(ContentDialogPlacement.Popup);
+    }
+
     public EditPropertyDialog(IEditProperties source, string title)
     {
         controls = new Dictionary<string, UIElement>();
@@ -41,7 +47,7 @@ public partial class EditPropertyDialog : ContentDialog
             Title = new TextBlock { Text = title };
             _ = Task.Run(async () =>
             {
-                var data = await WebHelper.GetHelpInfo(action.Type);
+                var data = await GithubHelper.GetHelpInfo(action.Type);
                 if (data != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
@@ -167,7 +173,7 @@ public partial class EditPropertyDialog : ContentDialog
                 FontSize = 12,
                 Opacity = 0.6,
                 Margin = new Thickness(0, Container.Spacing * 2, 0, 0),
-                Text = $"Ver.: {WebHelper.GetVersionString()}"
+                Text = $"Ver.: {GithubHelper.GetVersionString()}"
             });
         }
 
@@ -176,10 +182,10 @@ public partial class EditPropertyDialog : ContentDialog
         Closing += (s, e) =>
         {
             if (e.Result == ContentDialogResult.Primary)
+            {
                 foreach (var property in properties)
-                {
                     property.SetValue(source, property.GetValue(clone));
-                }
+            }
         };
     }
 
@@ -529,9 +535,12 @@ public partial class EditPropertyDialog : ContentDialog
 
     private UIElement GetTextEditControl(PropertyInfo property, IEditProperties clone, TextEditPropertyAttribute tAttr)
     {
+        if (tAttr.IsPassword)
+            return GetPasswordEditControl(property, clone, tAttr);
+
         var control = new TextBox
         {
-            FocusVisualStyle = null
+            FocusVisualStyle = null,
         };
 
         if (tAttr.Title != "-")
@@ -539,6 +548,22 @@ public partial class EditPropertyDialog : ContentDialog
 
         clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
         control.TextChanged += (s, e) => property.SetValue(clone, control.Text);
+
+        return control;
+    }
+
+    private UIElement GetPasswordEditControl(PropertyInfo property, IEditProperties clone, TextEditPropertyAttribute tAttr)
+    {
+        var control = new PasswordBox
+        {
+            FocusVisualStyle = null,
+        };
+
+        if (tAttr.Title != "-")
+            ControlHelper.SetHeader(control, tAttr.Title ?? property.Name);
+
+        clone.NeedUpdate += () => control.Password = (string)property.GetValue(clone);
+        control.PasswordChanged += (s, e) => property.SetValue(clone, control.Password);
 
         return control;
     }

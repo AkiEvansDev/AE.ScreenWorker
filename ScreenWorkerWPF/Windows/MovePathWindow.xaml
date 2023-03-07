@@ -12,7 +12,7 @@
     Title="Edit move path"
     Icon="../icon.ico"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterScreen"
+    WindowStartupLocation="CenterOwner"
     Height="Auto" Width="814"
     Padding="2">
     <Grid>
