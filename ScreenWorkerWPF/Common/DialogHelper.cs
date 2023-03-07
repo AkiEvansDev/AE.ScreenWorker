@@ -329,6 +329,9 @@ internal static class DialogHelper
                     return false;
                 }
 
+                IsCheckLogin = false;
+                LoginWait = null;
+
                 return isComplite;
             }
 
