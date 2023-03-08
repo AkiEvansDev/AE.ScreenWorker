@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 
 using AE.Core;
 
 using ModernWpf.Controls;
-
-using ScreenBase.Data.Base;
 
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
@@ -52,6 +49,9 @@ internal class OnlineScriptsViewModel : BaseModel
 
     public ActionNavigationMenuItem LogoutAction { get; }
 
+    public List<DriveFileInfo> Users { get; set; }
+    public bool IsUsers => Users?.Any() == true;
+
     private List<DriveFileInfo> files;
     public IEnumerable<DriveFileInfo> AllItems => files
         .OrderBy(f => f.Name);
@@ -81,6 +81,30 @@ internal class OnlineScriptsViewModel : BaseModel
             var text = SearchText;
             if (text.IsNull())
                 text = ".sw";
+
+            Users = new List<DriveFileInfo>();
+            if (text.EqualsIgnoreCase("/admin"))
+            {
+                var userFolder = await DriveHelper.GetUsersFolderId(service, cancellationTokenSource.Token);
+                if (!userFolder.IsNull())
+                {
+                    var currentUser = await DriveHelper.SearchFiles(service, userFolder, App.CurrentSettings.User.File, cancellationTokenSource.Token);
+                    if (currentUser.Any() && currentUser[0].Description.EqualsIgnoreCase("admin"))
+                    {
+                        Users = await DriveHelper.SearchFiles(service, userFolder, ".u", cancellationTokenSource.Token);
+                        foreach (var user in Users)
+                        {
+                            user.Edit = new RelayCommand(() => OnEdit(user, true));
+                            user.Delete = new RelayCommand(() => OnDelete(user));
+                        }
+                    }
+                }
+
+                text = ".sw";
+            }
+
+            NotifyPropertyChanged(nameof(Users));
+            NotifyPropertyChanged(nameof(IsUsers));
 
             files = await DriveHelper.SearchFiles(service, folder, text, cancellationTokenSource.Token);
             foreach (var file in files)
@@ -116,11 +140,11 @@ internal class OnlineScriptsViewModel : BaseModel
         IsLoading = false;
     }
 
-    private async void OnEdit(DriveFileInfo file)
+    private async void OnEdit(DriveFileInfo file, bool isUser = false)
     {
         if (await EditPropertyDialog.ShowAsync(file, "Edit script gallery data") == ContentDialogResult.Primary)
         {
-            var result = await DialogHelper.Edit(file.Id, file.Name, file.Description);
+            var result = await DialogHelper.Edit(file.Id, file.Name, file.Description, isUser);
 
             if (result)
                 file.UpdateData();
@@ -138,6 +162,10 @@ internal class OnlineScriptsViewModel : BaseModel
             if (await DriveHelper.DeleteFile(service, file.Id, cancellationTokenSource.Token))
             {
                 files.Remove(file);
+                Users?.Remove(file);
+
+                NotifyPropertyChanged(nameof(Users));
+                NotifyPropertyChanged(nameof(IsUsers));
 
                 NotifyPropertyChanged(nameof(AllItems));
                 NotifyPropertyChanged(nameof(MyItems));

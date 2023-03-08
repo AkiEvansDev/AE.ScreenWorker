@@ -99,7 +99,7 @@ internal static class DialogHelper
         return isComplite;
     }
 
-    public async static Task<bool> Edit(string fileId, string newName, string newDescription)
+    public async static Task<bool> Edit(string fileId, string newName, string newDescription, bool isUser)
     {
         if (newName.IsNull())
         {
@@ -108,10 +108,19 @@ internal static class DialogHelper
         }
 
         var fileName = newName;
-        newDescription = $"{App.CurrentSettings.User.Login.Length}|{App.CurrentSettings.User.Login}|{newDescription}";
 
-        if (!fileName.EndsWith(".sw"))
-            fileName = $"{fileName}.sw";
+        if (isUser)
+        {
+            if (!fileName.EndsWith(".u"))
+                fileName = $"{fileName}.u";
+        }
+        else
+        {
+            newDescription = $"{App.CurrentSettings.User.Login.Length}|{App.CurrentSettings.User.Login}|{newDescription}";
+
+            if (!fileName.EndsWith(".sw"))
+                fileName = $"{fileName}.sw";
+        }
 
         using var service = DriveHelper.GetDriveService();
 
@@ -131,7 +140,9 @@ internal static class DialogHelper
         {
             progress(0);
 
-            var folderId = await DriveHelper.GetScriptsFolderId(service, cancelTokenSource.Token);
+            var folderId = isUser 
+                ? await DriveHelper.GetUsersFolderId(service, cancelTokenSource.Token)
+                : await DriveHelper.GetScriptsFolderId(service, cancelTokenSource.Token);
             progress(0.2f);
 
             if (!folderId.IsNull())
@@ -142,7 +153,7 @@ internal static class DialogHelper
                 if (files.Any())
                 {
                     files = files
-                        .Where(f => f.Name.EqualsIgnoreCase(newName) && f.IsOwn)
+                        .Where(f => f.Name.EqualsIgnoreCase(newName) && f.IsOwn && f.Id != fileId)
                         .ToList();
 
                     if (files.Any())
@@ -313,7 +324,7 @@ internal static class DialogHelper
                 onOpen = async () =>
                 {
                     progress(0);
-                    var result = await DriveHelper.CreateFile(service, folderId, userInfo.File, null, userInfo, progress, cancelTokenSource.Token);
+                    var result = await DriveHelper.CreateFile(service, folderId, userInfo.File, "user", userInfo, progress, cancelTokenSource.Token);
 
                     isComplite = !result.IsNull();
                     LoginWait.Hide();

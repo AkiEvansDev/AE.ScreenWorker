@@ -57,10 +57,12 @@ internal class DriveFileInfo : BaseModel, IEditProperties
 
         if (name.EndsWith(".sw"))
             name = name.Substring(0, name.Length - 3);
+        else if (name.EndsWith(".u"))
+            name = name.Substring(0, name.Length - 2);
 
         Name = name;
 
-        if (!description.IsNull())
+        if (!description.IsNull() && description.Contains("|"))
         {
             var index = description.IndexOf('|');
             var len = int.Parse(description.Substring(0, index));
@@ -72,6 +74,8 @@ internal class DriveFileInfo : BaseModel, IEditProperties
             User = user;
             Description = description;
         }
+        else
+            Description = description;
     }
 
     public void UpdateData()
