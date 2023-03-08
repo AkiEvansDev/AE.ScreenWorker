@@ -3,12 +3,13 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ScreenWorkerWPF.Common;
 
 internal static class Extensions
 {
-    public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, Action<float> progress = null, CancellationToken cancellationToken = default)
+    public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, Action<float> progress = null, int bufferSize = 81920, CancellationToken cancellationToken = default)
     {
         using var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         var contentLength = response.Content.Headers.ContentLength;
@@ -21,8 +22,14 @@ internal static class Extensions
             return;
         }
 
-        void relativeProgress(long totalBytes) => progress((float)totalBytes / contentLength.Value);
-        await download.CopyToAsync(destination, 81920, relativeProgress, cancellationToken);
+        void relativeProgress(long totalBytes)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                progress((float)totalBytes / contentLength.Value);
+            });
+        }
+        await download.CopyToAsync(destination, bufferSize, relativeProgress, cancellationToken);
         progress(1);
     }
 

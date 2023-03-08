@@ -492,11 +492,12 @@ internal static class DialogHelper
             {
                 try
                 {
-                    using var file = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None);
                     void progress(float f) => downloadDialog.Content = $"Progress: {Math.Round(f * 100)}%";
 
+                    using var file = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None, 81920, true);
                     using var client = GithubHelper.GetHttpClient(TimeSpan.FromMinutes(5));
-                    await client.DownloadAsync(fileUrl, file, progress, cancelTokenSource.Token);
+
+                    await client.DownloadAsync(fileUrl, file, progress, 81920, cancelTokenSource.Token);
 
                     downloadDialog.Title = "Downloading help info...";
                     downloadDialog.Content = "Progress: 0%";
