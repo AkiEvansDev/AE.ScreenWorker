@@ -26,6 +26,7 @@ public enum ActionType
     While = 32,
     WhileGetColor = 33,
     WhileGetColorCount = 34,
+    WhileCompareNumber = 35,
 
     If = 40,
     IfColor = 41,

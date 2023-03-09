@@ -138,6 +138,7 @@ internal class MainViewModel : BaseModel
                 new WhileAction(),
                 new WhileGetColorAction(),
                 new WhileGetColorCountAction(),
+                new WhileCompareNumberAction(),
                 new ForAction(),
                 new ForeachColorAction(),
             }),
