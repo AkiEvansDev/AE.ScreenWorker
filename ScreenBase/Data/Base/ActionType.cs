@@ -63,6 +63,8 @@ public enum ActionType
 
     Translate = 210,
 
+    GetImagePartPosition = 250,
+
     SetWindowPosition = 300,
     Copy = 310,
     Paste = 311,

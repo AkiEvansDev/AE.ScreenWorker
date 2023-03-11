@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -95,8 +96,11 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
         }
     }
 
-    [TextEditProperty(10)]
+    [TextEditProperty(10, variantsProperty: nameof(Variants))]
     public string Arguments { get; set; }
+
+    [AEIgnore]
+    public Dictionary<string, string> Variants { get; }
 
     [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
     public Lang Lang { get; set; }
@@ -112,11 +116,19 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
 
     public ExtractTextAction()
     {
-        Arguments = "-tessedit_char_whitelist 0123456789oO|";
+        Variants = new Dictionary<string, string>
+        {
+            { "Numbers", "-tessedit_char_whitelist &m0123456789oO|" },
+            { "Eng text", "-tessedit_char_whitelist 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&s'.,:!?" },
+            { "Rus text", "-tessedit_char_whitelist 0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ&s'.,:!?" },
+        };
+
+        Arguments = Variants["Numbers"];
         Lang = Lang.Eng;
         OcrType = PageSegMode.SingleLine;
         PixelFormat = PixelFormat.Format32bppRgb;
         UseOptimizeCoordinate = true;
+
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
@@ -162,6 +174,10 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
                     {
                         var name = data[0].Trim(' ', '-');
                         var value = data[1].Trim(' ', '-');
+
+                        value = value
+                            .Replace("&m", "-")
+                            .Replace("&s", " ");
 
                         engine.SetVariable(name, value);
                     }

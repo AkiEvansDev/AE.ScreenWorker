@@ -84,10 +84,12 @@ public class ScreenRangeEditPropertyAttribute : EditPropertyAttribute
 public class TextEditPropertyAttribute : EditPropertyAttribute
 {
     public bool IsPassword { get; }
+    public string VariantsProperty { get; }
 
-    public TextEditPropertyAttribute(int order = 0, string title = null, bool isPassword = false) : base(order, title)
+    public TextEditPropertyAttribute(int order = 0, string title = null, bool isPassword = false, string variantsProperty = null) : base(order, title)
     {
         IsPassword = isPassword;
+        VariantsProperty = variantsProperty;
     }
 }
 

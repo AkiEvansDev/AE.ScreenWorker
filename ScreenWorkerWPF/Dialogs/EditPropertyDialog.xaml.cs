@@ -538,6 +538,9 @@ public partial class EditPropertyDialog : ContentDialog
         if (tAttr.IsPassword)
             return GetPasswordEditControl(property, clone, tAttr);
 
+        if (!tAttr.VariantsProperty.IsNull())
+            return GetTextEditControlWithVariant(property, clone, tAttr);
+
         var control = new TextBox
         {
             FocusVisualStyle = null,
@@ -564,6 +567,37 @@ public partial class EditPropertyDialog : ContentDialog
 
         clone.NeedUpdate += () => control.Password = (string)property.GetValue(clone);
         control.PasswordChanged += (s, e) => property.SetValue(clone, control.Password);
+
+        return control;
+    }
+
+    private UIElement GetTextEditControlWithVariant(PropertyInfo property, IEditProperties clone, TextEditPropertyAttribute tAttr)
+    {
+        var data = clone
+            .GetType()
+            .GetProperty(tAttr.VariantsProperty)
+            .GetValue(clone) as Dictionary<string, string>;
+
+        var control = new AutoSuggestBox
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            ItemsSource = data.Keys,
+            MaxWidth = 300,
+            Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+            FocusVisualStyle = null
+        };
+
+        if (tAttr.Title != "-")
+            ControlHelper.SetHeader(control, tAttr.Title ?? property.Name);
+
+        clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
+        control.TextChanged += (s, e) =>
+        {
+            if (data.Keys.Contains(control.Text))
+                control.Text = data[control.Text];
+
+            property.SetValue(clone, control.Text);
+        };
 
         return control;
     }
