@@ -11,6 +11,8 @@ using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.Windows;
 
+using WebWork;
+
 namespace ScreenWorkerWPF.ViewModel;
 
 internal class OnlineScriptsViewModel : BaseModel
@@ -49,19 +51,23 @@ internal class OnlineScriptsViewModel : BaseModel
 
     public ActionNavigationMenuItem LogoutAction { get; }
 
-    public List<DriveFileInfo> Users { get; set; }
+    private readonly List<DriveFileItem> users;
+    public IEnumerable<DriveFileItem> Users => users
+        .OrderBy(f => f.Name);
     public bool IsUsers => Users?.Any() == true;
 
-    private List<DriveFileInfo> files;
-    public IEnumerable<DriveFileInfo> AllItems => files
+    private readonly List<DriveFileItem> files;
+    public IEnumerable<DriveFileItem> AllItems => files
         .OrderBy(f => f.Name);
-    public IEnumerable<DriveFileInfo> MyItems => AllItems
+    public IEnumerable<DriveFileItem> MyItems => AllItems
         .Where(f => f.IsOwn);
 
     public OnlineScriptsViewModel()
     {
         LogoutAction = new ActionNavigationMenuItem("Logout", Symbol.BlockContact, OnLogout);
-        files = new List<DriveFileInfo>();
+
+        users = new List<DriveFileItem>();
+        files = new List<DriveFileItem>();
 
         Load();
     }
@@ -82,7 +88,7 @@ internal class OnlineScriptsViewModel : BaseModel
             if (text.IsNull())
                 text = ".sw";
 
-            Users = new List<DriveFileInfo>();
+            users.Clear();
             if (text.EqualsIgnoreCase("/admin"))
             {
                 var userFolder = await DriveHelper.GetUsersFolderId(service, cancellationTokenSource.Token);
@@ -91,11 +97,15 @@ internal class OnlineScriptsViewModel : BaseModel
                     var currentUser = await DriveHelper.SearchFiles(service, userFolder, App.CurrentSettings.User.File, cancellationTokenSource.Token);
                     if (currentUser.Any() && currentUser[0].Description.EqualsIgnoreCase("admin"))
                     {
-                        Users = await DriveHelper.SearchFiles(service, userFolder, ".u", cancellationTokenSource.Token);
-                        foreach (var user in Users)
+                        var usersResult = await DriveHelper.SearchFiles(service, userFolder, ".u", cancellationTokenSource.Token);
+                        foreach (var file in usersResult)
                         {
-                            user.Edit = new RelayCommand(() => OnEdit(user, true));
-                            user.Delete = new RelayCommand(() => OnDelete(user));
+                            var item = new DriveFileItem(file.Id, file.Size, file.Name, file.Description);
+
+                            item.Edit = new RelayCommand(() => OnEdit(item, true));
+                            item.Delete = new RelayCommand(() => OnDelete(item));
+
+                            users.Add(item);
                         }
                     }
                 }
@@ -106,12 +116,18 @@ internal class OnlineScriptsViewModel : BaseModel
             NotifyPropertyChanged(nameof(Users));
             NotifyPropertyChanged(nameof(IsUsers));
 
-            files = await DriveHelper.SearchFiles(service, folder, text, cancellationTokenSource.Token);
-            foreach (var file in files)
+            var fileResult = await DriveHelper.SearchFiles(service, folder, text, cancellationTokenSource.Token);
+            files.Clear();
+
+            foreach (var file in fileResult)
             {
-                file.Download = new RelayCommand(() => OnDownload(file));
-                file.Edit = new RelayCommand(() => OnEdit(file));
-                file.Delete = new RelayCommand(() => OnDelete(file));
+                var item = new DriveFileItem(file.Id, file.Size, file.Name, file.Description);
+
+                item.Download = new RelayCommand(() => OnDownload(item));
+                item.Edit = new RelayCommand(() => OnEdit(item));
+                item.Delete = new RelayCommand(() => OnDelete(item));
+
+                files.Add(item);
             }
 
             NotifyPropertyChanged(nameof(AllItems));
@@ -124,12 +140,12 @@ internal class OnlineScriptsViewModel : BaseModel
         IsLoading = false;
     }
 
-    private async void OnDownload(DriveFileInfo file)
+    private async void OnDownload(DriveFileItem file)
     {
         IsLoading = true;
         cancellationTokenSource = new CancellationTokenSource();
 
-        var script = await DialogHelper.Download(file.Id);
+        var script = await CommonHelper.Download(file.Id);
         if (script != null)
         {
             OnlineScriptsWindow.Current.Close();
@@ -140,20 +156,21 @@ internal class OnlineScriptsViewModel : BaseModel
         IsLoading = false;
     }
 
-    private async void OnEdit(DriveFileInfo file, bool isUser = false)
+    private async void OnEdit(DriveFileItem file, bool isUser = false)
     {
-        if (await EditPropertyDialog.ShowAsync(file, "Edit script gallery data") == ContentDialogResult.Primary)
+        var edit = (DriveFileItem)file.Clone();
+        if (await EditPropertyDialog.ShowAsync(edit, "Edit script gallery data") == ContentDialogResult.Primary)
         {
-            var result = await DialogHelper.Edit(file.Id, file.Name, file.Description, isUser);
+            var result = await CommonHelper.Edit(file.Id, edit.Name, edit.Description, isUser);
 
             if (result)
-                file.UpdateData();
+                file.UpdateData(edit);
         }
     }
 
-    private async void OnDelete(DriveFileInfo file)
+    private async void OnDelete(DriveFileItem file)
     {
-        if (await DialogHelper.ShowMessage(null, $"Delete `{file.Name}`?") == ContentDialogResult.Primary)
+        if (await CommonHelper.ShowMessage(null, $"Delete `{file.Name}`?") == ContentDialogResult.Primary)
         {
             IsLoading = true;
             cancellationTokenSource = new CancellationTokenSource();
@@ -162,7 +179,7 @@ internal class OnlineScriptsViewModel : BaseModel
             if (await DriveHelper.DeleteFile(service, file.Id, cancellationTokenSource.Token))
             {
                 files.Remove(file);
-                Users?.Remove(file);
+                users?.Remove(file);
 
                 NotifyPropertyChanged(nameof(Users));
                 NotifyPropertyChanged(nameof(IsUsers));

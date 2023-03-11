@@ -15,7 +15,7 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
         => $"While {(Not ? "<P>!</P>" : "")}({GetColorCount()} {GetSymb()} {GetValueString(Value, ValueVariable)}){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"While {(Not ? "<P>!</P>" : "")}({GetExecuteColorCount(executor)} {GetSymb()} {GetValueString(executor.GetValue(Value, ValueVariable))}){(Timeout > 0 ? $" or timeout {GetValueString(Timeout)} second" : "")}";
-    
+
     private string GetColorCount()
         => $"GetColorCount({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(ColorPoint.GetColor(), ColorVariable)} with {GetValueString(Accuracy)} accuracy)";
     private string GetExecuteColorCount(IScriptExecutor executor)
@@ -181,7 +181,6 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
                 executor.Log($"<E>Second position must be greater than the first</E>", true);
                 return ActionResultType.False;
             }
-
 
             var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
             worker.Screen();

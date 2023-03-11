@@ -11,7 +11,7 @@ using static ScreenWindows.WindowsHelper;
 
 namespace ScreenWindows;
 
-public class WindowsScreenWorker : IScreenWorker 
+public class WindowsScreenWorker : IScreenWorker
 {
     public event OnKeyEventDelegate OnKeyEvent;
 
@@ -32,7 +32,7 @@ public class WindowsScreenWorker : IScreenWorker
         var keyEvent = KeyEventType.KeyDown;
 
         if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyUp)
-            keyEvent= KeyEventType.KeyUp;
+            keyEvent = KeyEventType.KeyUp;
 
         if (key != 0)
             OnKeyEvent?.Invoke(key, keyEvent);
@@ -56,8 +56,8 @@ public class WindowsScreenWorker : IScreenWorker
     public Color[,] GetColors(Rectangle range)
     {
         var result = new Color[range.Width, range.Height];
-        
-        for (var x = 0; x < range.Width; ++x) 
+
+        for (var x = 0; x < range.Width; ++x)
             for (var y = 0; y < range.Height; ++y)
                 result[x, y] = screen.GetPixel(range.X + x, range.Y + y);
 

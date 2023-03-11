@@ -144,7 +144,7 @@ public static class WindowsHelper
         public int cy;
 
         public SIZE(int cx, int cy)
-        { 
+        {
             this.cx = cx;
             this.cy = cy;
         }

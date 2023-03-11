@@ -61,6 +61,8 @@ public enum ActionType
     ExtractText = 200,
     ParseNumber = 201,
 
+    Translate = 210,
+
     SetWindowPosition = 300,
     Copy = 310,
     Paste = 311,
@@ -147,8 +149,17 @@ public enum MoveType
     Left = -90,
     Right = 90,
     Backward = 180,
-    BackwardLeft = -135, 
+    BackwardLeft = -135,
     BackwardRight = 135,
+}
+
+public enum WindowLocation
+{
+    LeftTop = 1,
+    RightTop = 2,
+    LeftBottom = 3,
+    RightBottom = 4,
+    Center = 5,
 }
 
 public enum FontStyle
@@ -170,4 +181,15 @@ public enum PixelFormat
     Format4bppIndexed = 197634,
     Format8bppIndexed = 198659,
     Format16bppGrayScale = 1052676,
+}
+
+public enum Lang
+{
+    Eng = 0,
+    Rus = 1,
+}
+
+public enum TranslateApiSource
+{
+    Google = 0,
 }

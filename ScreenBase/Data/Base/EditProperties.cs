@@ -126,7 +126,7 @@ public class SaveEditPropertyAttribute : LoadEditPropertyAttribute
 {
     public string DefaultExt { get; set; }
 
-    public SaveEditPropertyAttribute(int order = 0, string title = null, string defaultExt = null, string defaultName = null, string nameProperty = null, string filter = null) : base(order, title, defaultName, nameProperty, filter) 
+    public SaveEditPropertyAttribute(int order = 0, string title = null, string defaultExt = null, string defaultName = null, string nameProperty = null, string filter = null) : base(order, title, defaultName, nameProperty, filter)
     {
         DefaultExt = defaultExt;
     }

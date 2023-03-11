@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 
 using AE.Core;
 
@@ -63,7 +62,7 @@ internal class FunctionViewModelBase : BaseModel
 
             if (canEdit)
                 Cut = new RelayCommand(OnCut, IsSelect);
-            
+
             Copy = new RelayCommand(OnCopy, IsSelect);
             Paste = new RelayCommand(OnPaste, () => ToCopy.Any());
         }
@@ -336,7 +335,7 @@ internal class FunctionViewModelBase : BaseModel
         if (await EditPropertyDialog.ShowAsync(item.Action, $"Edit {item.Action.Type.Name()}") == ContentDialogResult.Primary)
         {
             item.UpdateTitle();
-            
+
             if (item.Action is IElseAction elseAction)
             {
                 if (elseAction.NeedElse && !item.Children.Any(i => i.Action.Type == ActionType.Else))
@@ -348,7 +347,7 @@ internal class FunctionViewModelBase : BaseModel
                     OnPaste(new List<IAction> { new ElseAction() }, Items, target ?? item, false);
                 }
                 else if (!elseAction.NeedElse)
-                { 
+                {
                     var target = item.Children.FirstOrDefault(i => i.Action.Type == ActionType.Else);
                     if (target != null)
                         DeleteItem(target);
@@ -494,7 +493,7 @@ internal class VariablesViewModel : FunctionViewModelBase
                         {
                             property.SetValue(item.Action, "");
                             item.UpdateTitle();
-                        }    
+                        }
                     }
                 }
     }

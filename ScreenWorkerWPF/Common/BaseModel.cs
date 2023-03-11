@@ -4,7 +4,7 @@ namespace ScreenWorkerWPF.Common;
 
 internal abstract class BaseModel : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
 
     protected void NotifyPropertyChanged(string propertyName)
     {

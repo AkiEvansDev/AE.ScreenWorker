@@ -17,7 +17,7 @@ public class CommentAction : BaseAction<CommentAction>
 
     public CommentAction()
     {
-       // Comment = "Add some commands here...";
+        // Comment = "Add some commands here...";
     }
 
     public CommentAction(string comment = "")

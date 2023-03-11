@@ -40,7 +40,7 @@ public class GetFileTableLengthAction : BaseAction<GetFileTableLengthAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
-        { 
+        {
             executor.SetVariable(Result, executor.GetFileTableLength(Name, LengthType));
             return ActionResultType.True;
         }

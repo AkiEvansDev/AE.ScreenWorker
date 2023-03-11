@@ -45,9 +45,9 @@ public partial class EditPropertyDialog : ContentDialog
         if (clone is IAction action)
         {
             Title = new TextBlock { Text = title };
-            _ = Task.Run(async () =>
+            Task.Run(async () =>
             {
-                var data = await GithubHelper.GetHelpInfo(action.Type);
+                var data = await CommonHelper.GetHelpInfo(action.Type);
                 if (data != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
@@ -173,7 +173,7 @@ public partial class EditPropertyDialog : ContentDialog
                 FontSize = 12,
                 Opacity = 0.6,
                 Margin = new Thickness(0, Container.Spacing * 2, 0, 0),
-                Text = $"Ver.: {GithubHelper.GetVersionString()}"
+                Text = $"Ver.: {CommonHelper.GetVersionString()}"
             });
         }
 
@@ -407,7 +407,7 @@ public partial class EditPropertyDialog : ContentDialog
 
             panel1.Children.Add(control);
             panel1.Children.Add(panel2);
-            
+
             return panel1;
         }
         else
@@ -626,7 +626,7 @@ public partial class EditPropertyDialog : ContentDialog
 
         return control;
     }
-    
+
     private UIElement GetFilePathEditControl(PropertyInfo property, IEditProperties clone, FilePathEditPropertyAttribute fPathAttr)
     {
         var control = new TextBox

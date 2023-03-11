@@ -15,10 +15,10 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
 {
     public override ActionType Type => ActionType.ExtractText;
 
-    public override string GetTitle() 
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(PixelFormat)}, {GetValueString(OcrType)});";
-    public override string GetExecuteTitle(IScriptExecutor executor) 
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(PixelFormat)}, {GetValueString(OcrType)});";
+    public override string GetTitle()
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)});";
+    public override string GetExecuteTitle(IScriptExecutor executor)
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)});";
 
     [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
@@ -99,20 +99,24 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
     public string Arguments { get; set; }
 
     [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
-    public PixelFormat PixelFormat { get; set; }
+    public Lang Lang { get; set; }
 
     [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
     public PageSegMode OcrType { get; set; }
 
-    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Enum)]
+    public PixelFormat PixelFormat { get; set; }
+
+    [ComboBoxEditProperty(13, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Result { get; set; }
 
     public ExtractTextAction()
     {
-        UseOptimizeCoordinate = true;
-        Arguments = "-tessedit_char_whitelist 0123456789";
-        PixelFormat = PixelFormat.Format32bppRgb;
+        Arguments = "-tessedit_char_whitelist 0123456789oO|";
+        Lang = Lang.Eng;
         OcrType = PageSegMode.SingleLine;
+        PixelFormat = PixelFormat.Format32bppRgb;
+        UseOptimizeCoordinate = true;
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
@@ -135,7 +139,14 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
                 "tessdata"
             );
 
-            using var engine = new TesseractEngine(path, "eng", EngineMode.Default);
+            var lang = Lang switch
+            {
+                Lang.Eng => "eng",
+                Lang.Rus => "rus",
+                _ => "eng",
+            };
+
+            using var engine = new TesseractEngine(path, lang, EngineMode.Default);
 
             if (!Arguments.IsNull())
             {

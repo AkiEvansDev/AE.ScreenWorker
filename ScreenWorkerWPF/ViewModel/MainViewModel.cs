@@ -170,10 +170,11 @@ internal class MainViewModel : BaseModel
                 new CompareTextAction(),
                 new IsColorAction(),
             }),
-            new ActionNavigationMenuItem("Ocr", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionNavigationMenuItem("Ocr & Api", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new ExtractTextAction(),
                 new ParseNumberAction(),
+                new TranslateAction(),
             }),
             new ActionNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
             {
@@ -194,7 +195,7 @@ internal class MainViewModel : BaseModel
             new ActionNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new OpenFileTableAction(),
-                new GetFileTableLengthAction(), 
+                new GetFileTableLengthAction(),
                 new GetFileTableValueAction(),
             }),
             new ActionNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
@@ -213,7 +214,7 @@ internal class MainViewModel : BaseModel
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
             LoginAction,
-            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await DialogHelper.Update(true)),
+            new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await CommonHelper.CheckUpdate(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
@@ -257,7 +258,8 @@ internal class MainViewModel : BaseModel
         LogsWindow.IsDebug = debug;
         if (SaveData() && !ScriptInfo.IsEmpty())
         {
-            if (ScriptInfo.Main.FirstOrDefault(a => a.Type != ActionType.Comment)?.Type == ActionType.SetupDisplayWindow)
+            var fisrt = ScriptInfo.Main.FirstOrDefault(a => a.Type != ActionType.Comment);
+            if (fisrt != null && !fisrt.Disabled && fisrt.Type == ActionType.SetupDisplayWindow)
                 BaseExecutorWorker<DisplayWindow>.Start(new DisplayWindow(ScriptInfo, debug));
             else
                 BaseExecutorWorker<ExecuteWindow>.Start(new ExecuteWindow(ScriptInfo, debug));
@@ -286,14 +288,14 @@ internal class MainViewModel : BaseModel
             logs.ShowDialog();
         }
         else
-            DialogHelper.ShowError("No logs, start script debug before!", "Warning!");
+            CommonHelper.ShowError("No logs, start script debug before!", "Warning!");
     }
 
     private async void OnUpload()
     {
         if (App.CurrentSettings.User != null && App.CurrentSettings.User.IsLogin && SaveData())
         {
-            var fileInfo = new DriveFileInfo
+            var fileInfo = new DriveFileItem
             {
                 Name = ScriptInfo.Name,
                 Description = ""
@@ -301,14 +303,14 @@ internal class MainViewModel : BaseModel
 
             if (await EditPropertyDialog.ShowAsync(fileInfo, "Upload script to gallery") == ContentDialogResult.Primary)
             {
-                var result = await DialogHelper.Upload(ScriptInfo, fileInfo.Name, fileInfo.Description);
+                var result = await CommonHelper.Upload(ScriptInfo, fileInfo.Name, fileInfo.Description);
 
                 if (result)
-                    await DialogHelper.ShowMessage($"Upload `{fileInfo.Name}` success completed!", cancelBtn: null);
+                    await CommonHelper.ShowMessage($"Upload `{fileInfo.Name}` success completed!", cancelBtn: null);
             }
         }
         else
-            DialogHelper.ShowError("Login first!", "Warning!");
+            CommonHelper.ShowError("Login first!", "Warning!");
     }
 
     private async void OnSettings()
@@ -325,9 +327,9 @@ internal class MainViewModel : BaseModel
         }
         else
         {
-            if (DialogHelper.IsCheckLogin)
+            if (CommonHelper.IsCheckLogin)
             {
-                await DialogHelper.Login(null, true);
+                await CommonHelper.Login(null, true);
                 return;
             }
 
@@ -336,7 +338,7 @@ internal class MainViewModel : BaseModel
             {
                 user.EncryptPassword();
 
-                if (await DialogHelper.Login(user, true))
+                if (await CommonHelper.Login(user, true))
                 {
                     user.IsLogin = true;
                     App.CurrentSettings.User = user;
@@ -366,7 +368,7 @@ internal class MainViewModel : BaseModel
 
             if (ScriptInfo.Folder.IsNull() || !Directory.Exists(ScriptInfo.Folder))
             {
-                DialogHelper.ShowError($"Path `{ScriptInfo.Folder}` not exist!");
+                CommonHelper.ShowError($"Path `{ScriptInfo.Folder}` not exist!");
             }
             else if (SaveData())
             {
@@ -377,7 +379,7 @@ internal class MainViewModel : BaseModel
                 }
                 catch (Exception ex)
                 {
-                    DialogHelper.ShowError(ex.Message);
+                    CommonHelper.ShowError(ex.Message);
                 }
             }
         }
@@ -437,7 +439,7 @@ internal class MainViewModel : BaseModel
             }
             else if (scriptInfo.Width != size.Width || scriptInfo.Height != size.Height)
             {
-                if (await DialogHelper.ShowMessage($"Optimize for {size.Width}x{size.Height}?", $"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size!") == ContentDialogResult.Primary)
+                if (await CommonHelper.ShowMessage($"Optimize for {size.Width}x{size.Height}?", $"Script create on {scriptInfo.Width}x{scriptInfo.Height} screen size!") == ContentDialogResult.Primary)
                 {
                     foreach (var action in scriptInfo.Main.Concat(scriptInfo.Data.SelectMany(f => f.Value)))
                     {
@@ -467,7 +469,7 @@ internal class MainViewModel : BaseModel
         {
             foreach (var item in group.Items)
                 OptimizeCoordinate(item, oldWidth, oldHeight, newWidth, newHeight);
-        } 
+        }
     }
 
     private bool SaveData()
@@ -483,7 +485,7 @@ internal class MainViewModel : BaseModel
         }
         catch (Exception ex)
         {
-            DialogHelper.ShowError(ex.Message);
+            CommonHelper.ShowError(ex.Message);
             return false;
         }
 
@@ -516,7 +518,7 @@ internal class MainViewModel : BaseModel
         }
         catch (Exception ex)
         {
-            DialogHelper.ShowError(ex.Message);
+            CommonHelper.ShowError(ex.Message);
         }
     }
 
@@ -532,7 +534,7 @@ internal class MainViewModel : BaseModel
             }
         }
 
-        if (!ScriptInfo.IsEmpty() && await DialogHelper.ShowMessage("Save data before open new script?") == ContentDialogResult.Primary)
+        if (!ScriptInfo.IsEmpty() && await CommonHelper.ShowMessage("Save data before open new script?") == ContentDialogResult.Primary)
             OnSave(action);
         else
             action();

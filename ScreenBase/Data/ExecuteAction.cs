@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 
 using AE.Core;
 
@@ -49,7 +48,7 @@ public class StartProcessAction : BaseDelayAction<StartProcessAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Path.IsNull() && File.Exists(Path))
-        { 
+        {
             worker.StartProcess(Path, Arguments);
             return ActionResultType.True;
         }

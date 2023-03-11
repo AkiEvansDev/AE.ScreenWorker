@@ -5,11 +5,11 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Windows;
 
 [AESerializable]
-public class SetupDisplayWindowAction : BaseAction<SetupDisplayWindowAction>, ICoordinateAction
+public class SetupDisplayWindowAction : BaseAction<SetupDisplayWindowAction>, ISetupDisplayWindowAction, ICoordinateAction
 {
     public override ActionType Type => ActionType.SetupDisplayWindow;
 
-    public override string GetTitle() 
+    public override string GetTitle()
         => $"SetupDisplayWindow({GetValueString(DisplayWindowLocation)}, {GetValueString(Left)}, {GetValueString(Top)}, {GetValueString(Width)}, {GetValueString(Height)}{(Opacity > 0 ? $", {GetValueString(ColorPoint.GetColor())}, {GetValueString(Round)}" : "")});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
@@ -41,7 +41,7 @@ public class SetupDisplayWindowAction : BaseAction<SetupDisplayWindowAction>, IC
         }
     }
 
-    [NumberEditProperty(4, minValue: 0, maxValue: 255)]
+    [NumberEditProperty(4, $"{nameof(Opacity)} [0-255]", minValue: 0, maxValue: 255)]
     public int Opacity { get; set; }
 
     [NumberEditProperty(4, minValue: 0)]

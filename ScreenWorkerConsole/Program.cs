@@ -34,8 +34,8 @@ else
         Console.WriteLine($"Start {data.Name}, press eny key to stop!");
 
         var hwnd = Process.GetCurrentProcess().MainWindowHandle;
-        var size = WindowsHelper.GetMonitorSize(hwnd); 
-        
+        var size = WindowsHelper.GetMonitorSize(hwnd);
+
         var worker = new WindowsScreenWorker(size.Width, size.Height);
         var executor = new ScriptExecutor();
 

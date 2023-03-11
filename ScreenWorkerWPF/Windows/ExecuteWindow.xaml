@@ -5,11 +5,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:web="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     mc:Ignorable="d"
     Title="execute"
     WindowStyle="None"
     ResizeMode="NoResize"
-    WindowStartupLocation="Manual"
+    WindowStartupLocation="CenterScreen"
     Topmost="True"
     AllowsTransparency="True"
     ShowInTaskbar="False"
@@ -28,5 +29,10 @@
             Text="..."
             FontSize="12"
             HorizontalAlignment="Center"/>
+        <web:WebView2
+            x:Name="Web"
+            Width="0"
+            Height="0"
+            Visibility="Collapsed"/>
     </ui:SimpleStackPanel>
 </Window>

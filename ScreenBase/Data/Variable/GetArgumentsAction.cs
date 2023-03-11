@@ -18,7 +18,7 @@ public class GetArgumentsAction : BaseAction<GetArgumentsAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
-        { 
+        {
             executor.SetVariable(Result, executor.GetArguments());
             return ActionResultType.True;
         }

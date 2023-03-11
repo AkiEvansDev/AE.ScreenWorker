@@ -77,8 +77,17 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
     {
         worker.Screen();
 
+        var start = executor.GetValue(RangeStart, RangeStartVariable);
+        var end = executor.GetValue(RangeEnd, RangeEndVariable);
+
+        if (start < end)
+        {
+            executor.Log($"<E>Second position must be greater than the first</E>", true);
+            return ActionResultType.False;
+        }
+
         var val = executor.GetValue(RangeValue, RangeValueVariable);
-        for (var i = executor.GetValue(RangeStart, RangeStartVariable); i < executor.GetValue(RangeEnd, RangeEndVariable); i += Step)
+        for (var i = start; i < end; i += Step)
         {
             var x = RangeType == RangeType.Horizontal ? i : val;
             var y = RangeType == RangeType.Horizontal ? val : i;

@@ -25,10 +25,10 @@ public partial class MovePathWindow : Window
     private double X;
     private double Y;
 
-    private readonly Button up; 
+    private readonly Button up;
     private readonly Button upLeft;
     private readonly Button upRight;
-    private readonly Button left; 
+    private readonly Button left;
     private readonly Button right;
     private readonly Button down;
     private readonly Button downLeft;
@@ -256,7 +256,7 @@ public partial class MovePathWindow : Window
         {
             var x = Math.Abs(X) + border;
             Panel.Width = Panel.Width + x;
-            
+
             foreach (UIElement element in Panel.Children)
                 Canvas.SetLeft(element, Canvas.GetLeft(element) + x);
 
@@ -269,10 +269,10 @@ public partial class MovePathWindow : Window
         {
             var y = Math.Abs(Y) + border;
             Panel.Height = Panel.Height + y;
-            
+
             foreach (UIElement element in Panel.Children)
                 Canvas.SetTop(element, Canvas.GetTop(element) + y);
-            
+
             Y = Y + y;
         }
         else if (Y > Panel.Height - border)

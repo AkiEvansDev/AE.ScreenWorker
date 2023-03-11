@@ -101,7 +101,7 @@ public class GlobalKeyboardHook : IDisposable
     {
         windowsHookHandle = IntPtr.Zero;
         user32LibraryHandle = IntPtr.Zero;
-        hookProc = LowLevelKeyboardProc; 
+        hookProc = LowLevelKeyboardProc;
 
         user32LibraryHandle = LoadLibrary("user32.dll");
         if (user32LibraryHandle == IntPtr.Zero)

@@ -37,7 +37,7 @@ public partial class LogsWindow : Window
     {
         InitializeComponent();
 
-        LogsView.ItemsSource = Logs; 
+        LogsView.ItemsSource = Logs;
         LogsView.SelectedIndex = LogsView.Items.Count - 1;
         LogsView.ScrollIntoView(LogsView.SelectedItem);
     }

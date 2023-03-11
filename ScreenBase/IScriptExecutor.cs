@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 
 using ScreenBase.Data.Base;
-using ScreenBase.Data.Windows;
 
 namespace ScreenBase;
 
 public delegate void OnMessageDelegate(string message, bool needDisplay);
 public delegate void OnVariableChangeDelegate(string name, object newValue);
 
-public delegate void SetupDisplayWindowDelegate(SetupDisplayWindowAction action);
-public delegate void AddDisplayVariableDelegate(AddDisplayVariableAction action);
-public delegate void AddDisplayImageDelegate(AddDisplayImageAction action);
+public delegate void SetupDisplayWindowDelegate(ISetupDisplayWindowAction action);
+public delegate void AddDisplayVariableDelegate(IAddDisplayVariableAction action);
+public delegate void AddDisplayImageDelegate(IAddDisplayImageAction action);
 
 public interface IScriptExecutor
 {

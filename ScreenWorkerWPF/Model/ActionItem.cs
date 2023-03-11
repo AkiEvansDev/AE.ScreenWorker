@@ -19,7 +19,7 @@ internal class ActionItem : BaseModel
 
     public RelayCommand Edit { get; set; }
 
-    public ActionItem(IEnumerable<ActionItem> allItems, IAction action, Action<ActionItem> onEdit,  ActionItem parent = null)
+    public ActionItem(IEnumerable<ActionItem> allItems, IAction action, Action<ActionItem> onEdit, ActionItem parent = null)
     {
         StaticId++;
 
@@ -47,7 +47,7 @@ internal class ActionItem : BaseModel
 
     private readonly IEnumerable<ActionItem> allItems;
     public IEnumerable<ActionItem> Children => allItems != null ? allItems.Where(i => i.Parent?.Id == Id) : new List<ActionItem>();
-    
+
     private int ChildrenCount()
     {
         var result = 0;
@@ -62,9 +62,9 @@ internal class ActionItem : BaseModel
     }
 
     public string Title => Action.GetTitle();
-    public string Subtitle 
-        => (Action is IDelayAction delay) 
-            ? $"{delay.DelayAfter} ms" 
+    public string Subtitle
+        => (Action is IDelayAction delay)
+            ? $"{delay.DelayAfter} ms"
             : (Children.Count() > 1 && !IsExpanded)
                 ? $"({ChildrenCount()})"
                 : "";
@@ -80,7 +80,7 @@ internal class ActionItem : BaseModel
             : Visibility.Visible;
 
     public double LeftBorderOpacity
-        => (IsSelectedParent() && Action.Type != ActionType.End) 
+        => (IsSelectedParent() && Action.Type != ActionType.End)
         || (Action.Type == ActionType.End && Parent?.IsSelectedParent() == true)
             ? 1
             : 0.4;
@@ -155,7 +155,7 @@ internal class ActionItem : BaseModel
         get => isSelected;
         set
         {
-            if (value == isSelected) 
+            if (value == isSelected)
                 return;
 
             isSelected = value;
@@ -201,7 +201,7 @@ internal class ActionItem : BaseModel
             NotifyPropertyChanged(nameof(IsExpanded));
             NotifyPropertyChanged(nameof(Subtitle));
             NotifyPropertyChanged(nameof(ExpanderLineVisibility));
-            
+
             if (isExpanded)
                 foreach (var item in Children) item.Visibility = Visibility.Visible;
             else

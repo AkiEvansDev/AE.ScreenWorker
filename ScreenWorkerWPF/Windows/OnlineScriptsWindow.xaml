@@ -51,6 +51,14 @@
                     <TextBlock 
                         Text="{Binding User}"
                         Style="{StaticResource CaptionTextBlockStyle}"/>
+                    <TextBlock 
+                        Text=" on ver.: "
+                        Opacity="0.6"
+                        Style="{StaticResource CaptionTextBlockStyle}"/>
+                    <TextBlock 
+                        Text="{Binding Version}"
+                        Opacity="0.6"
+                        Style="{StaticResource CaptionTextBlockStyle}"/>
                 </ui:SimpleStackPanel>
                 <TextBlock 
                     Text="{Binding Description}"

@@ -7,12 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
+using Microsoft.Web.WebView2.Wpf;
+
 using ScreenBase.Data.Base;
-using ScreenBase.Data.Windows;
 
 using ScreenWindows;
 
 using Color = System.Drawing.Color;
+using Image = System.Drawing.Image;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Size = System.Drawing.Size;
 
@@ -23,10 +25,10 @@ public partial class DisplayWindow : Window
     internal class DisplayWindowWorker : BaseExecutorWorker<DisplayWindow>
     {
         private readonly List<IAction> Data;
-        private SetupDisplayWindowAction Info;
+        private ISetupDisplayWindowAction Info;
         private Bitmap Bitmap;
 
-        public DisplayWindowWorker(DisplayWindow window, ScriptInfo scriptData, bool isDebug) : base(window, scriptData, isDebug)
+        public DisplayWindowWorker(DisplayWindow window, WebView2 web, ScriptInfo scriptData, bool isDebug) : base(window, web, scriptData, isDebug)
         {
             Data = new List<IAction>();
         }
@@ -49,11 +51,11 @@ public partial class DisplayWindow : Window
             base.OnStop();
         }
 
-        private void OnSetup(SetupDisplayWindowAction action)
+        private void OnSetup(ISetupDisplayWindowAction action)
         {
             Info = action;
             Bitmap = new Bitmap(action.Width, action.Height, PixelFormat.Format32bppArgb);
-            
+
             Update();
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -95,7 +97,7 @@ public partial class DisplayWindow : Window
         private void OnExecutorVariableChange(string name, object newValue)
         {
             if (Data
-                .OfType<AddDisplayVariableAction>()
+                .OfType<IAddDisplayVariableAction>()
                 .Where(d => d.UpdateOnVariableChange)
                 .Any(d => d.Variable == name || d.ColorVariable == name)
                 )
@@ -123,7 +125,7 @@ public partial class DisplayWindow : Window
 
             foreach (var data in Data)
             {
-                if (data is AddDisplayVariableAction vAction)
+                if (data is IAddDisplayVariableAction vAction)
                 {
                     var color = Executor.GetValue(vAction.ColorPoint.GetColor(), vAction.ColorVariable);
                     g.DrawString(
@@ -133,7 +135,7 @@ public partial class DisplayWindow : Window
                         new PointF(vAction.Left, vAction.Top)
                     );
                 }
-                else if (data is AddDisplayImageAction iAction)
+                else if (data is IAddDisplayImageAction iAction)
                 {
                     var bytes = Convert.FromBase64String(iAction.Image);
                     using var stream = new MemoryStream();
@@ -145,8 +147,9 @@ public partial class DisplayWindow : Window
                 }
             }
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Window.Dispatcher.Invoke(() =>
             {
+                Window.Opacity = 1;
                 WindowsHelper.SelectBitmap(Handle, Bitmap, (int)Window.Left, (int)Window.Top);
             });
         }
@@ -185,6 +188,6 @@ public partial class DisplayWindow : Window
     public DisplayWindow(ScriptInfo scriptData, bool isDebug)
     {
         InitializeComponent();
-        Worker = new DisplayWindowWorker(this, scriptData, isDebug);
+        Worker = new DisplayWindowWorker(this, Web, scriptData, isDebug);
     }
 }

@@ -2,6 +2,8 @@
 
 using AE.Core;
 
+using Microsoft.Web.WebView2.Wpf;
+
 using ScreenBase.Data.Base;
 
 using ScreenWorkerWPF.Common;
@@ -12,7 +14,7 @@ public partial class ExecuteWindow : Window
 {
     internal class ExecuteWindowWorker : BaseExecutorWorker<ExecuteWindow>
     {
-        public ExecuteWindowWorker(ExecuteWindow window, ScriptInfo scriptData, bool isDebug) : base(window, scriptData, isDebug) { }
+        public ExecuteWindowWorker(ExecuteWindow window, WebView2 web, ScriptInfo scriptData, bool isDebug) : base(window, web, scriptData, isDebug) { }
 
         protected override void OnStart(ScriptInfo scriptData, bool isDebug)
         {
@@ -63,6 +65,6 @@ public partial class ExecuteWindow : Window
     public ExecuteWindow(ScriptInfo scriptData, bool isDebug)
     {
         InitializeComponent();
-        Worker = new ExecuteWindowWorker(this, scriptData, isDebug);
+        Worker = new ExecuteWindowWorker(this, Web, scriptData, isDebug);
     }
 }

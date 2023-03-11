@@ -5,8 +5,6 @@ using System.Windows.Controls;
 
 using ModernWpf.Controls;
 
-using ScreenBase.Data;
-
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.View;
@@ -24,7 +22,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         CheckUpdateLoginAndLoad(path);
-
+        
         //var s = new System.Windows.Controls.StackPanel
         //{
         //    Width = 200,
@@ -54,12 +52,12 @@ public partial class MainWindow : Window
         MainGrid.IsEnabled = false;
         DataContext = new MainViewModel(path);
 
-        await DialogHelper.Update(false);
+        await CommonHelper.CheckUpdate(false);
         MainGrid.IsEnabled = true;
 
         if (App.CurrentSettings.User != null)
         {
-            if (await DialogHelper.Login(App.CurrentSettings.User, false))
+            if (await CommonHelper.Login(App.CurrentSettings.User, false))
             {
                 App.CurrentSettings.User.IsLogin = true;
                 ViewModel.LoginAction.Title = App.CurrentSettings.User.Login;
@@ -139,7 +137,7 @@ public partial class MainWindow : Window
     {
         if (sender is NavigationViewItem viewItem && viewItem.DataContext is NavigationMenuItem menuItem && menuItem.Action != null)
         {
-            var data = await GithubHelper.GetHelpInfo(menuItem.Action.Type);
+            var data = await CommonHelper.GetHelpInfo(menuItem.Action.Type);
             if (data != null)
             {
                 //var panel = new SimpleStackPanel();

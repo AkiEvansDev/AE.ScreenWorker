@@ -26,7 +26,7 @@ public partial class OnlineScriptsWindow : Window
             var binding = BindingOperations.GetBindingExpression(tBox, TextBox.TextProperty);
 
             if (binding != null)
-            { 
+            {
                 binding.UpdateSource();
                 Keyboard.ClearFocus();
             }

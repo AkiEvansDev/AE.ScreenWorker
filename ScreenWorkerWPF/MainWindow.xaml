@@ -147,7 +147,7 @@
             Grid.ColumnSpan="2"
             Margin="0 -8 0 0"
             PaneDisplayMode="Left" 
-            OpenPaneLength="220"
+            OpenPaneLength="230"
             IsTabStop="False"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"

@@ -28,7 +28,16 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
         if (!Value.IsNull() && !Result.IsNull())
         {
             var value = executor.GetValue("", Value);
-            value = string.Concat(value.Where(i => "0123456789".Contains(i)));
+
+            if (!value.IsNull())
+            {
+                value = value
+                    .Replace('O', 'o')
+                    .Replace('o', '0')
+                    .Replace('|', '1');
+
+                value = string.Concat(value.Where(i => "0123456789".Contains(i)));
+            }
 
             if (int.TryParse(value, out int result))
                 executor.SetVariable(Result, result);
@@ -40,7 +49,7 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-        
+
             if (!Result.IsNull())
                 executor.SetVariable(Result, Default);
 

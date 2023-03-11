@@ -29,7 +29,7 @@ public class DisplaySpan
     public string Text { get; set; }
     public DisplaySpanType Type { get; set; }
 
-    public List<DisplaySpan> Inlines { get; set;}
+    public List<DisplaySpan> Inlines { get; set; }
 
     public DisplaySpan()
     {

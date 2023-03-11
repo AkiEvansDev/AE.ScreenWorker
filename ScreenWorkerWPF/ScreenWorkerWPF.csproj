@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>4.4.2002</Version>
+	<Version>4.5.1002</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -18,14 +18,14 @@
 
   <ItemGroup>
     <PackageReference Include="AE.CoreWPF" Version="3.0.2" />
-    <PackageReference Include="AE.Secrets" Version="1.0.2" />
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.60.0.2971" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1587.40" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NeuroImage\NeuroImage.csproj" />
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
+    <ProjectReference Include="..\WebWork\WebWork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

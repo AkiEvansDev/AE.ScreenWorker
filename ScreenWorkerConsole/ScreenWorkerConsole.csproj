@@ -4,9 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>4.4.2002</Version>
+	<Version>4.5.1002</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -18,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NeuroImage\NeuroImage.csproj" />
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
+    <ProjectReference Include="..\WebWork\WebWork.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,14 +5,14 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Windows;
 
 [AESerializable]
-public class AddDisplayImageAction : BaseAction<AddDisplayImageAction>
+public class AddDisplayImageAction : BaseAction<AddDisplayImageAction>, IAddDisplayImageAction
 {
     public override ActionType Type => ActionType.AddDisplayImage;
 
     public override string GetTitle()
         => $"AddDisplayImage({GetResultString("(image)")}, {GetValueString(Left)}, {GetValueString(Top)}, {GetValueString(Width)}, {GetValueString(Height)}, {GetValueString(Opacity)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
-    
+
     [ImageEditProperty(0)]
     public string Image { get; set; }
 
@@ -28,7 +28,7 @@ public class AddDisplayImageAction : BaseAction<AddDisplayImageAction>
     [NumberEditProperty(3, minValue: 1)]
     public int Height { get; set; }
 
-    [NumberEditProperty(4, minValue: 0, maxValue: 255)]
+    [NumberEditProperty(4, $"{nameof(Opacity)} [0-255]", minValue: 0, maxValue: 255)]
     public int Opacity { get; set; }
 
     public AddDisplayImageAction()

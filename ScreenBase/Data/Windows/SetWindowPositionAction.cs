@@ -54,7 +54,7 @@ public class SetWindowPositionAction : BaseDelayAction<SetWindowPositionAction>,
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!WindowName.IsNull())
-        { 
+        {
             worker.SetWindowPosition(WindowName, executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
             return ActionResultType.True;
         }

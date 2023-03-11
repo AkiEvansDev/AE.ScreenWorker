@@ -65,7 +65,10 @@ public class ScriptInfo : IEditProperties
 
     public static string GetDefaultPath()
     {
-        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Scripts");
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.Create),
+            "Scripts"
+        );
     }
 
     public bool Is(ScriptInfo info)
@@ -84,21 +87,24 @@ public class ScriptInfo : IEditProperties
     }
 }
 
-public enum WindowLocation
+public enum HelpInfoUpdateStatus
 {
-    LeftTop = 1,
-    RightTop = 2,
-    LeftBottom = 3,
-    RightBottom = 4,
-    Center = 5,
+    None = 0,
+    Updating = 1,
+    WasUpdate = 2,
 }
 
 [AESerializable]
 public class HelpInfo
 {
     [AEIgnore]
-    public bool WasUpdate { get; set; }
+    public HelpInfoUpdateStatus Status { get; set; }
     public DisplaySpan Data { get; set; }
+
+    public HelpInfo()
+    {
+        Status = HelpInfoUpdateStatus.None;
+    }
 }
 
 [AESerializable]
@@ -163,12 +169,15 @@ public class UserInfo : IEditProperties
 
     public void EncryptPassword()
     {
-        var data = Encoding.ASCII.GetBytes(Password);
+        if (!Password.IsNull())
+        {
+            var data = Encoding.ASCII.GetBytes(Password);
 
-        using var sha = SHA256.Create();
-        data = sha.ComputeHash(data);
+            using var sha = SHA256.Create();
+            data = sha.ComputeHash(data);
 
-        Password = Encoding.ASCII.GetString(data);
+            Password = Encoding.ASCII.GetString(data);
+        }
     }
 
     public IEditProperties Clone()

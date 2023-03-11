@@ -15,7 +15,7 @@ public class IfGetColorCountAction : BaseGroupElseAction<IfGetColorCountAction>,
         => $"If {(Not ? "<P>!</P>" : "")}({GetColorCount()} {GetSymb()} {GetValueString(Value, ValueVariable)}) =<AL></AL> {GetResultString(Result)}";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"If {(Not ? "<P>!</P>" : "")}({GetExecuteColorCount(executor)} {GetSymb()} {GetValueString(executor.GetValue(Value, ValueVariable))}) =<AL></AL> {GetResultString(Result)}";
-    
+
     private string GetColorCount()
         => $"GetColorCount({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(ColorPoint.GetColor(), ColorVariable)} with {GetValueString(Accuracy)} accuracy)";
     private string GetExecuteColorCount(IScriptExecutor executor)

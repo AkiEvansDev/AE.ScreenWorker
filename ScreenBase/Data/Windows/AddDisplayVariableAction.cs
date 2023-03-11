@@ -5,14 +5,14 @@ using ScreenBase.Data.Base;
 namespace ScreenBase.Data.Windows;
 
 [AESerializable]
-public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>
+public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>, IAddDisplayVariableAction
 {
     public override ActionType Type => ActionType.AddDisplayVarible;
 
     public override string GetTitle()
         => $"AddDisplayVarible(<T>\"{GetTextForDisplay(Title)}</T>{{{GetResultString(Variable)}}}<T>\"</T>, {GetValueString(Left)}, {GetValueString(Top)}, {GetValueString(ColorPoint.GetColor(), ColorVariable)}, {GetValueString(FontFamily)}, {GetValueString(FontSize)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
-    
+
     [TextEditProperty(0)]
     public string Title { get; set; }
 
@@ -41,7 +41,7 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>
     [VariableEditProperty("TextColor", VariableType.Color, 3, propertyNames: $"{nameof(ColorPoint)}")]
     public string ColorVariable { get; set; }
 
-    [NumberEditProperty(5, minValue: 0, maxValue: 255)]
+    [NumberEditProperty(5, $"{nameof(Opacity)} [0-255]", minValue: 0, maxValue: 255)]
     public int Opacity { get; set; }
 
     [NumberEditProperty(5, minValue: 6, maxValue: 80)]

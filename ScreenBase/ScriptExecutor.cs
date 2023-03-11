@@ -144,7 +144,7 @@ public class ScriptExecutor : IScriptExecutor
                             return result;
 
                         break;
-                } 
+                }
             }
             catch (ThreadInterruptedException) { }
             catch (Exception ex)
@@ -170,7 +170,7 @@ public class ScriptExecutor : IScriptExecutor
         {
             if (IsDebug)
                 Log($"<E>Script force stop</E>");
-            
+
             try
             {
                 thread.Interrupt();
@@ -357,8 +357,8 @@ public class ScriptExecutor : IScriptExecutor
 
             while (Execute(Functions[function]) != ActionResultType.Break)
             {
-                await Task.Delay(delay); 
-                
+                await Task.Delay(delay);
+
                 ct.ThrowIfCancellationRequested();
             }
         }, tokenSource.Token);

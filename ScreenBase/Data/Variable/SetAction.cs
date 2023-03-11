@@ -33,7 +33,7 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
-        { 
+        {
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
             return ActionResultType.True;
         }
@@ -153,7 +153,7 @@ public class SetPointAction : BaseAction<SetPointAction>, ICoordinateAction
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Result.IsNull())
-        { 
+        {
             executor.SetVariable(Result, new Point(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable)));
             return ActionResultType.True;
         }

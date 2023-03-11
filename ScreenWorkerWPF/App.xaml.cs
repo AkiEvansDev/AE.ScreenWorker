@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -8,8 +9,11 @@ using ScreenBase.Data.Base;
 
 using ScreenWindows;
 
+using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.ViewModel;
 using ScreenWorkerWPF.Windows;
+
+using WebWork;
 
 namespace ScreenWorkerWPF;
 
@@ -21,12 +25,25 @@ public partial class App : Application
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
-        if (File.Exists(GetSettingsPath()))
-            CurrentSettings = DataHelper.Load<ScriptSettings>(GetSettingsPath());
+        var settingsPath = GetSettingsPath();
+        var folder = Path.GetDirectoryName(settingsPath);
+
+        if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+
+        if (File.Exists(settingsPath))
+            CurrentSettings = DataHelper.Load<ScriptSettings>(settingsPath);
         else
             CurrentSettings = new ScriptSettings();
 
         GlobalKeyboardHook.Current.KeyboardPressed += OnKeyboardPressed;
+
+        DriveHelper.OnLog = m => LogsWindow.AddLog(m, true);
+        GithubHelper.OnLog = m => LogsWindow.AddLog(m, true);
+        TranslateHelper.OnLog = m => LogsWindow.AddLog(m, true);
+
+        DriveHelper.Invoke = a => Current.Dispatcher.Invoke(a);
+        GithubHelper.GetVersionString = CommonHelper.GetVersionString;
 
         var path = e.Args?.FirstOrDefault();
         var mainWindow = new MainWindow(path);
@@ -79,7 +96,8 @@ public partial class App : Application
     private string GetSettingsPath()
     {
         return Path.Combine(
-            Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location),
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
+            "ScreenWorker",
             "settings.data"
         );
     }
