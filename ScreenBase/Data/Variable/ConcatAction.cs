@@ -1,4 +1,7 @@
-﻿using AE.Core;
+﻿using System;
+using System.Collections.Generic;
+
+using AE.Core;
 
 using ScreenBase.Data.Base;
 
@@ -10,9 +13,9 @@ public class ConcatAction : BaseAction<ConcatAction>
     public override ActionType Type => ActionType.Concat;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = Concat({GetValueString(Value1, Value1Variable, true)}, {GetValueString(Value2, Value2Variable, true)});";
+        => $"{GetResultString(Result)} = Concat({GetValueString(Value1, Value1Variable, true)}, {GetValueString(Value2, Value2Variable, true)}, {GetValueString(ConcatSeparator, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"{GetResultString(Result)} = Concat({GetValueString(executor.GetValue(Value1, Value1Variable))}, {GetValueString(executor.GetValue(Value2, Value2Variable))});";
+        => $"{GetResultString(Result)} = Concat({GetValueString(executor.GetValue(Value1, Value1Variable))}, {GetValueString(executor.GetValue(Value2, Value2Variable))}, {GetValueString(ConcatSeparator, useEmptyStringDisplay: true)});";
 
     [TextEditProperty(1, "-")]
     public string Value1 { get; set; }
@@ -26,8 +29,22 @@ public class ConcatAction : BaseAction<ConcatAction>
     [VariableEditProperty(nameof(Value2), VariableType.Text, 2)]
     public string Value2Variable { get; set; }
 
-    [ComboBoxEditProperty(4, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    [TextEditProperty(4, variantsProperty: nameof(Variants))]
+    public string ConcatSeparator { get; set; }
+
+    [AEIgnore]
+    public Dictionary<string, string> Variants { get; }
+
+    [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Result { get; set; }
+
+    public ConcatAction()
+    {
+        Variants = new Dictionary<string, string>
+        {
+            { "New line", "&nl" }
+        };
+    }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
@@ -35,8 +52,9 @@ public class ConcatAction : BaseAction<ConcatAction>
         {
             var value1 = executor.GetValue(Value1, Value1Variable);
             var value2 = executor.GetValue(Value2, Value2Variable);
+            var value3 = (ConcatSeparator ?? "").Replace("&nl", Environment.NewLine);
 
-            executor.SetVariable(Result, value1 + value2);
+            executor.SetVariable(Result, string.Concat(value1, value3, value2));
             return ActionResultType.True;
         }
         else

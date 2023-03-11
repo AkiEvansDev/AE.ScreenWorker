@@ -52,7 +52,7 @@ public class ScriptExecutor : IScriptExecutor
         foreach (var variable in script.Variables)
             Variables.Add(variable.Name, variable.VariableType switch
             {
-                VariableType.Number => 0.0,
+                VariableType.Number => 0,
                 VariableType.Boolean => false,
                 VariableType.Point => new Point(),
                 VariableType.Color => new Color(),

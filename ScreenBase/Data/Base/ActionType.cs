@@ -41,9 +41,10 @@ public enum ActionType
     SetText = 54,
     GetColor = 55,
     GetColorCount = 56,
+    FindColorPosition = 57,
 
-    Concat = 57,
-    GetArguments = 58,
+    Concat = 58,
+    GetArguments = 59,
 
     CalculationNumber = 60,
     CalculationBoolean = 61,
@@ -135,6 +136,14 @@ public enum CoordinateType
 {
     X = 1,
     Y = 2,
+}
+
+public enum PositionType
+{
+    LeftTop = 1,
+    RightTop = 2,
+    LeftBottom = 3,
+    RightBottom = 4,
 }
 
 public enum FileTableLengthType

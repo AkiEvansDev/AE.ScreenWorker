@@ -128,8 +128,10 @@ public partial class DisplayWindow : Window
                 if (data is IAddDisplayVariableAction vAction)
                 {
                     var color = Executor.GetValue(vAction.ColorPoint.GetColor(), vAction.ColorVariable);
+                    var value = Executor.GetValue("", vAction.Variable);
+
                     g.DrawString(
-                        $"{vAction.Title}{Executor.GetValue("", vAction.Variable)}",
+                        $"{vAction.Title}{value}",
                         new Font(vAction.FontFamily, vAction.FontSize, (System.Drawing.FontStyle)vAction.FontStyle),
                         new SolidBrush(Color.FromArgb(vAction.Opacity, color)),
                         new PointF(vAction.Left, vAction.Top)

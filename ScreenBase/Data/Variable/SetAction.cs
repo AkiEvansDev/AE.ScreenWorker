@@ -251,7 +251,11 @@ public class SetTextAction : BaseAction<SetTextAction>
     {
         if (!Result.IsNull())
         {
-            executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
+            var value = executor.GetValue(Value, ValueVariable);
+            if (value.IsNull())
+                value = "";
+
+            executor.SetVariable(Result, value);
             return ActionResultType.True;
         }
         else

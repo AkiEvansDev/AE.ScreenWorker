@@ -188,9 +188,12 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
             var part = worker.GetPart(x1, y1, x2, y2, PixelFormat);
 
             using var page = engine.Process(part, OcrType);
-            var result = page.GetText().Trim();
+            var result = page.GetText();
 
-            executor.SetVariable(Result, result);
+            if (result.IsNull())
+                result = "";
+
+            executor.SetVariable(Result, result.Trim());
             return ActionResultType.True;
         }
         else

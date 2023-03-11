@@ -159,6 +159,7 @@ internal class MainViewModel : BaseModel
                 new SetTextAction(),
                 new GetColorAction(),
                 new GetColorCountAction(),
+                new FindColorPositionAction(),
                 new ConcatAction(),
                 new GetArgumentsAction(),
             }),
