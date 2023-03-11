@@ -51,7 +51,7 @@ public class MouseMoveAction : BaseDelayAction<MouseMoveAction>, ICoordinateActi
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseMove(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     [CheckBoxEditProperty(2000)]

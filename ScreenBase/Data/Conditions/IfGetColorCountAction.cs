@@ -164,7 +164,7 @@ public class IfGetColorCountAction : BaseGroupElseAction<IfGetColorCountAction>,
         if (x2 < x1 || y2 < y1)
         {
             executor.Log($"<E>Second position must be greater than the first</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
 
         var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
@@ -221,7 +221,7 @@ public class IfGetColorCountAction : BaseGroupElseAction<IfGetColorCountAction>,
         else if (result)
             return executor.Execute(Items);
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
 
     }
 

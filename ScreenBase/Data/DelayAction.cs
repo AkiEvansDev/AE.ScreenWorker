@@ -28,7 +28,7 @@ public class DelayAction : BaseAction<DelayAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         Thread.Sleep(executor.GetValue(Delay, DelayVariable));
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }
 

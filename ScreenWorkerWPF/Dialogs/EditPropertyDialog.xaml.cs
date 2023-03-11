@@ -47,13 +47,14 @@ public partial class EditPropertyDialog : ContentDialog
             Title = new TextBlock { Text = title };
             Task.Run(async () =>
             {
-                var data = await CommonHelper.GetHelpInfo(action.Type);
-                if (data != null)
+                var info = await CommonHelper.GetHelpInfo(action.Type);
+                if (info != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         var textBlock = new TextBlock();
-                        FormattedTextBlockBehavior.SetFormattedData(textBlock, data);
+                        FormattedTextBlockBehavior.SetFormattedData(textBlock, info.Data);
+
                         (Title as TextBlock).ToolTip = new ToolTip
                         {
                             Content = textBlock,

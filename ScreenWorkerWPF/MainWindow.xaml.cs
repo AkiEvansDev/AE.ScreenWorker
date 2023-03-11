@@ -5,6 +5,8 @@ using System.Windows.Controls;
 
 using ModernWpf.Controls;
 
+using ScreenBase.Data.Base;
+
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Model;
 using ScreenWorkerWPF.View;
@@ -122,29 +124,38 @@ public partial class MainWindow : Window
         }
     }
 
+    private ActionView CurrentView;
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (sender is Frame frame && frame.DataContext is NavigationMenuItem menuItem && menuItem.Tab != null)
         {
-            frame.Navigate(new ActionView
+            CurrentView = new ActionView
             {
                 DataContext = menuItem.Tab
-            });
+            };
+
+            CurrentView.Scroll.Width = Width - Navigation.OpenPaneLength - 4;
+           
+            frame.Navigate(CurrentView);
         }
+    }
+
+    private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (CurrentView != null)
+            CurrentView.Scroll.Width = Width - Navigation.OpenPaneLength - 4;
     }
 
     private async void OnNavigationViewItemToolTipOpening(object sender, ToolTipEventArgs e)
     {
         if (sender is NavigationViewItem viewItem && viewItem.DataContext is NavigationMenuItem menuItem && menuItem.Action != null)
         {
-            var data = await CommonHelper.GetHelpInfo(menuItem.Action.Type);
-            if (data != null)
+            var info = await CommonHelper.GetHelpInfo(menuItem.Action.Type);
+            if (info != null && info.Status == HelpInfoUpdateStatus.WasUpdate)
             {
-                //var panel = new SimpleStackPanel();
                 var textBlock = new TextBlock();
-                FormattedTextBlockBehavior.SetFormattedData(textBlock, data);
+                FormattedTextBlockBehavior.SetFormattedData(textBlock, info.Data);
 
-                //panel.Children.Add(textBlock);
                 viewItem.ToolTip = new ToolTip
                 {
                     Content = textBlock,

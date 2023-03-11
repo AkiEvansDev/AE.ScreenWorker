@@ -35,12 +35,12 @@ public class SetNumberAction : BaseAction<SetNumberAction>, ICoordinateAction
         if (!Result.IsNull())
         {
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 
@@ -93,12 +93,12 @@ public class SetBooleanAction : BaseAction<SetBooleanAction>
         if (!Result.IsNull())
         {
             executor.SetVariable(Result, executor.GetValue(Value, ValueVariable));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }
@@ -155,12 +155,12 @@ public class SetPointAction : BaseAction<SetPointAction>, ICoordinateAction
         if (!Result.IsNull())
         {
             executor.SetVariable(Result, new Point(executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable)));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 
@@ -218,12 +218,12 @@ public class SetColorAction : BaseAction<SetColorAction>
         if (!Result.IsNull())
         {
             executor.SetVariable(Result, executor.GetValue(ColorPoint.GetColor(), ColorVariable));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }
@@ -256,12 +256,12 @@ public class SetTextAction : BaseAction<SetTextAction>
                 value = "";
 
             executor.SetVariable(Result, value);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

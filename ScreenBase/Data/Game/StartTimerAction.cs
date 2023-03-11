@@ -31,12 +31,12 @@ public class StartTimerAction : BaseAction<StartTimerAction>
         if (!Function.IsNull())
         {
             executor.StartTimer(Name, Step, Function);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

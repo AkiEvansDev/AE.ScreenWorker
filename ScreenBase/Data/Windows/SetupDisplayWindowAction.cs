@@ -61,12 +61,12 @@ public class SetupDisplayWindowAction : BaseAction<SetupDisplayWindowAction>, IS
         if (executor.SetupDisplayWindow != null)
         {
             executor.SetupDisplayWindow?.Invoke(this);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} not available</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 

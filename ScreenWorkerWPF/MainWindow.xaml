@@ -7,13 +7,17 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:ScreenWorkerWPF.Common"
+    xmlns:v="clr-namespace:ScreenWorkerWPF.View"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     ui:WindowHelper.UseModernWindowStyle="True"
     ui:TitleBar.ExtendViewIntoTitleBar="True"
+    WindowStartupLocation="CenterScreen"
     Height="800" Width="1000"
+    MinHeight="800" MinWidth="1000"
     Icon="icon.ico"
-    Title="{Binding Title}">
+    Title="{Binding Title}"
+    SizeChanged="OnWindowSizeChanged">
     <Window.Resources>
 
         <sys:Double x:Key="NavigationViewItemOnLeftMinHeight">32</sys:Double>
@@ -46,7 +50,7 @@
                             <ui:SymbolIcon Symbol="{Binding Glyph, Mode=OneTime}" FontSize="{Binding GlyphSize, Mode=OneTime}" />
                         </ui:NavigationViewItem.Icon>
                         <ui:NavigationViewItem.ToolTip>
-                            <TextBlock Text="{Binding Title}" />
+                            <TextBlock common:FormattedTextBlockBehavior.FormattedData="{Binding ToolTip}" />
                         </ui:NavigationViewItem.ToolTip>
                     </ui:NavigationViewItem>
                 </DataTemplate>
@@ -114,7 +118,9 @@
             </common:MenuItemTemplateSelector.SeparatorTemplate>
         </common:MenuItemTemplateSelector>
     </Window.Resources>
-    <Grid x:Name="MainGrid">
+    <Grid 
+        x:Name="MainGrid"
+        Width="{Binding ElementName=Window, Path=Width}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding ElementName=Window, Path=(ui:TitleBar.SystemOverlayLeftInset), Converter={StaticResource PixelsToGridLength}}" />
             <ColumnDefinition Width="Auto" />
@@ -138,6 +144,7 @@
                 VerticalAlignment="Center" />
         </Grid>
         <ui:NavigationView 
+            x:Name="Navigation"
             MenuItemTemplateSelector="{StaticResource MenuItemTemplateSelector}"
             MenuItemsSource="{Binding Items}"
             FooterMenuItemsSource="{Binding FooterItems}"
@@ -214,12 +221,13 @@
             </ui:TitleBarButton>
         </Grid>
         <Border
+            x:Name="Border"
             BorderBrush="{DynamicResource NavigationViewItemSeparatorForeground}"
             BorderThickness="2 2 0 0"
-            Padding="0 12"
+            Padding="0 12 0 0"
             Grid.Column="2"
-            Grid.Row="2"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            Grid.Row="2">
             <ui:Frame 
                 DataContext="{Binding SelectedItem, Mode=OneWay}"
                 DataContextChanged="OnDataContextChanged"/>

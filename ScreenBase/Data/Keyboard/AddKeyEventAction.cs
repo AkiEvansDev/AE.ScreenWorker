@@ -37,12 +37,12 @@ public class AddKeyEventAction : BaseAction<AddKeyEventAction>
                     executor.Execute(executor.Functions[Function]);
                 }
             };
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

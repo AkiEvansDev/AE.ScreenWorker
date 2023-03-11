@@ -56,12 +56,12 @@ public class SetWindowPositionAction : BaseDelayAction<SetWindowPositionAction>,
         if (!WindowName.IsNull())
         {
             worker.SetWindowPosition(WindowName, executor.GetValue(X, XVariable), executor.GetValue(Y, YVariable));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 

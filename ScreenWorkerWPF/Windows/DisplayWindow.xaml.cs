@@ -56,7 +56,7 @@ public partial class DisplayWindow : Window
             Info = action;
             Bitmap = new Bitmap(action.Width, action.Height, PixelFormat.Format32bppArgb);
 
-            Update();
+            Update(true);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -102,50 +102,53 @@ public partial class DisplayWindow : Window
                 .Any(d => d.Variable == name || d.ColorVariable == name)
                 )
             {
-                Update();
+                Update(true);
             }
         }
 
-        private void Update()
+        private void Update(bool visible)
         {
             using var g = Graphics.FromImage(Bitmap);
 
             g.Clear(Color.Transparent);
 
-            if (Info.Opacity > 0)
+            if (visible)
             {
-                var color = Color.FromArgb(Info.Opacity, Info.ColorPoint.GetColor());
-                using var path = RoundedRect(new Rectangle(0, 0, Info.Width, Info.Height), Info.Round);
-
-                g.FillPath(new SolidBrush(color), path);
-            }
-
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            foreach (var data in Data)
-            {
-                if (data is IAddDisplayVariableAction vAction)
+                if (Info.Opacity > 0)
                 {
-                    var color = Executor.GetValue(vAction.ColorPoint.GetColor(), vAction.ColorVariable);
-                    var value = Executor.GetValue("", vAction.Variable);
+                    var color = Color.FromArgb(Info.Opacity, Info.ColorPoint.GetColor());
+                    using var path = RoundedRect(new Rectangle(0, 0, Info.Width, Info.Height), Info.Round);
 
-                    g.DrawString(
-                        $"{vAction.Title}{value}",
-                        new Font(vAction.FontFamily, vAction.FontSize, (System.Drawing.FontStyle)vAction.FontStyle),
-                        new SolidBrush(Color.FromArgb(vAction.Opacity, color)),
-                        new PointF(vAction.Left, vAction.Top)
-                    );
+                    g.FillPath(new SolidBrush(color), path);
                 }
-                else if (data is IAddDisplayImageAction iAction)
+
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+                foreach (var data in Data)
                 {
-                    var bytes = Convert.FromBase64String(iAction.Image);
-                    using var stream = new MemoryStream();
+                    if (data is IAddDisplayVariableAction vAction)
+                    {
+                        var color = Executor.GetValue(vAction.ColorPoint.GetColor(), vAction.ColorVariable);
+                        var value = Executor.GetValue("", vAction.Variable);
 
-                    stream.Write(bytes, 0, bytes.Length);
-                    stream.Position = 0;
+                        g.DrawString(
+                            $"{vAction.Title}{value}",
+                            new Font(vAction.FontFamily, vAction.FontSize, (System.Drawing.FontStyle)vAction.FontStyle),
+                            new SolidBrush(Color.FromArgb(vAction.Opacity, color)),
+                            new PointF(vAction.Left, vAction.Top)
+                        );
+                    }
+                    else if (data is IAddDisplayImageAction iAction)
+                    {
+                        var bytes = Convert.FromBase64String(iAction.Image);
+                        using var stream = new MemoryStream();
 
-                    g.DrawImage(Image.FromStream(stream), iAction.Left, iAction.Top, iAction.Width, iAction.Height);
+                        stream.Write(bytes, 0, bytes.Length);
+                        stream.Position = 0;
+
+                        g.DrawImage(Image.FromStream(stream), iAction.Left, iAction.Top, iAction.Width, iAction.Height);
+                    }
                 }
             }
 

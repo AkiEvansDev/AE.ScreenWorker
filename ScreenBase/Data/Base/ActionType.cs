@@ -82,9 +82,10 @@ public enum ActionType
 
 public enum ActionResultType
 {
-    False = 0,
-    True = 1,
+    Cancel = 0,
+    Completed = 1,
     Break = 2,
+    BreakAll = 3,
 }
 
 public enum VariableType

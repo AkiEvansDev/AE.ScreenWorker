@@ -20,9 +20,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid
+        HorizontalAlignment="Stretch">
         <ScrollViewer 
-            x:Name="Scroll">
+            x:Name="Scroll"
+            HorizontalScrollBarVisibility="Auto">
             <ui:ListView
                 x:Name="MainList"
                 ItemsSource="{Binding Items}"

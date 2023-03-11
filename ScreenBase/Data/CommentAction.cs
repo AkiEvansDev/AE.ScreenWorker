@@ -27,6 +27,6 @@ public class CommentAction : BaseAction<CommentAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        return ActionResultType.False;
+        return ActionResultType.Cancel;
     }
 }

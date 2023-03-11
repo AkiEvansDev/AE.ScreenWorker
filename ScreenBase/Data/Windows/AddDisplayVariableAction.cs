@@ -69,12 +69,12 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>, IA
         if (executor.AddDisplayVariable != null)
         {
             executor.AddDisplayVariable?.Invoke(this);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} not available</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

@@ -44,7 +44,7 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
             else
                 executor.SetVariable(Result, Default);
 
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
@@ -53,7 +53,7 @@ public class ParseNumberAction : BaseAction<ParseNumberAction>
             if (!Result.IsNull())
                 executor.SetVariable(Result, Default);
 
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

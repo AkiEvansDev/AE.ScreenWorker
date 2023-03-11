@@ -12,6 +12,7 @@ public delegate void OnVariableChangeDelegate(string name, object newValue);
 public delegate void SetupDisplayWindowDelegate(ISetupDisplayWindowAction action);
 public delegate void AddDisplayVariableDelegate(IAddDisplayVariableAction action);
 public delegate void AddDisplayImageDelegate(IAddDisplayImageAction action);
+public delegate void UpdateDisplayDelegate(bool visible);
 
 public interface IScriptExecutor
 {
@@ -22,7 +23,7 @@ public interface IScriptExecutor
     SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     AddDisplayVariableDelegate AddDisplayVariable { get; set; }
     AddDisplayImageDelegate AddDisplayImage { get; set; }
-    Action UpdateDisplay { get; set; }
+    UpdateDisplayDelegate UpdateDisplay { get; set; }
 
     IReadOnlyDictionary<string, IAction[]> Functions { get; }
 

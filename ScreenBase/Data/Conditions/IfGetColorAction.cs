@@ -106,7 +106,7 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
         else if (result)
             return executor.Execute(Items);
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     [CheckBoxEditProperty(2000)]

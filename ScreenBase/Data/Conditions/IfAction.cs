@@ -42,12 +42,12 @@ public class IfAction : BaseGroupElseAction<IfAction>
             else if (value)
                 return executor.Execute(Items);
 
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

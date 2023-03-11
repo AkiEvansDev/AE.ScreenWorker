@@ -44,10 +44,15 @@ public class ForAction : BaseGroupAction<ForAction>
             if (!Result.IsNull())
                 executor.SetVariable(Result, i);
 
-            if (executor.Execute(Items) == ActionResultType.Break)
-                return ActionResultType.False;
+            var result = executor.Execute(Items);
+
+            if (result == ActionResultType.Break)
+                return ActionResultType.Cancel;
+
+            if (result == ActionResultType.BreakAll)
+                return result;
         }
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

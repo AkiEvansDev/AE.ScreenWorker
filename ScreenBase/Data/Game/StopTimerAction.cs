@@ -18,6 +18,6 @@ public class StopTimerAction : BaseAction<StopTimerAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         executor.StopTimer(Name);
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

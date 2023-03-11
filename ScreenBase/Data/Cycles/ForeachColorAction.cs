@@ -83,7 +83,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
         if (start < end)
         {
             executor.Log($"<E>Second position must be greater than the first</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
 
         var val = executor.GetValue(RangeValue, RangeValueVariable);
@@ -97,11 +97,16 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
             if (!Result.IsNull())
                 executor.SetVariable(Result, color);
 
-            if (executor.Execute(Items) == ActionResultType.Break)
-                return ActionResultType.False;
+            var result = executor.Execute(Items);
+
+            if (result == ActionResultType.Break)
+                return ActionResultType.Cancel;
+
+            if (result == ActionResultType.BreakAll)
+                return result;
         }
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     [CheckBoxEditProperty(2000)]

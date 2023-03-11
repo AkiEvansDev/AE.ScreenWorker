@@ -20,7 +20,7 @@ public class ScriptExecutor : IScriptExecutor
     public SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     public AddDisplayVariableDelegate AddDisplayVariable { get; set; }
     public AddDisplayImageDelegate AddDisplayImage { get; set; }
-    public Action UpdateDisplay { get; set; }
+    public UpdateDisplayDelegate UpdateDisplay { get; set; }
 
     private Thread thread;
     private bool needStop;
@@ -81,13 +81,13 @@ public class ScriptExecutor : IScriptExecutor
             if (IsDebug)
                 Log("=<AL></AL> No items;");
 
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
 
         foreach (var action in actions)
         {
             if (needStop)
-                return ActionResultType.Break;
+                return ActionResultType.BreakAll;
 
             try
             {
@@ -97,8 +97,6 @@ public class ScriptExecutor : IScriptExecutor
                     case ActionType.Else:
                     case ActionType.Comment:
                         break;
-                    case ActionType.Break:
-                        return ActionResultType.Break;
                     default:
 
                         switch (action.Type)
@@ -129,6 +127,12 @@ public class ScriptExecutor : IScriptExecutor
                         if (needStop)
                             return ActionResultType.Break;
 
+                        if (IsDebug)
+                            Log($"result: {BaseAction<IAction>.GetValueString(result)}");
+
+                        if (result == ActionResultType.Break || result == ActionResultType.BreakAll)
+                            return result;
+
                         if (action is IDelayAction delayAction && delayAction.DelayAfter > 0)
                         {
                             if (IsDebug)
@@ -136,12 +140,6 @@ public class ScriptExecutor : IScriptExecutor
 
                             Thread.Sleep(delayAction.DelayAfter);
                         }
-
-                        if (IsDebug)
-                            Log($"result: {BaseAction<IAction>.GetValueString(result)}");
-
-                        if (result == ActionResultType.Break)
-                            return result;
 
                         break;
                 }
@@ -151,11 +149,11 @@ public class ScriptExecutor : IScriptExecutor
             {
                 Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}");
 
-                return ActionResultType.False;
+                return ActionResultType.Cancel;
             }
         }
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     public void Stop(bool force = true)
@@ -355,8 +353,10 @@ public class ScriptExecutor : IScriptExecutor
         {
             ct.ThrowIfCancellationRequested();
 
-            while (Execute(Functions[function]) != ActionResultType.Break)
+            while (true)
             {
+                Execute(Functions[function]);
+
                 await Task.Delay(delay);
 
                 ct.ThrowIfCancellationRequested();

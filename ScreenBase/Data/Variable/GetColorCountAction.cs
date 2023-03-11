@@ -128,7 +128,7 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
         if (x2 < x1 || y2 < y1)
         {
             executor.Log($"<E>Second position must be greater than the first</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
 
         if (!Result.IsNull())
@@ -146,12 +146,12 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
                 }
 
             executor.SetVariable(Result, count);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 

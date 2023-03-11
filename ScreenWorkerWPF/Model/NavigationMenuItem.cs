@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Controls;
 
 using AE.Core;
 
 using ModernWpf.Controls;
 
 using ScreenBase.Data.Base;
+using ScreenBase.Display;
 
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Dialogs;
@@ -49,6 +51,7 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
     public Symbol Glyph { get; }
     public FunctionViewModelBase Tab { get; }
     public IAction Action { get; }
+    public DisplaySpan ToolTip { get; }
 
     public ObservableCollection<NavigationMenuItemBase> Items { get; }
 
@@ -56,7 +59,7 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
 
     public virtual bool IsExpanded { get; set; }
 
-    protected NavigationMenuItem(string title, Symbol glyph, object tab, Action onClick) : base(title)
+    protected NavigationMenuItem(string title, Symbol glyph, object data, Action onClick) : base(title)
     {
         GlyphSize = glyph switch
         {
@@ -66,8 +69,16 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
         };
         Glyph = glyph;
 
-        Tab = tab as FunctionViewModelBase;
-        Action = tab as IAction;
+        Tab = data as FunctionViewModelBase;
+        Action = data as IAction;
+
+        if (Action != null)
+        {
+            if (App.CurrentSettings.HelpInfo.ContainsKey(Action.Type))
+                ToolTip = App.CurrentSettings.HelpInfo[Action.Type].Data;
+            else
+                ToolTip = new DisplaySpan(title);
+        }
 
         Items = new ObservableCollection<NavigationMenuItemBase>();
 

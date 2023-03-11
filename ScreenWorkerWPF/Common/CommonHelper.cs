@@ -24,7 +24,7 @@ namespace ScreenWorkerWPF.Common;
 
 internal static class CommonHelper
 {
-    public async static Task<DisplaySpan> GetHelpInfo(ActionType actionType)
+    public async static Task<HelpInfo> GetHelpInfo(ActionType actionType)
     {
         HelpInfo result = null;
         if (App.CurrentSettings.HelpInfo.ContainsKey(actionType))
@@ -44,7 +44,7 @@ internal static class CommonHelper
                 App.CurrentSettings.HelpInfo.Add(actionType, result);
         }
 
-        return result?.Data;
+        return result;
     }
 
     private static void AsyncUpdate(ActionType actionType)

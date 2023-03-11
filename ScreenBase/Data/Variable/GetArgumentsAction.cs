@@ -20,12 +20,12 @@ public class GetArgumentsAction : BaseAction<GetArgumentsAction>
         if (!Result.IsNull())
         {
             executor.SetVariable(Result, executor.GetArguments());
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

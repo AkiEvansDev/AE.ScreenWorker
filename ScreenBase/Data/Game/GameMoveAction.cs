@@ -152,12 +152,12 @@ public class GameMoveAction : BaseDelayAction<GameMoveAction>
                     Thread.Sleep(part.DelayAfter);
             }
 
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

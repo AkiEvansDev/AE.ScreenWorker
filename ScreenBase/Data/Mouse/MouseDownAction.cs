@@ -23,6 +23,6 @@ public class MouseDownAction : BaseDelayAction<MouseDownAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseDown(Event);
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

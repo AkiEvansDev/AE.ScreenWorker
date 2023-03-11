@@ -97,6 +97,6 @@ public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
         else if (result)
             return executor.Execute(Items);
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

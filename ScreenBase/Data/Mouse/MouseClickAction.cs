@@ -69,7 +69,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
             Thread.Sleep(PressDelay);
         worker.MouseUp(Event);
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     [CheckBoxEditProperty(2000)]

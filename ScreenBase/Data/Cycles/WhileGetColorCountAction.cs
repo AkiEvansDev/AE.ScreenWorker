@@ -161,10 +161,10 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        var result = true;
+        var whileResult = true;
         var sw = new Stopwatch();
 
-        while (result)
+        while (whileResult)
         {
             if (Timeout != 0)
                 sw.Start();
@@ -179,7 +179,7 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
             if (x2 < x1 || y2 < y1)
             {
                 executor.Log($"<E>Second position must be greater than the first</E>", true);
-                return ActionResultType.False;
+                return ActionResultType.Cancel;
             }
 
             var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
@@ -198,29 +198,34 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
             switch (Action)
             {
                 case CompareType.More:
-                    result = value1 > value2;
+                    whileResult = value1 > value2;
                     break;
                 case CompareType.Less:
-                    result = value1 < value2;
+                    whileResult = value1 < value2;
                     break;
                 case CompareType.MoreOrEqual:
-                    result = value1 >= value2;
+                    whileResult = value1 >= value2;
                     break;
                 case CompareType.LessOrEqual:
-                    result = value1 <= value2;
+                    whileResult = value1 <= value2;
                     break;
                 case CompareType.Equal:
-                    result = value1 == value2;
+                    whileResult = value1 == value2;
                     break;
             }
 
             if (Not)
-                result = !result;
+                whileResult = !whileResult;
 
-            if (result)
+            if (whileResult)
             {
-                if (executor.Execute(Items) == ActionResultType.Break)
-                    return ActionResultType.False;
+                var result = executor.Execute(Items);
+
+                if (result == ActionResultType.Break)
+                    return ActionResultType.Cancel;
+
+                if (result == ActionResultType.BreakAll)
+                    return result;
             }
 
             if (Timeout != 0)
@@ -229,12 +234,12 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
                 if (sw.Elapsed.TotalSeconds > Timeout)
                 {
                     executor.Log("<E>Timeout</E>");
-                    return ActionResultType.False;
+                    return ActionResultType.Cancel;
                 }
             }
         }
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     [CheckBoxEditProperty(2000)]

@@ -23,6 +23,6 @@ public class CopyAction : BaseAction<CopyAction>
         var text = executor.GetValue(Text, TextVariable);
         worker.Copy(text);
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

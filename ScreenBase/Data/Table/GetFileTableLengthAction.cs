@@ -42,12 +42,12 @@ public class GetFileTableLengthAction : BaseAction<GetFileTableLengthAction>
         if (!Result.IsNull())
         {
             executor.SetVariable(Result, executor.GetFileTableLength(Name, LengthType));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

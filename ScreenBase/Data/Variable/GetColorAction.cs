@@ -61,12 +61,12 @@ public class GetColorAction : BaseAction<GetColorAction>, ICoordinateAction
             var y = executor.GetValue(Y, YVariable);
 
             executor.SetVariable(Result, worker.GetColor(x, y));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 

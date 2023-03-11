@@ -37,6 +37,6 @@ public class VariableAction : BaseAction<VariableAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

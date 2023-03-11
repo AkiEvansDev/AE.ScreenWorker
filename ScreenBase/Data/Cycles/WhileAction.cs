@@ -30,20 +30,25 @@ public class WhileAction : BaseGroupAction<WhileAction>
 
             while (value)
             {
-                if (executor.Execute(Items) == ActionResultType.Break)
-                    return ActionResultType.False;
+            var result = executor.Execute(Items);
+
+            if (result == ActionResultType.Break)
+                return ActionResultType.Cancel;
+
+            if (result == ActionResultType.BreakAll)
+                return result;
 
                 value = executor.GetValue(false, ValueVariable);
                 if (Not)
                     value = !value;
             }
 
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

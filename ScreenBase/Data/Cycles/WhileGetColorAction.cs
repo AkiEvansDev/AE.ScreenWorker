@@ -81,10 +81,10 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        var result = true;
+        var whileResult = true;
         var sw = new Stopwatch();
 
-        while (result)
+        while (whileResult)
         {
             if (Timeout != 0)
                 sw.Start();
@@ -97,15 +97,20 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
             var color1 = worker.GetColor(x, y);
             var color2 = executor.GetValue(ColorPoint.GetColor(), ColorVariable);
 
-            result = executor.IsColor(color1, color2, Accuracy);
+            whileResult = executor.IsColor(color1, color2, Accuracy);
 
             if (Not)
-                result = !result;
+                whileResult = !whileResult;
 
-            if (result)
+            if (whileResult)
             {
-                if (executor.Execute(Items) == ActionResultType.Break)
-                    return ActionResultType.False;
+                var result = executor.Execute(Items);
+
+                if (result == ActionResultType.Break)
+                    return ActionResultType.Cancel;
+
+                if (result == ActionResultType.BreakAll)
+                    return result;
             }
 
             if (Timeout != 0)
@@ -114,12 +119,12 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
                 if (sw.Elapsed.TotalSeconds > Timeout)
                 {
                     executor.Log("<E>Timeout</E>");
-                    return ActionResultType.False;
+                    return ActionResultType.Cancel;
                 }
             }
         }
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 
     [CheckBoxEditProperty(2000)]

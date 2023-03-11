@@ -129,7 +129,7 @@ public class EndAction : BaseAction<EndAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        return ActionResultType.False;
+        return ActionResultType.Cancel;
     }
 }
 
@@ -143,7 +143,7 @@ public class ElseAction : BaseAction<ElseAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        return ActionResultType.False;
+        return ActionResultType.Cancel;
     }
 }
 
@@ -152,11 +152,14 @@ public class BreakAction : BaseAction<BreakAction>
 {
     public override ActionType Type => ActionType.Break;
 
-    public override string GetTitle() => $"Break();";
+    public override string GetTitle() => $"{Do(null, null).Name()}();";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
+
+    [CheckBoxEditProperty(0)]
+    public bool Through { get; set; }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        return ActionResultType.Break;
+        return Through ? ActionResultType.BreakAll : ActionResultType.Break;
     }
 }

@@ -26,7 +26,7 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }
@@ -50,12 +50,12 @@ public class StartProcessAction : BaseDelayAction<StartProcessAction>
         if (!Path.IsNull() && File.Exists(Path))
         {
             worker.StartProcess(Path, Arguments);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

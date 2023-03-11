@@ -43,12 +43,12 @@ public class AddDisplayImageAction : BaseAction<AddDisplayImageAction>, IAddDisp
         if (executor.AddDisplayImage != null)
         {
             executor.AddDisplayImage?.Invoke(this);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} not available</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

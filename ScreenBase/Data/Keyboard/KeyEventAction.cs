@@ -52,12 +52,12 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
                     break;
             }
 
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

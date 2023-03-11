@@ -13,7 +13,8 @@
     Icon="../icon.ico"
     Title="Scripts gallery"
     WindowStartupLocation="CenterScreen"
-    Height="800" Width="1000">
+    Height="800" Width="1000"
+    MinHeight="800" MinWidth="1000">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         

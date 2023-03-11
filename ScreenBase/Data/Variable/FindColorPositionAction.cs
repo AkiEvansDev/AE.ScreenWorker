@@ -136,7 +136,7 @@ public class FindColorPositionAction : BaseAction<FindColorPositionAction>, ICoo
         if (x2 < x1 || y2 < y1)
         {
             executor.Log($"<E>Second position must be greater than the first</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
 
         if (!Result.IsNull())
@@ -148,12 +148,12 @@ public class FindColorPositionAction : BaseAction<FindColorPositionAction>, ICoo
             var result = GetPoint(x1, y1, x2, y2, color2, executor, worker);
 
             executor.SetVariable(Result, result);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 

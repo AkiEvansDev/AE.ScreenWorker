@@ -72,12 +72,12 @@ public class OpenFileTableAction : BaseAction<OpenFileTableAction>
             }
 
             executor.SetFileTable(Name, table);
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

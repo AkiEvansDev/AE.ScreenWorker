@@ -53,9 +53,9 @@ public class WhileCompareNumberAction : BaseGroupAction<WhileCompareNumberAction
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        var result = true;
+        var compareResult = true;
 
-        while (result)
+        while (compareResult)
         {
             var value1 = executor.GetValue(Value1, Value1Variable);
             var value2 = executor.GetValue(Value2, Value2Variable);
@@ -63,32 +63,37 @@ public class WhileCompareNumberAction : BaseGroupAction<WhileCompareNumberAction
             switch (Action)
             {
                 case CompareType.More:
-                    result = value1 > value2;
+                    compareResult = value1 > value2;
                     break;
                 case CompareType.Less:
-                    result = value1 < value2;
+                    compareResult = value1 < value2;
                     break;
                 case CompareType.MoreOrEqual:
-                    result = value1 >= value2;
+                    compareResult = value1 >= value2;
                     break;
                 case CompareType.LessOrEqual:
-                    result = value1 <= value2;
+                    compareResult = value1 <= value2;
                     break;
                 case CompareType.Equal:
-                    result = value1 == value2;
+                    compareResult = value1 == value2;
                     break;
             }
 
             if (Not)
-                result = !result;
+                compareResult = !compareResult;
 
-            if (result)
+            if (compareResult)
             {
-                if (executor.Execute(Items) == ActionResultType.Break)
-                    return ActionResultType.False;
+                var result = executor.Execute(Items);
+
+                if (result == ActionResultType.Break)
+                    return ActionResultType.Cancel;
+
+                if (result == ActionResultType.BreakAll)
+                    return result;
             }
         }
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

@@ -55,12 +55,12 @@ public class ConcatAction : BaseAction<ConcatAction>
             var value3 = (ConcatSeparator ?? "").Replace("&nl", Environment.NewLine);
 
             executor.SetVariable(Result, string.Concat(value1, value3, value2));
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

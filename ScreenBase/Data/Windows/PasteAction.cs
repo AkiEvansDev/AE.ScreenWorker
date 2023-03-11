@@ -15,6 +15,6 @@ public class PasteAction : BaseAction<PasteAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.Paste();
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

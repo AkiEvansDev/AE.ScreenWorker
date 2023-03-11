@@ -23,6 +23,6 @@ public class MouseUpAction : BaseDelayAction<MouseUpAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         worker.MouseUp(Event);
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }

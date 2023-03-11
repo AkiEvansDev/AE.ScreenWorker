@@ -41,12 +41,12 @@ public class CompareTextAction : BaseAction<CompareTextAction>
             else
                 executor.SetVariable(Result, value1.EqualsIgnoreCase(value2));
 
-            return ActionResultType.True;
+            return ActionResultType.Completed;
         }
         else
         {
             executor.Log($"<E>{Type.Name()} ignored</E>", true);
-            return ActionResultType.False;
+            return ActionResultType.Cancel;
         }
     }
 }

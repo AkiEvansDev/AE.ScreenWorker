@@ -40,6 +40,6 @@ public class LogAction : BaseAction<LogAction>
         else
             executor.Log(message, true);
 
-        return ActionResultType.True;
+        return ActionResultType.Completed;
     }
 }
