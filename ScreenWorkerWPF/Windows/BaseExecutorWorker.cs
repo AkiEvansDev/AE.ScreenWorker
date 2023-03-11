@@ -100,13 +100,13 @@ internal class BaseExecutorWorker<T>
                 string resultHtml = null;
                 while (timeout > 0)
                 {
-                    if (CancellationTokenSource.IsCancellationRequested)
+                    if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
                         return;
 
                     await Task.Delay(1000);
                     timeout--;
 
-                    if (CancellationTokenSource.IsCancellationRequested)
+                    if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
                         return;
 
                     var html = await Application.Current.Dispatcher.Invoke(async () =>

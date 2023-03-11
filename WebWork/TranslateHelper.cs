@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Security;
+using System.Text.RegularExpressions;
 using System.Web;
 
 using AE.Core;
@@ -17,9 +19,10 @@ public static class TranslateHelper
 
     public static string GetUrl(TranslateApiSource source, Lang from, Lang to, string text)
     {
+        text = HttpUtility.UrlEncode($"|{text.Replace(Environment.NewLine, "&nl&")}|");
         return source switch
         {
-            TranslateApiSource.Google => $"https://translate.google.com/?sl={GetLangName(from)}&tl={GetLangName(to)}&text={HttpUtility.UrlEncode($"|{text}|")}&op=translate",
+            TranslateApiSource.Google => $"https://translate.google.com/?sl={GetLangName(from)}&tl={GetLangName(to)}&text={text}&op=translate",
             _ => throw new NotImplementedException()
         };
     }
@@ -61,7 +64,12 @@ public static class TranslateHelper
 
                     var data = html.Substring(index, endIndex - index + 1);
                     if (!data.IsNull())
-                        data = data.Trim('|', ' ');
+                    {
+                        data = Regex.Replace(data, "<.*?>", "");
+                        data = data
+                            .Trim('|', ' ')
+                            .Replace("&amp;nl&amp;", Environment.NewLine);
+                    }
 
                     return data;
                 }
