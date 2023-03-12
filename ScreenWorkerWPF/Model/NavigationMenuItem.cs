@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 
 using AE.Core;
 
@@ -243,24 +242,41 @@ internal class CustomFunctionNavigationMenuItem : NavigationMenuItem
 
 internal class ActionNavigationMenuItem : NavigationMenuItem
 {
-    public ActionNavigationMenuItem(string title, Symbol symbol, Action action) : base(title, symbol, null, action) { }
+    public ActionNavigationMenuItem(string title, Symbol symbol, Action action)
+        : base(title, symbol, null, action) { }
+    public ActionNavigationMenuItem(IAction action, Symbol symbol, Action<IAction> onClick)
+        : base(action.Type.Name(), symbol, action, () => onClick?.Invoke(action)) { }
 
-    protected ActionNavigationMenuItem(IAction action, Symbol symbol, Action<IAction> onClick) : base(action.Type.Name(), symbol, action, () => onClick?.Invoke(action)) { }
+}
 
-    public ActionNavigationMenuItem(string title, Symbol glyph, Symbol itemsGlyph, Action<IAction> itemClick, List<IAction> items) : this(title, glyph, null)
+internal class ActionsNavigationMenuItem : NavigationMenuItem
+{
+    private bool isExpanded;
+    public override bool IsExpanded
+    {
+        get => isExpanded;
+        set
+        {
+            if (value)
+            {
+                foreach (var item in MainViewModel.Current.Items.OfType<NavigationMenuItem>())
+                    item.IsExpanded = false;
+
+                isExpanded = true;
+            }
+            else
+            {
+                isExpanded = value;
+            }
+
+            NotifyPropertyChanged(nameof(IsExpanded));
+        }
+    }
+
+    public ActionsNavigationMenuItem(string title, Symbol glyph, Symbol itemsGlyph, Action<IAction> itemClick, List<IAction> items)
+        : base(title, glyph, null, null)
     {
         foreach (var item in items)
             Items.Add(new ActionNavigationMenuItem(item, itemsGlyph, itemClick));
     }
-
-    public ActionNavigationMenuItem(List<NavigationMenuItemBase> actions) : base("Actions", Symbol.GlobalNavigationButton, null, null)
-    {
-        foreach (var action in actions)
-            Items.Add(action);
-    }
-}
-
-internal class AddVaribleAction : ActionNavigationMenuItem
-{
-    public AddVaribleAction(Action action) : base("Add variable", Symbol.Add, action) { }
 }

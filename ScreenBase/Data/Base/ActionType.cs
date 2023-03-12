@@ -8,7 +8,7 @@ public enum ActionType
     Variable = 0,
 
     Delay = 1,
-    InfinityDelay = 2,
+    //InfinityDelay = 2,
     Break = 3,
     Comment = 4,
     Log = 5,

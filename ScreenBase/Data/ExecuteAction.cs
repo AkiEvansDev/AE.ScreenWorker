@@ -21,7 +21,12 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
     {
         if (!Function.IsNull())
         {
-            return executor.Execute(executor.Functions[Function]);
+            var result = executor.Execute(executor.Functions[Function]);
+
+            if (result == ActionResultType.Break)
+                return ActionResultType.Cancel;
+
+            return result;
         }
         else
         {

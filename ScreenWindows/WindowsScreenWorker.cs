@@ -183,13 +183,15 @@ public class WindowsScreenWorker : IScreenWorker
         ClipboardService.SetText(value ?? "");
     }
 
-    public void Paste()
+    public string Paste()
     {
         KeyDown(KeyFlags.KeyLeftControl, true);
         KeyDown(KeyFlags.KeyV, true);
 
         KeyUp(KeyFlags.KeyV);
         KeyUp(KeyFlags.KeyLeftControl);
+
+        return ClipboardService.GetText();
     }
 
     public void Dispose()

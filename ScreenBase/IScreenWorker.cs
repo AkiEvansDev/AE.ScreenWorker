@@ -23,6 +23,6 @@ public interface IScreenWorker : IDisposable
     void StartProcess(string path, string arguments);
     void SetWindowPosition(string windowName, int x, int y);
     void Copy(string value);
-    void Paste();
+    string Paste();
 }
 

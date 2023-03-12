@@ -2,8 +2,6 @@
 
 using AE.Core;
 
-using Microsoft.VisualBasic.FileIO;
-
 using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Variable;

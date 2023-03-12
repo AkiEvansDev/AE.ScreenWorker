@@ -14,7 +14,6 @@ using ModernWpf.Controls;
 using Newtonsoft.Json.Linq;
 
 using ScreenBase.Data.Base;
-using ScreenBase.Display;
 
 using ScreenWorkerWPF.Windows;
 
@@ -124,7 +123,7 @@ internal static class CommonHelper
                                 count++;
                                 progress(0.5f + (count / files.Count / 2));
                             }
-                        }  
+                        }
 
                     progress(1);
                 }
@@ -654,7 +653,7 @@ internal static class CommonHelper
     public static string GetVersionString()
     {
         var ver = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
-     
+
         if (ver.Length < 8)
             ver = ver.PadRight(8, '0');
 

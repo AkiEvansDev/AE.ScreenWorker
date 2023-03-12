@@ -67,7 +67,7 @@ internal class MainViewModel : BaseModel
         }
     }
 
-    public AddVaribleAction AddVaribleAction { get; }
+    public ActionNavigationMenuItem AddVaribleAction { get; }
     public ActionNavigationMenuItem LoginAction { get; }
     public ActionNavigationMenuItem UploadAction { get; }
     public ObservableCollection<NavigationMenuItemBase> HeaderItems { get; }
@@ -102,7 +102,7 @@ internal class MainViewModel : BaseModel
     {
         Current = this;
 
-        AddVaribleAction = new AddVaribleAction(OnAddVariable);
+        AddVaribleAction = new ActionNavigationMenuItem("Add variable", Symbol.Add, OnAddVariable);
 
         UploadAction = new ActionNavigationMenuItem("Upload", Symbol.Upload, OnUpload);
         HeaderItems = new ObservableCollection<NavigationMenuItemBase>
@@ -121,19 +121,19 @@ internal class MainViewModel : BaseModel
             new VariableNavigationMenuItem(),
             new MainNavigationMenuItem(),
             new NavigationMenuHeader("Functions"),
-            new ActionNavigationMenuItem("Mouse", Symbol.TouchPointer, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Mouse", Symbol.TouchPointer, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new MouseMoveAction(),
                 new MouseDownAction(),
                 new MouseUpAction(),
                 new MouseClickAction(),
             }),
-            new ActionNavigationMenuItem("Keyboard", Symbol.Keyboard, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Keyboard", Symbol.Keyboard, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new KeyEventAction(),
                 new AddKeyEventAction(),
             }),
-            new ActionNavigationMenuItem("Сycles", Symbol.Sync, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Сycles", Symbol.Sync, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new WhileAction(),
                 new WhileGetColorAction(),
@@ -142,7 +142,7 @@ internal class MainViewModel : BaseModel
                 new ForAction(),
                 new ForeachColorAction(),
             }),
-            new ActionNavigationMenuItem("Сonditions", Symbol.Shuffle, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Сonditions", Symbol.Shuffle, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new IfAction(),
                 new IfColorAction(),
@@ -150,7 +150,7 @@ internal class MainViewModel : BaseModel
                 new IfGetColorCountAction(),
                 new IfCompareNumberAction(),
             }),
-            new ActionNavigationMenuItem("Variable methods", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Variable methods", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new SetNumberAction(),
                 new SetBooleanAction(),
@@ -163,7 +163,7 @@ internal class MainViewModel : BaseModel
                 new ConcatAction(),
                 new GetArgumentsAction(),
             }),
-            new ActionNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new CalculationNumberAction(),
                 new CalculationBooleanAction(),
@@ -171,19 +171,19 @@ internal class MainViewModel : BaseModel
                 new CompareTextAction(),
                 new IsColorAction(),
             }),
-            new ActionNavigationMenuItem("Ocr & Api", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Ocr & Api", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new ExtractTextAction(),
                 new ParseNumberAction(),
                 new TranslateAction(),
             }),
-            new ActionNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new GameMoveAction(),
                 new StartTimerAction(),
                 new StopTimerAction(),
             }),
-            new ActionNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new CopyAction(),
                 new PasteAction(),
@@ -193,16 +193,15 @@ internal class MainViewModel : BaseModel
                 new AddDisplayImageAction(),
                 new UpdateDisplayAction(),
             }),
-            new ActionNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new OpenFileTableAction(),
                 new GetFileTableLengthAction(),
                 new GetFileTableValueAction(),
             }),
-            new ActionNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
             {
                 new DelayAction(),
-                new InfinityDelay(),
                 new BreakAction(),
                 new ExecuteAction(),
                 new StartProcessAction(),

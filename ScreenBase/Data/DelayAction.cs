@@ -11,14 +11,17 @@ public class DelayAction : BaseAction<DelayAction>
 {
     public override ActionType Type => ActionType.Delay;
 
-    public override string GetTitle() => $"Delay({GetValueString(Delay, DelayVariable)});";
-    public override string GetExecuteTitle(IScriptExecutor executor) => $"Delay({GetValueString(executor.GetValue(Delay, DelayVariable))});";
+    public override string GetTitle() => $"{(Infinity ? nameof(Infinity) : "")}Delay({(Infinity ? "" : GetValueString(Delay, DelayVariable))});";
+    public override string GetExecuteTitle(IScriptExecutor executor) => $"{(Infinity ? nameof(Infinity) : "")}Delay({(Infinity ? "" : GetValueString(executor.GetValue(Delay, DelayVariable)))});";
 
     [NumberEditProperty(1, "-", minValue: 50, smallChange: 50, largeChange: 1000)]
     public int Delay { get; set; }
 
     [VariableEditProperty(nameof(Delay), VariableType.Number, 0, $"Use variable for {nameof(Delay)} (ms)")]
     public string DelayVariable { get; set; }
+
+    [CheckBoxEditProperty(2)]
+    public bool Infinity { get; set; }
 
     public DelayAction()
     {
@@ -27,24 +30,17 @@ public class DelayAction : BaseAction<DelayAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        Thread.Sleep(executor.GetValue(Delay, DelayVariable));
-        return ActionResultType.Completed;
-    }
-}
-
-[AESerializable]
-public class InfinityDelay : BaseAction<InfinityDelay>
-{
-    public override ActionType Type => ActionType.InfinityDelay;
-
-    public override string GetTitle() => $"InfinityDelay();";
-    public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
-
-    public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
-    {
-        while (true)
+        if (Infinity)
         {
-            Thread.Sleep(int.MaxValue);
+            while (Infinity)
+                Thread.Sleep(int.MaxValue);
         }
+        else
+        {
+            var value = executor.GetValue(Delay, DelayVariable);
+            Thread.Sleep(value);
+        }
+
+        return ActionResultType.Completed;
     }
 }

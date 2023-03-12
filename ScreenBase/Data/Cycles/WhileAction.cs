@@ -30,13 +30,13 @@ public class WhileAction : BaseGroupAction<WhileAction>
 
             while (value)
             {
-            var result = executor.Execute(Items);
+                var result = executor.Execute(Items);
 
-            if (result == ActionResultType.Break)
-                return ActionResultType.Cancel;
+                if (result == ActionResultType.Break)
+                    return ActionResultType.Cancel;
 
-            if (result == ActionResultType.BreakAll)
-                return result;
+                if (result == ActionResultType.BreakAll)
+                    return result;
 
                 value = executor.GetValue(false, ValueVariable);
                 if (Not)

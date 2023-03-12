@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         CheckUpdateLoginAndLoad(path);
-        
+
         //var s = new System.Windows.Controls.StackPanel
         //{
         //    Width = 200,
@@ -135,7 +135,7 @@ public partial class MainWindow : Window
             };
 
             CurrentView.Scroll.Width = Width - Navigation.OpenPaneLength - 4;
-           
+
             frame.Navigate(CurrentView);
         }
     }
@@ -150,6 +150,8 @@ public partial class MainWindow : Window
     {
         if (sender is NavigationViewItem viewItem && viewItem.DataContext is NavigationMenuItem menuItem && menuItem.Action != null)
         {
+            (viewItem.ToolTip as FrameworkElement).MaxWidth = Width / 2;
+
             var info = await CommonHelper.GetHelpInfo(menuItem.Action.Type);
             if (info != null && info.Status == HelpInfoUpdateStatus.WasUpdate)
             {
