@@ -118,7 +118,7 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
                 sw.Stop();
                 if (sw.Elapsed.TotalSeconds > Timeout)
                 {
-                    executor.Log("<E>Timeout</E>");
+                    executor.Log("<E>Timeout</E>", true);
                     return ActionResultType.Cancel;
                 }
             }

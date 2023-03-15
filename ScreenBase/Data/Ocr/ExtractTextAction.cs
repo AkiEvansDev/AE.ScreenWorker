@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -17,9 +18,9 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
     public override ActionType Type => ActionType.ExtractText;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)});";
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)}{(ClearBackground ? $", clearBackground: {GetValueString(ClearBackground)}" : "" )});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)});";
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)}{(ClearBackground ? $", {GetValueString(TextColor.GetColor())} with {GetValueString(Accuracy)} accuracy" : "")});";
 
     [Group(0, 0)]
     [NumberEditProperty(1, "-", minValue: 0)]
@@ -108,10 +109,19 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
     [ComboBoxEditProperty(11, source: ComboBoxEditPropertySource.Enum)]
     public PageSegMode OcrType { get; set; }
 
-    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Enum)]
+    [CheckBoxEditProperty(12)]
+    public bool ClearBackground { get; set; }
+
+    [ScreenPointEditProperty(13, "Text color", showColorBox: true)]
+    public ScreenPoint TextColor { get; set; }
+
+    [ComboBoxEditProperty(14, source: ComboBoxEditPropertySource.Enum)]
     public PixelFormat PixelFormat { get; set; }
 
-    [ComboBoxEditProperty(13, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
+    [NumberEditProperty(14, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
+    public double Accuracy { get; set; }
+
+    [ComboBoxEditProperty(15, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Text)]
     public string Result { get; set; }
 
     public ExtractTextAction()
@@ -119,14 +129,17 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
         Variants = new Dictionary<string, string>
         {
             { "Numbers", "-tessedit_char_whitelist &m0123456789oO|" },
-            { "Eng text", "-tessedit_char_whitelist 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&s'.,:!?" },
-            { "Rus text", "-tessedit_char_whitelist 0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ&s'.,:!?" },
+            { "English text", "-tessedit_char_whitelist 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&s'.,:!?" },
+            { "Russian text", "-tessedit_char_whitelist 0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ&s'.,:!?" },
         };
 
         Arguments = Variants["Numbers"];
         Lang = Lang.Eng;
         OcrType = PageSegMode.SingleLine;
+        ClearBackground = true;
+        TextColor = new ScreenPoint(0, 0, 255, 255, 255, 255);
         PixelFormat = PixelFormat.Format32bppRgb;
+        Accuracy = 0.9;
         UseOptimizeCoordinate = true;
 
     }
@@ -187,9 +200,20 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
             worker.Screen();
             var part = worker.GetPart(x1, y1, x2, y2, PixelFormat);
 
+            if (ClearBackground)
+            {
+                var bgColor = Color.FromArgb(255, 255 - TextColor.R, 255 - TextColor.G, 255 - TextColor.B);
+                for (var x = 0; x < x2 - x1; ++x)
+                    for (var y = 0; y < y2 - y1; ++y)
+                    {
+                        if (executor.IsColor(part.GetPixel(x, y), TextColor.GetColor(), Accuracy))
+                            part.SetPixel(x, y, bgColor);
+                    }
+            }
+
             using var page = engine.Process(part, OcrType);
             var result = page.GetText();
-
+            
             if (result.IsNull())
                 result = "";
 

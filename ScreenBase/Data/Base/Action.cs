@@ -25,12 +25,12 @@ public abstract class BaseAction<T> : IAction
 
     public abstract ActionResultType Do(IScriptExecutor executor, IScreenWorker worker);
 
-    public static string GetTextForDisplay(string text)
+    public static string GetTextForDisplay(string text, bool substringText = true)
     {
         if (text.IsNull())
             return "";
 
-        if (text.Length > 80)
+        if (substringText && text.Length > 80)
             text = text.Substring(0, 39) + "..." + string.Concat(text.Reverse().Take(39).Reverse());
 
         return text.Replace("<", "<AR></AR>").Replace(">", "<AL></AL>");
@@ -41,7 +41,7 @@ public abstract class BaseAction<T> : IAction
         return result.IsNull() ? "<V>...</V>" : $"<V>{GetTextForDisplay(result)}</V>";
     }
 
-    public static string GetValueString(object value, string variable = null, bool useEmptyStringDisplay = false)
+    public static string GetValueString(object value, string variable = null, bool useEmptyStringDisplay = false, bool substringText = true)
     {
         if (variable.IsNull())
         {
@@ -58,7 +58,7 @@ public abstract class BaseAction<T> : IAction
                 value = "";
 
             if (value is string str)
-                return $"<T>\"{GetTextForDisplay(useEmptyStringDisplay ? (str.IsNull() ? "" : str) : str)}\"</T>";
+                return $"<T>\"{GetTextForDisplay(useEmptyStringDisplay ? (str.IsNull() ? "" : str) : str, substringText)}\"</T>";
 
             return $"<P>{value}</P>";
         }

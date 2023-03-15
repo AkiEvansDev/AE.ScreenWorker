@@ -147,7 +147,7 @@ public class ScriptExecutor : IScriptExecutor
             catch (ThreadInterruptedException) { }
             catch (Exception ex)
             {
-                Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}");
+                Log($"<E>[Error]</E> {action.GetTitle()} =<AL></AL><NL></NL>{ex.Message}", true);
 
                 return ActionResultType.Cancel;
             }

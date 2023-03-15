@@ -233,7 +233,7 @@ public class WhileGetColorCountAction : BaseGroupAction<WhileGetColorCountAction
                 sw.Stop();
                 if (sw.Elapsed.TotalSeconds > Timeout)
                 {
-                    executor.Log("<E>Timeout</E>");
+                    executor.Log("<E>Timeout</E>", true);
                     return ActionResultType.Cancel;
                 }
             }

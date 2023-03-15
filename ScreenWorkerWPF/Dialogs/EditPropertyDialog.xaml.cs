@@ -545,7 +545,10 @@ public partial class EditPropertyDialog : ContentDialog
         var control = new TextBox
         {
             FocusVisualStyle = null,
+            MaxWidth = 300,
         };
+
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
 
         if (tAttr.Title != "-")
             ControlHelper.SetHeader(control, tAttr.Title ?? property.Name);
@@ -561,7 +564,10 @@ public partial class EditPropertyDialog : ContentDialog
         var control = new PasswordBox
         {
             FocusVisualStyle = null,
+            MaxWidth = 300,
         };
+
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
 
         if (tAttr.Title != "-")
             ControlHelper.SetHeader(control, tAttr.Title ?? property.Name);
@@ -583,10 +589,12 @@ public partial class EditPropertyDialog : ContentDialog
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ItemsSource = data.Keys,
-            MaxWidth = 300,
             Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
-            FocusVisualStyle = null
+            FocusVisualStyle = null,
+            MaxWidth = 300,
         };
+
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
 
         if (tAttr.Title != "-")
             ControlHelper.SetHeader(control, tAttr.Title ?? property.Name);
@@ -612,8 +620,11 @@ public partial class EditPropertyDialog : ContentDialog
         var control = new TextBox
         {
             IsReadOnly = true,
-            FocusVisualStyle = null
+            FocusVisualStyle = null,
+            MaxWidth = 300,
         };
+
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
 
         clone.NeedUpdate += () =>
         {
@@ -667,9 +678,11 @@ public partial class EditPropertyDialog : ContentDialog
         var control = new TextBox
         {
             IsReadOnly = true,
-            FocusVisualStyle = null
+            FocusVisualStyle = null,
+            MaxWidth = 300,
         };
 
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
         clone.NeedUpdate += () => control.Text = (string)property.GetValue(clone);
 
         control.PreviewMouseLeftButtonUp += (s, e) =>
@@ -841,8 +854,11 @@ public partial class EditPropertyDialog : ContentDialog
         {
             IsReadOnly = true,
             FocusVisualStyle = null,
-            Tag = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "/")
+            Tag = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "/"),
+            MaxWidth = 300,
         };
+
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
 
         var image = new Image
         {
@@ -926,9 +942,11 @@ public partial class EditPropertyDialog : ContentDialog
         var control = new TextBox
         {
             IsReadOnly = true,
-            FocusVisualStyle = null
+            FocusVisualStyle = null,
+            MaxWidth = 300,
         };
 
+        Container.SizeChanged += (s, e) => control.MaxWidth = Container.ActualWidth;
         clone.NeedUpdate += () => control.Text = (string)displayProperty.GetValue(clone);
 
         control.PreviewMouseLeftButtonUp += (s, e) =>

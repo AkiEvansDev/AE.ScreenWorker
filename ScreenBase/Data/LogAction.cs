@@ -30,12 +30,12 @@ public class LogAction : BaseAction<LogAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        var message = GetTextForDisplay(Message);
+        var message = GetTextForDisplay(Message, false);
 
         if (!Variable.IsNull())
         {
             var value = executor.GetVariable(Variable);
-            executor.Log($"{message}{GetValueString(value)}", NeedDisplay);
+            executor.Log($"{message}{GetValueString(value, substringText: false)}", NeedDisplay);
         }
         else
             executor.Log(message, true);
