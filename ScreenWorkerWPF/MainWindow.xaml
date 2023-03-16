@@ -7,7 +7,6 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:ScreenWorkerWPF.Common"
-    xmlns:v="clr-namespace:ScreenWorkerWPF.View"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     ui:WindowHelper.UseModernWindowStyle="True"
@@ -21,7 +20,6 @@
     <Window.Resources>
 
         <sys:Double x:Key="NavigationViewItemOnLeftMinHeight">32</sys:Double>
-
         <common:PixelsToGridLengthConverter x:Key="PixelsToGridLength"/>
 
         <common:MenuItemTemplateSelector x:Key="MenuItemTemplateSelector" >
@@ -117,6 +115,7 @@
                 </DataTemplate>
             </common:MenuItemTemplateSelector.SeparatorTemplate>
         </common:MenuItemTemplateSelector>
+        
     </Window.Resources>
     <Grid 
         x:Name="MainGrid"

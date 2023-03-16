@@ -28,16 +28,4 @@
     <ProjectReference Include="..\WebWork\WebWork.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Windows\DisplayWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Windows\DisplayWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-
 </Project>
