@@ -40,6 +40,18 @@ internal class BaseExecutorWorker<T>
 
         WindowsHelper.SetClickThrough(Handle);
 
+        Window.Closed += (s, e) =>
+        {
+            if (CancellationTokenSource != null)
+            {
+                CancellationTokenSource.Cancel();
+                CancellationTokenSource = null;
+            }
+
+            TranslateHelper.OnTranslate = null;
+            Executor = null;
+        };
+
         Window.Loaded += (s, e) =>
         {
             LogsWindow.Clear();
@@ -63,17 +75,14 @@ internal class BaseExecutorWorker<T>
 
     protected virtual void OnStop()
     {
-        if (CancellationTokenSource != null)
+        try
         {
-            CancellationTokenSource.Cancel();
-            CancellationTokenSource = null;
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                Window.Close();
+            });
         }
-
-        Application.Current.Dispatcher.Invoke(Window.Close);
-
-        TranslateHelper.OnTranslate = null;
-        Executor = null;
-
+        catch { }
     }
 
     protected virtual void OnMessage(string message, bool needDisplay)

@@ -80,7 +80,7 @@ public class ForeachColorAction : BaseGroupAction<ForeachColorAction>, ICoordina
         var start = executor.GetValue(RangeStart, RangeStartVariable);
         var end = executor.GetValue(RangeEnd, RangeEndVariable);
 
-        if (start < end)
+        if (start > end)
         {
             executor.Log($"<E>Second position must be greater than the first</E>", true);
             return ActionResultType.Cancel;
