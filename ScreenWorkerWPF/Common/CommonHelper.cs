@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -93,6 +94,8 @@ internal static class CommonHelper
         };
 
         var isComplite = false;
+        List<DriveFileInfo> filesToRemove = null;
+
         void progress(float f) => waitDialog.Content = $"Progress: {Math.Round(f * 100)}%";
         waitDialog.Opened += async (s, e) =>
         {
@@ -103,29 +106,40 @@ internal static class CommonHelper
 
             if (!folderId.IsNull())
             {
-                var files = await DriveHelper.SearchFiles(service, folderId, fileName, cancelTokenSource.Token);
-                progress(0.5f);
-
-                if (files.Any())
+                if (filesToRemove == null)
                 {
-                    files = files
-                        .Where(f => f.Name.EqualsIgnoreCase(fileName) && f.Description.StartsWith(user))
-                        .ToList();
+                    filesToRemove = new List<DriveFileInfo>();
+
+                    var files = await DriveHelper.SearchFiles(service, folderId, fileName, cancelTokenSource.Token);
+                    progress(0.5f);
 
                     if (files.Any())
-                        if (await ShowMessage("Update or upload copy?", "Find file with the same name!", "Update", "Upload copy") == ContentDialogResult.Primary)
-                        {
-                            var count = 0;
-                            foreach (var file in files)
-                            {
-                                await DriveHelper.DeleteFile(service, file.Id, cancelTokenSource.Token);
+                    {
+                        filesToRemove = files
+                            .Where(f => f.Name.EqualsIgnoreCase(fileName) && f.Description.StartsWith(user))
+                            .ToList();
 
-                                count++;
-                                progress(0.5f + (count / files.Count / 2));
-                            }
+                        if (filesToRemove.Any())
+                        {
+                            waitDialog.Hide();
+                            return;
                         }
 
-                    progress(1);
+                        progress(1);
+                    }
+                }
+                else if (filesToRemove.Any())
+                {
+                    progress(0.5f);
+
+                    var count = 0;
+                    foreach (var file in filesToRemove)
+                    {
+                        await DriveHelper.DeleteFile(service, file.Id, cancelTokenSource.Token);
+
+                        count++;
+                        progress(0.5f + (count / filesToRemove.Count / 2));
+                    }
                 }
 
                 waitDialog.Title = $"Uploading `{name}`...";
@@ -142,6 +156,18 @@ internal static class CommonHelper
         {
             cancelTokenSource.Cancel();
             return false;
+        }
+
+        if (!isComplite && filesToRemove != null && filesToRemove.Any())
+        {
+            if (await ShowMessage("Update or upload copy?", "Find file with the same name!", "Update", "Upload copy") == ContentDialogResult.Secondary)
+                filesToRemove.Clear();
+
+            if (await waitDialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                cancelTokenSource.Cancel();
+                return false;
+            }
         }
 
         return isComplite;

@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -55,6 +60,41 @@ public partial class MainWindow : Window
         DataContext = new MainViewModel(path);
 
         await CommonHelper.CheckUpdate(false);
+
+        using var identity = WindowsIdentity.GetCurrent();
+        var principal = new WindowsPrincipal(identity);
+
+        if (!principal.IsInRole(WindowsBuiltInRole.Administrator) && await CommonHelper.ShowMessage("Application may not work properly, restart?", "No administrator rights!") == ContentDialogResult.Primary)
+        {
+            try
+            {
+                var exePath = Assembly.GetExecutingAssembly().Location;
+                if (exePath.EndsWith(".dll"))
+                    exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
+
+                if (File.Exists(exePath))
+                {
+                    var process = new Process();
+                    process.StartInfo.FileName = exePath;
+                    process.StartInfo.UseShellExecute = true;
+                    process.StartInfo.Verb = "runas";
+
+                    process.Start();
+
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    await CommonHelper.ShowMessage("Please run application as administrator!", "Can't find exe path!", cancelBtn: null);
+                    Application.Current.Shutdown();
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowError(ex.Message);
+            }
+        }
+
         MainGrid.IsEnabled = true;
 
         if (App.CurrentSettings.User != null)

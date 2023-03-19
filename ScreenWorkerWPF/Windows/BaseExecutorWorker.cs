@@ -28,7 +28,7 @@ internal class BaseExecutorWorker<T>
     protected readonly IntPtr Handle;
     protected readonly Size ScreenSize;
 
-    public IScriptExecutor Executor { get; protected set; }
+    protected IScriptExecutor Executor { get; private set; }
 
     public BaseExecutorWorker(T window, WebView2 web, ScriptInfo scriptData, bool isDebug)
     {
@@ -42,17 +42,7 @@ internal class BaseExecutorWorker<T>
 
         Window.Closed += (s, e) =>
         {
-            if (!WasStop)
-                Executor.Stop(true);
-
-            if (CancellationTokenSource != null)
-            {
-                CancellationTokenSource.Cancel();
-                CancellationTokenSource = null;
-            }
-
-            TranslateHelper.OnTranslate = null;
-            Executor = null;
+            Stop(true);
         };
 
         Window.Loaded += (s, e) =>
@@ -60,7 +50,6 @@ internal class BaseExecutorWorker<T>
             LogsWindow.Clear();
 
             Executor = new ScriptExecutor();
-            Executor.OnStop += OnStop;
             Executor.OnMessage += OnMessage;
 
             TranslateHelper.OnTranslate = OnWeb;
@@ -71,26 +60,39 @@ internal class BaseExecutorWorker<T>
         };
     }
 
-    protected virtual void OnStart(ScriptInfo scriptData, bool isDebug)
+    public virtual void Stop(bool fromClosed = false)
     {
-        Executor.Start(scriptData, new WindowsScreenWorker(ScreenSize.Width, ScreenSize.Height), isDebug);
-    }
+        Executor.Stop();
 
-    private bool WasStop = false;
-    protected virtual void OnStop()
-    {
-        if (WasStop)
+        if (CancellationTokenSource != null)
+        {
+            try
+            {
+                CancellationTokenSource.Cancel();
+            }
+            catch { }
+            CancellationTokenSource = null;
+        }
+
+        TranslateHelper.OnTranslate = null;
+        Executor = null;
+
+        if (fromClosed)
             return;
 
         try
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                WasStop = true;
                 Window.Close();
             });
         }
         catch { }
+    }
+
+    protected virtual void OnStart(ScriptInfo scriptData, bool isDebug)
+    {
+        Executor.Start(scriptData, new WindowsScreenWorker(ScreenSize.Width, ScreenSize.Height), isDebug);
     }
 
     protected virtual void OnMessage(string message, bool needDisplay)

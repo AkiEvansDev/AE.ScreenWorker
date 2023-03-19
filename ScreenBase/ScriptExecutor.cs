@@ -13,7 +13,6 @@ namespace ScreenBase;
 
 public class ScriptExecutor : IScriptExecutor
 {
-    public event Action OnStop;
     public event OnMessageDelegate OnMessage;
     public event OnVariableChangeDelegate OnVariableChange;
 
@@ -178,8 +177,6 @@ public class ScriptExecutor : IScriptExecutor
         }
         else if (IsDebug)
             Log($"Script stop");
-
-        OnStop?.Invoke();
     }
 
     public string GetArguments()

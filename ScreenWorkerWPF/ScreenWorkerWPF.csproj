@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>4.6.3004</Version>
+	<Version>4.6.3005</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -27,6 +27,12 @@
     <ProjectReference Include="..\NeuroImage\NeuroImage.csproj" />
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
     <ProjectReference Include="..\WebWork\WebWork.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

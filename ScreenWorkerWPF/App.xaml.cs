@@ -53,10 +53,13 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        DataHelper.Save(GetSettingsPath(), CurrentSettings);
+
+        ExecuteWindow.Worker?.Stop();
+        DisplayWindow.Worker?.Stop();
+
         GlobalKeyboardHook.Current.KeyboardPressed -= OnKeyboardPressed;
         GlobalKeyboardHook.Current.Dispose();
-
-        DataHelper.Save(GetSettingsPath(), CurrentSettings);
 
         base.OnExit(e);
     }
@@ -74,8 +77,8 @@ public partial class App : Application
                     e.Handled = true;
                     keysPressed.Remove((int)CurrentSettings.StartKey);
 
-                    ExecuteWindow.Worker?.Executor?.Stop();
-                    DisplayWindow.Worker?.Executor?.Stop();
+                    ExecuteWindow.Worker?.Stop();
+                    DisplayWindow.Worker?.Stop();
 
                     MainViewModel.Current.OnStart(false);
                 }
@@ -84,8 +87,8 @@ public partial class App : Application
                     e.Handled = true;
                     keysPressed.Remove((int)CurrentSettings.StopKey);
 
-                    ExecuteWindow.Worker?.Executor?.Stop();
-                    DisplayWindow.Worker?.Executor?.Stop();
+                    ExecuteWindow.Worker?.Stop();
+                    DisplayWindow.Worker?.Stop();
                 }
             }
         }

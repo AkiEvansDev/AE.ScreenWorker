@@ -16,7 +16,6 @@ public delegate void UpdateDisplayDelegate(bool visible);
 
 public interface IScriptExecutor
 {
-    event Action OnStop;
     event OnMessageDelegate OnMessage;
     event OnVariableChangeDelegate OnVariableChange;
 
