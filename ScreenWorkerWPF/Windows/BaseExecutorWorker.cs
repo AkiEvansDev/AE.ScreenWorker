@@ -42,6 +42,9 @@ internal class BaseExecutorWorker<T>
 
         Window.Closed += (s, e) =>
         {
+            if (!WasStop)
+                Executor.Stop(true);
+
             if (CancellationTokenSource != null)
             {
                 CancellationTokenSource.Cancel();
@@ -73,12 +76,17 @@ internal class BaseExecutorWorker<T>
         Executor.Start(scriptData, new WindowsScreenWorker(ScreenSize.Width, ScreenSize.Height), isDebug);
     }
 
+    private bool WasStop = false;
     protected virtual void OnStop()
     {
+        if (WasStop)
+            return;
+
         try
         {
-            Application.Current.Dispatcher.Invoke(() => 
+            Application.Current.Dispatcher.Invoke(() =>
             {
+                WasStop = true;
                 Window.Close();
             });
         }
