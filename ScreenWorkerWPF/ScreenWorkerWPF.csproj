@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>4.6.3005</Version>
+	<Version>4.6.3006</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AE.CoreWPF" Version="3.0.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1587.40" />
+    <PackageReference Include="AE.CoreWPF" Version="3.2.2" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1661.34" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
 

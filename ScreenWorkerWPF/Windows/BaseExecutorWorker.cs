@@ -62,8 +62,6 @@ internal class BaseExecutorWorker<T>
 
     public virtual void Stop(bool fromClosed = false)
     {
-        Executor.Stop();
-
         if (CancellationTokenSource != null)
         {
             try
@@ -74,8 +72,17 @@ internal class BaseExecutorWorker<T>
             CancellationTokenSource = null;
         }
 
-        TranslateHelper.OnTranslate = null;
-        Executor = null;
+        if (Executor != null)
+        {
+            try
+            {
+                Executor.Stop();
+            }
+            catch { }
+
+            TranslateHelper.OnTranslate = null;
+            Executor = null;
+        }
 
         if (fromClosed)
             return;
