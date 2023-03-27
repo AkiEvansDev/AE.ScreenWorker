@@ -13,8 +13,11 @@ namespace ScreenBase;
 
 public class ScriptExecutor : IScriptExecutor
 {
+    public event OnExecutorCompliteDelegate OnExecutorComplite;
     public event OnMessageDelegate OnMessage;
     public event OnVariableChangeDelegate OnVariableChange;
+
+    public bool IsRun { get; private set; }
 
     public SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     public AddDisplayVariableDelegate AddDisplayVariable { get; set; }
@@ -64,7 +67,10 @@ public class ScriptExecutor : IScriptExecutor
             if (IsDebug)
                 Log($"Script <F>{BaseAction<IAction>.GetTextForDisplay(script.Name)}</F> start");
 
+            IsRun = true;
             Execute(script.Main);
+
+            OnExecutorComplite?.Invoke();
             Stop(false);
         })
         {
@@ -157,6 +163,8 @@ public class ScriptExecutor : IScriptExecutor
 
     public void Stop(bool force = true)
     {
+        IsRun = force;
+
         foreach (var name in Timers.Keys.ToList())
             StopTimer(name);
 
@@ -172,6 +180,8 @@ public class ScriptExecutor : IScriptExecutor
             {
                 thread.Interrupt();
                 thread = null;
+
+                IsRun = false;
             }
             catch { }
         }

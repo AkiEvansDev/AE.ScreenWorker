@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -50,6 +51,7 @@ internal class BaseExecutorWorker<T>
             LogsWindow.Clear();
 
             Executor = new ScriptExecutor();
+            Executor.OnExecutorComplite += () => Stop();
             Executor.OnMessage += OnMessage;
 
             TranslateHelper.OnTranslate = OnWeb;
@@ -58,6 +60,11 @@ internal class BaseExecutorWorker<T>
 
             OnStart(scriptData, isDebug);
         };
+    }
+
+    protected virtual void OnStart(ScriptInfo scriptData, bool isDebug)
+    {
+        Executor.Start(scriptData, new WindowsScreenWorker(ScreenSize.Width, ScreenSize.Height), isDebug);
     }
 
     public virtual void Stop(bool fromClosed = false)
@@ -74,13 +81,17 @@ internal class BaseExecutorWorker<T>
 
         if (Executor != null)
         {
-            try
-            {
-                Executor.Stop();
-            }
-            catch { }
-
             TranslateHelper.OnTranslate = null;
+
+            if (Executor.IsRun)
+            {
+                try
+                {
+                    Executor.Stop();
+                }
+                catch { }
+            }
+
             Executor = null;
         }
 
@@ -95,11 +106,6 @@ internal class BaseExecutorWorker<T>
             });
         }
         catch { }
-    }
-
-    protected virtual void OnStart(ScriptInfo scriptData, bool isDebug)
-    {
-        Executor.Start(scriptData, new WindowsScreenWorker(ScreenSize.Width, ScreenSize.Height), isDebug);
     }
 
     protected virtual void OnMessage(string message, bool needDisplay)

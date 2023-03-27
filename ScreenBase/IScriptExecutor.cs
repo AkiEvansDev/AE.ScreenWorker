@@ -6,6 +6,7 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase;
 
+public delegate void OnExecutorCompliteDelegate();
 public delegate void OnMessageDelegate(string message, bool needDisplay);
 public delegate void OnVariableChangeDelegate(string name, object newValue);
 
@@ -16,8 +17,11 @@ public delegate void UpdateDisplayDelegate(bool visible);
 
 public interface IScriptExecutor
 {
+    event OnExecutorCompliteDelegate OnExecutorComplite;
     event OnMessageDelegate OnMessage;
     event OnVariableChangeDelegate OnVariableChange;
+
+    bool IsRun { get; }
 
     SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     AddDisplayVariableDelegate AddDisplayVariable { get; set; }

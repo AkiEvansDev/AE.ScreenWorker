@@ -33,13 +33,6 @@ public partial class DisplayWindow : Window
             Data = new List<IAction>();
         }
 
-        public override void Stop(bool fromClosed = false)
-        {
-            Executor.OnVariableChange -= OnExecutorVariableChange;
-
-            base.Stop(fromClosed);
-        }
-
         protected override void OnStart(ScriptInfo scriptData, bool isDebug)
         {
             Executor.SetupDisplayWindow = OnSetup;
@@ -49,6 +42,13 @@ public partial class DisplayWindow : Window
             Executor.OnVariableChange += OnExecutorVariableChange;
 
             base.OnStart(scriptData, isDebug);
+        }
+
+        public override void Stop(bool fromClosed = false)
+        {
+            Executor.OnVariableChange -= OnExecutorVariableChange;
+
+            base.Stop(fromClosed);
         }
 
         private void OnSetup(ISetupDisplayWindowAction action)
