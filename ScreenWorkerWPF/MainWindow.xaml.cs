@@ -28,30 +28,7 @@ public partial class MainWindow : Window
     public MainWindow(string path)
     {
         InitializeComponent();
-        //CheckUpdateLoginAndLoad(path);
-
-        var s = new System.Windows.Controls.StackPanel
-        {
-            Width = 200,
-        };
-
-        foreach (var symb in Enum.GetValues(typeof(Symbol)))
-        {
-            s.Children.Add(new System.Windows.Controls.TextBlock
-            {
-                Text = symb.ToString(),
-            });
-
-            s.Children.Add(new SymbolIcon
-            {
-                Symbol = (Symbol)symb,
-            });
-        }
-
-        Content = new System.Windows.Controls.ScrollViewer
-        {
-            Content = s
-        };
+        CheckUpdateLoginAndLoad(path);
     }
 
     private async void CheckUpdateLoginAndLoad(string path)
