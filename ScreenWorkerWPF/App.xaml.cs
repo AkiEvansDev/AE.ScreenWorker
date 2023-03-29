@@ -96,7 +96,7 @@ public partial class App : Application
             keysPressed.Remove(e.KeyboardData.VirtualCode);
     }
 
-    private string GetSettingsPath()
+    private static string GetSettingsPath()
     {
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),

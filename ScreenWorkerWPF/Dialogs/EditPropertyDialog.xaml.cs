@@ -649,12 +649,14 @@ public partial class EditPropertyDialog : ContentDialog
                     CheckPathExists = true,
                     Filter = sAttr.Filter,
                     DefaultExt = sAttr.DefaultExt,
+                    InitialDirectory = control.Text,
                     FileName = Path.Combine(control.Text, nameProperty == null ? sAttr.DefaultName : (string)nameProperty.GetValue(clone)),
                 };
             else
                 dialog = new VistaOpenFileDialog
                 {
                     Filter = lAttr.Filter,
+                    InitialDirectory = control.Text,
                     FileName = Path.Combine(control.Text, nameProperty == null ? lAttr.DefaultName : (string)nameProperty.GetValue(clone)),
                 };
 
@@ -854,7 +856,7 @@ public partial class EditPropertyDialog : ContentDialog
         {
             IsReadOnly = true,
             FocusVisualStyle = null,
-            Tag = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "/"),
+            Tag = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
             MaxWidth = 300,
         };
 
@@ -900,12 +902,12 @@ public partial class EditPropertyDialog : ContentDialog
             var dialog = new VistaOpenFileDialog
             {
                 Filter = "Image Files|*.jpg;*.jpeg;*.png;",
-                FileName = (string)control.Tag,
+                InitialDirectory = (string)control.Tag,
             };
 
             if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
             {
-                control.Tag = dialog.FileName;
+                control.Tag = Path.GetDirectoryName(dialog.FileName);
 
                 try
                 {
