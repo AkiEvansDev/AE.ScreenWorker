@@ -36,6 +36,8 @@ internal class BaseExecutorWorker<T>
         Window = window;
         Web = web;
 
+        Window.Owner = Application.Current.MainWindow;
+
         Handle = new WindowInteropHelper(Window).EnsureHandle();
         ScreenSize = WindowsHelper.GetMonitorSize(Handle);
 
