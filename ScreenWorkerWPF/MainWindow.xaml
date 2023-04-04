@@ -118,8 +118,7 @@
         
     </Window.Resources>
     <Grid 
-        x:Name="MainGrid"
-        Width="{Binding ElementName=Window, Path=Width}">
+        x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding ElementName=Window, Path=(ui:TitleBar.SystemOverlayLeftInset), Converter={StaticResource PixelsToGridLength}}" />
             <ColumnDefinition Width="Auto" />

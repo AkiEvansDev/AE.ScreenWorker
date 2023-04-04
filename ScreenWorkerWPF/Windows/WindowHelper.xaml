@@ -14,8 +14,8 @@
     Title="Window Helper" 
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
-    Height="450" Width="300"
-    MinHeight="450" MinWidth="300"
+    Height="450" Width="340"
+    MinHeight="450" MinWidth="340"
     Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}">
     <Window.Resources>
         <ResourceDictionary>
@@ -81,18 +81,20 @@
                 </Grid.ColumnDefinitions>
                 <ui:NumberBox 
                     x:Name="Left"
+                    SmallChange="10"
                     Value="50"
                     ui:ControlHelper.Header="Left"
                     HorizontalAlignment="Stretch"
-                    SpinButtonPlacementMode="Hidden"
+                    SpinButtonPlacementMode="Inline"
                     FocusVisualStyle="{x:Null}"/>
                 <ui:NumberBox 
                     x:Name="Top"
                     Grid.Column="2"
+                    SmallChange="10"
                     Value="50"
                     ui:ControlHelper.Header="Top"
                     HorizontalAlignment="Stretch"
-                    SpinButtonPlacementMode="Hidden"
+                    SpinButtonPlacementMode="Inline"
                     FocusVisualStyle="{x:Null}"/>
             </Grid>
             <Grid>
@@ -104,19 +106,21 @@
                 <ui:NumberBox 
                     x:Name="Width"
                     Minimum="100"
+                    SmallChange="10"
                     Value="600"
                     ui:ControlHelper.Header="Width"
                     HorizontalAlignment="Stretch"
-                    SpinButtonPlacementMode="Hidden"
+                    SpinButtonPlacementMode="Inline"
                     FocusVisualStyle="{x:Null}"/>
                 <ui:NumberBox 
                     x:Name="Height"
                     Grid.Column="2"
                     Minimum="100"
+                    SmallChange="10"
                     Value="500"
                     ui:ControlHelper.Header="Height"
                     HorizontalAlignment="Stretch"
-                    SpinButtonPlacementMode="Hidden"
+                    SpinButtonPlacementMode="Inline"
                     FocusVisualStyle="{x:Null}"/>
             </Grid>
             <Button
@@ -135,7 +139,7 @@
                 SpinButtonPlacementMode="Inline"
                 FocusVisualStyle="{x:Null}"/>
             <CheckBox
-                x:Name="Topmost"
+                x:Name="TopmostCB"
                 Content="Topmost"/>
             <CheckBox
                 x:Name="Clickable"
@@ -143,14 +147,33 @@
                 IsChecked="True"
                 Margin="0 -6 0 0"/>
         </ui:SimpleStackPanel>
-        <Button
+        <Grid
             Grid.Row="2"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Margin="12 6"
-            HorizontalAlignment="Stretch"
-            Content="Apply"
-            FocusVisualStyle="{x:Null}"
-            Click="OnApplyClick"/>
+            Margin="12 6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="32"/>
+            </Grid.ColumnDefinitions>
+            <Button
+                HorizontalAlignment="Stretch"
+                Content="Apply"
+                FocusVisualStyle="{x:Null}"
+                Click="OnApplyClick"/>
+            <Button
+                Grid.Column="2"
+                Height="32"
+                Width="32"
+                Padding="0"
+                VerticalAlignment="Bottom"
+                FocusVisualStyle="{x:Null}"
+                Click="PinClick">
+                <ui:SymbolIcon 
+                    Symbol="Pin"
+                    FontSize="14"/>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

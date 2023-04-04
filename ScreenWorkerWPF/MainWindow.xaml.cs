@@ -160,7 +160,7 @@ public partial class MainWindow : Window
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (CurrentView != null)
-            CurrentView.Scroll.Width = Width - Navigation.OpenPaneLength - 4;
+            CurrentView.Scroll.Width = e.NewSize.Width - Navigation.OpenPaneLength - 4;
     }
 
     private async void OnNavigationViewItemToolTipOpening(object sender, ToolTipEventArgs e)

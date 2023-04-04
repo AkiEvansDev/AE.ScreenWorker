@@ -25,6 +25,20 @@ public partial class App : Application
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
+        var args = e.Args?.FirstOrDefault();
+
+        if (args == "-winhelper")
+        {
+            MainWindow = new WindowHelper();
+            MainWindow.Show();
+            return;
+        }
+
+        if (!File.Exists(args))
+            args = null;
+
+        LogsWindow.AddLog(args, true);
+
         var settingsPath = GetSettingsPath();
         var folder = Path.GetDirectoryName(settingsPath);
 
@@ -45,10 +59,8 @@ public partial class App : Application
         DriveHelper.Invoke = a => Current.Dispatcher.Invoke(a);
         GithubHelper.GetVersionString = CommonHelper.GetVersionString;
 
-        var path = e.Args?.FirstOrDefault();
-        var mainWindow = new MainWindow(path);
-
-        mainWindow.Show();
+        MainWindow = new MainWindow(args);
+        MainWindow.Show();
     }
 
     protected override void OnExit(ExitEventArgs e)

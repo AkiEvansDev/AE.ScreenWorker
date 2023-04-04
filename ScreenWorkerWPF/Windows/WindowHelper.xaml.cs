@@ -1,14 +1,23 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 
 using AE.Core;
+
+using IWshRuntimeLibrary;
+
+using ModernWpf.Controls;
 
 using ScreenBase.Data.Base;
 
 using ScreenWindows;
+
+using ScreenWorkerWPF.Common;
+
+using File = System.IO.File;
 
 namespace ScreenWorkerWPF.Windows;
 
@@ -32,6 +41,9 @@ public partial class WindowHelper : Window
             Current.Closing += (s, e) => Current = null;
 
             Current.Show();
+
+            Current.Topmost = true;
+            Current.Topmost = false;
         }
     }
 
@@ -91,9 +103,34 @@ public partial class WindowHelper : Window
                 (int)Left.Value, (int)Top.Value, 
                 (int)Width.Value, (int)Height.Value, 
                 (byte)Opacity.Value,
-                Topmost.IsChecked.Value, 
+                TopmostCB.IsChecked.Value, 
                 !Clickable.IsChecked.Value
             );
+        }
+    }
+
+    private async void PinClick(object sender, RoutedEventArgs e)
+    {
+        var shortcutAddress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"WindowHelper.lnk");
+        
+        if (File.Exists(shortcutAddress))
+        {
+            CommonHelper.ShowError($"Location: `Desktop`.", "Shortcut already exists!");
+        }
+        else if (await CommonHelper.ShowMessage($"Path: `Desktop`.", "Create shortcut?") == ContentDialogResult.Primary)
+        {
+            var shell = new WshShell();
+            var shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+
+            var exePath = Assembly.GetExecutingAssembly().Location;
+            if (exePath.EndsWith(".dll"))
+                exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
+
+            shortcut.TargetPath = exePath;
+            shortcut.IconLocation = Path.Combine(Path.GetDirectoryName(exePath), "icon2.ico");
+            shortcut.Arguments = "-winhelper";
+
+            shortcut.Save();
         }
     }
 }
