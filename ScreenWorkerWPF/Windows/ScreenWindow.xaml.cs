@@ -146,7 +146,7 @@ public partial class ScreenWindow : Window
 
     public static ScreenPoint GetPoint(ScreenPoint oldPosition, ScreenRange display = null, Window owner = null)
     {
-        var bitmap = GetBitmap();
+        var bitmap = GetBitmap(owner ?? Application.Current.MainWindow);
         var window = new ScreenWindow(bitmap, display?.Point1 ?? oldPosition, display?.Point2, 1)
         {
             ShowInTaskbar = false,
@@ -167,7 +167,7 @@ public partial class ScreenWindow : Window
 
     public static ScreenRange GetRange(ScreenRange old, Window owner = null)
     {
-        var bitmap = GetBitmap();
+        var bitmap = GetBitmap(owner ?? Application.Current.MainWindow);
         var window = new ScreenWindow(bitmap, old.Point1, old.Point2, 2)
         {
             ShowInTaskbar = false,
@@ -198,16 +198,17 @@ public partial class ScreenWindow : Window
         return null;
     }
 
-    private static Bitmap GetBitmap()
+    private static Bitmap GetBitmap(Window owner)
     {
-        var state = Application.Current.MainWindow.WindowState;
-        Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        var state = owner.WindowState;
+        owner.WindowState = WindowState.Minimized;
 
-        var hwnd = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
+        var hwnd = new WindowInteropHelper(owner).EnsureHandle();
         var size = WindowsHelper.GetMonitorSize(hwnd);
 
         var bitmap = WindowsHelper.GetScreen(size.Width, size.Height);
-        Application.Current.MainWindow.WindowState = state;
+
+        owner.WindowState = state;
 
         return bitmap;
     }
