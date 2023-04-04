@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.X86;
+using System.Threading.Tasks;
 
 using ScreenBase;
 
@@ -14,13 +17,19 @@ public static class WindowsHelper
     internal const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
     internal const uint KEYEVENTF_KEYUP = 0x0002;
     internal const uint SWP_NOSIZE = 0x0001;
+    internal const uint SWP_NOMOVE = 0x0002;
     internal const uint SWP_NOZORDER = 0x0004;
+    internal const uint SWP_SHOWWINDOW = 0x0040;
+    internal const int SW_HIDE = 0;
+    internal const int SW_SHOW = 9;
     internal const int MONITOR_DEFAULTTONEAREST = 0x00000002;
     internal const int GWL_EXSTYLE = -20;
     internal const int WS_EX_LAYERED = 0x80000;
     internal const int WS_EX_TRANSPARENT = 0x20;
+    internal const long WS_EX_TOPMOST = 0x00000008L;
     internal const int HTCAPTION = 0x02;
     internal const int WM_NCHITTEST = 0x84;
+    internal const int LWA_ALPHA = 0x2;
     internal const int ULW_ALPHA = 0x02;
     internal const byte AC_SRC_OVER = 0x00;
     internal const byte AC_SRC_ALPHA = 0x01;
@@ -52,13 +61,25 @@ public static class WindowsHelper
     internal static extern bool SetForegroundWindow(IntPtr hWnd);
 
     [DllImport("user32.dll")]
+    internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    internal static extern bool GetWindowRect(IntPtr hwnd, ref RECT rectangle);
+
+    [DllImport("user32.dll")]
     internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
     [DllImport("user32.dll")]
-    internal static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+    internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
     [DllImport("user32.dll")]
-    internal static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+    internal static extern long GetWindowLong(IntPtr hWnd, int nIndex);
+
+    [DllImport("user32.dll")]
+    internal static extern int SetWindowLong(IntPtr hWnd, int nIndex, long dwNewLong);
+
+    [DllImport("user32.dll")]
+    internal static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -115,6 +136,7 @@ public static class WindowsHelper
         public int top;
         public int right;
         public int bottom;
+        public Size Size => new(right - left, bottom - top);
 
         public RECT(int left, int top, int right, int bottom)
         {
@@ -133,8 +155,6 @@ public static class WindowsHelper
         }
 
         public static RECT FromXYWH(int x, int y, int width, int height) => new RECT(x, y, x + width, y + height);
-
-        public Size Size => new Size(right - left, bottom - top);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -211,6 +231,33 @@ public static class WindowsHelper
             SetForegroundWindow(hWnd);
             SetWindowPos(hWnd, IntPtr.Zero, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
         }
+    }
+
+    public static void SetWindowOptions(IntPtr window, int x, int y, int width, int height, byte opacity, bool topmost, bool noClickable)
+    {
+        ShowWindow(window, SW_SHOW);
+        SetForegroundWindow(window);
+
+        SetWindowPos(window, topmost ? new IntPtr(-1) : new IntPtr(-2), x, y, width, height, SWP_SHOWWINDOW);
+        MoveWindow(window, x, y, width, height, true);
+
+        var style = GetWindowLong(window, GWL_EXSTYLE);
+
+        if (opacity < 255 || noClickable)
+            style |= WS_EX_LAYERED;
+        else
+            style &= ~WS_EX_LAYERED;
+
+        if (noClickable)
+            style |= WS_EX_TRANSPARENT;
+        else
+            style &= ~WS_EX_TRANSPARENT;
+
+        _ = SetWindowLong(window, GWL_EXSTYLE, style);
+        SetLayeredWindowAttributes(window, 0, opacity, LWA_ALPHA);
+
+        ShowWindow(window, SW_SHOW);
+        SetForegroundWindow(window);
     }
 
     public static void SetClickThrough(IntPtr window)

@@ -214,6 +214,7 @@ internal class MainViewModel : BaseModel
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
             LoginAction,
+            new ActionNavigationMenuItem("Window helper", Symbol.NewWindow, OnWindowHleper),
             new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await CommonHelper.CheckUpdate(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
@@ -289,6 +290,11 @@ internal class MainViewModel : BaseModel
         }
         else
             CommonHelper.ShowError("No logs, start script debug before!", "Warning!");
+    }
+
+    private void OnWindowHleper()
+    {
+        WindowHelper.Open();
     }
 
     private async void OnUpload()

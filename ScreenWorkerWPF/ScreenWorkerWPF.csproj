@@ -5,14 +5,21 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>4.6.4007</Version>
+	<Version>4.6.5007</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icon2.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icon2.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

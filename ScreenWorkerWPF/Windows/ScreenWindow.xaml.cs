@@ -144,10 +144,15 @@ public partial class ScreenWindow : Window
 
     #region Static
 
-    public static ScreenPoint GetPoint(ScreenPoint oldPosition, ScreenRange display = null)
+    public static ScreenPoint GetPoint(ScreenPoint oldPosition, ScreenRange display = null, Window owner = null)
     {
         var bitmap = GetBitmap();
-        var window = new ScreenWindow(bitmap, display?.Point1 ?? oldPosition, display?.Point2, 1);
+        var window = new ScreenWindow(bitmap, display?.Point1 ?? oldPosition, display?.Point2, 1)
+        {
+            ShowInTaskbar = false,
+            Topmost = true,
+            Owner = owner ?? Application.Current.MainWindow
+        };
 
         window.ShowDialog();
 
@@ -160,13 +165,17 @@ public partial class ScreenWindow : Window
         return null;
     }
 
-    public static ScreenRange GetRange(ScreenRange old)
+    public static ScreenRange GetRange(ScreenRange old, Window owner = null)
     {
         var bitmap = GetBitmap();
-        var window = new ScreenWindow(bitmap, old.Point1, old.Point2, 2);
+        var window = new ScreenWindow(bitmap, old.Point1, old.Point2, 2)
+        {
+            ShowInTaskbar = false,
+            Topmost = true,
+            Owner = owner ?? Application.Current.MainWindow
+        };
 
         window.ShowDialog();
-
 
         if (window.Result1 != null && window.Result2 != null)
         {
