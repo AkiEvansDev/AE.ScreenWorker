@@ -10,9 +10,9 @@ public class ForAction : BaseGroupAction<ForAction>
     public override ActionType Type => ActionType.For;
 
     public override string GetTitle()
-        => $"For {GetResultString(Result)} = {GetValueString(From, FromVariable)} to {GetValueString(To, ToVariable)} {GetResultString(Result)} += {GetValueString(Step)}";
+        => $"For {GetResultString(Result)} = {GetValueString(From, FromVariable)} to {GetValueString(To, ToVariable)} with {GetResultString(Result)} += {GetValueString(Step)}";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"For {GetResultString(Result)} = {GetValueString(executor.GetValue(From, FromVariable))} to {GetValueString(executor.GetValue(To, ToVariable))} {GetResultString(Result)} += {GetValueString(Step)}";
+        => $"For {GetResultString(Result)} = {GetValueString(executor.GetValue(From, FromVariable))} to {GetValueString(executor.GetValue(To, ToVariable))} with {GetResultString(Result)} += {GetValueString(Step)}";
 
     [NumberEditProperty(1, "-", useXFromScreen: true, useYFromScreen: true)]
     public int From { get; set; }
@@ -39,7 +39,7 @@ public class ForAction : BaseGroupAction<ForAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        for (var i = executor.GetValue(From, FromVariable); i < executor.GetValue(To, ToVariable); i += Step)
+        for (var i = executor.GetValue(From, FromVariable); i <= executor.GetValue(To, ToVariable); i += Step)
         {
             if (!Result.IsNull())
                 executor.SetVariable(Result, i);

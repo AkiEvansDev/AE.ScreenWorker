@@ -7,8 +7,6 @@ using System.Windows;
 
 using AE.Core;
 
-using IWshRuntimeLibrary;
-
 using ModernWpf.Controls;
 
 using ScreenBase.Data.Base;
@@ -23,28 +21,23 @@ namespace ScreenWorkerWPF.Windows;
 
 public partial class WindowHelper : Window
 {
-    private static WindowHelper Current = null;
     public static void Open()
     {
-        if (Current != null)
+        var exePath = Assembly.GetExecutingAssembly().Location;
+        if (exePath.EndsWith(".dll"))
+            exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
+
+        var startInfo = new ProcessStartInfo
         {
-            Current.WindowState = WindowState.Normal;
-            Current.Activate();
-        }
-        else
+            FileName = exePath,
+            Arguments = "-winhelper",
+        };
+
+        var process = new Process
         {
-            Current = new WindowHelper
-            {
-                Owner = null,
-            };
-
-            Current.Closing += (s, e) => Current = null;
-
-            Current.Show();
-
-            Current.Topmost = true;
-            Current.Topmost = false;
-        }
+            StartInfo = startInfo
+        };
+        process.Start();
     }
 
     public WindowHelper()
@@ -119,18 +112,31 @@ public partial class WindowHelper : Window
         }
         else if (await CommonHelper.ShowMessage($"Path: `Desktop`.", "Create shortcut?") == ContentDialogResult.Primary)
         {
-            var shell = new WshShell();
-            var shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
-
             var exePath = Assembly.GetExecutingAssembly().Location;
             if (exePath.EndsWith(".dll"))
                 exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
 
-            shortcut.TargetPath = exePath;
-            shortcut.IconLocation = Path.Combine(Path.GetDirectoryName(exePath), "icon2.ico");
-            shortcut.Arguments = "-winhelper";
+            var cmd = $"$s=(New-Object -COM WScript.Shell).CreateShortcut('{shortcutAddress}');" +
+                $"$s.TargetPath='{exePath}';" +
+                $"$s.IconLocation='{Path.Combine(Path.GetDirectoryName(exePath), "icon2.ico")}';" +
+                $"$s.Arguments='-winhelper';" +
+                $"$s.Save()";
 
-            shortcut.Save();
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = @"powershell.exe",
+                Arguments = cmd,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            var process = new Process
+            {
+                StartInfo = startInfo
+            };
+            process.Start();
         }
     }
 }
