@@ -19,7 +19,7 @@ public class IfColorAction : BaseGroupElseAction<IfColorAction>
     private ScreenPoint color1;
     private ScreenPoint color2;
 
-    [ScreenPointEditProperty(1, $"Get {nameof(Color1)}", true)]
+    [ScreenPointEditProperty(1, $"Get {nameof(Color1)}", showColorBox: true)]
     public ScreenPoint Color1
     {
         get => color1;
@@ -33,7 +33,7 @@ public class IfColorAction : BaseGroupElseAction<IfColorAction>
     [VariableEditProperty(nameof(Color1), VariableType.Color, 0)]
     public string Color1Variable { get; set; }
 
-    [ScreenPointEditProperty(3, $"Get {nameof(Color2)}", true)]
+    [ScreenPointEditProperty(3, $"Get {nameof(Color2)}", showColorBox: true)]
     public ScreenPoint Color2
     {
         get => color2;

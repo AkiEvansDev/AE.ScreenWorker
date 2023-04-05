@@ -91,7 +91,7 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
         }
     }
 
-    [ScreenPointEditProperty(11, "Get color", true, nameof(Range))]
+    [ScreenPointEditProperty(11, "Get color", showColorBox: true, colorRangeProperty: nameof(Range))]
     public ScreenPoint ColorPoint
     {
         get => color;

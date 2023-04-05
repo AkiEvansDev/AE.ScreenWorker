@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.X86;
-using System.Threading.Tasks;
 
 using ScreenBase;
 

@@ -65,11 +65,11 @@ public partial class WindowHelper : Window
 
         if (proc != null)
         {
-            WindowsHelper.SetWindowOptions(proc.MainWindowHandle, 
-                (int)Left.Value, (int)Top.Value, 
-                (int)Width.Value, (int)Height.Value, 
+            WindowsHelper.SetWindowOptions(proc.MainWindowHandle,
+                (int)Left.Value, (int)Top.Value,
+                (int)Width.Value, (int)Height.Value,
                 (byte)Opacity.Value,
-                TopmostCB.IsChecked.Value, 
+                TopmostCB.IsChecked.Value,
                 !Clickable.IsChecked.Value
             );
         }
@@ -78,7 +78,7 @@ public partial class WindowHelper : Window
     //private async void PinClick(object sender, RoutedEventArgs e)
     //{
     //    var shortcutAddress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"WindowHelper.lnk");
-        
+
     //    if (File.Exists(shortcutAddress))
     //    {
     //        CommonHelper.ShowError($"Location: `Desktop`.", "Shortcut already exists!");

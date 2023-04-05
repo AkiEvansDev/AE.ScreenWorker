@@ -65,11 +65,13 @@ public class NumberEditPropertyAttribute : EditPropertyAttribute
 public class ScreenPointEditPropertyAttribute : EditPropertyAttribute
 {
     public bool ShowColorBox { get; set; }
+    public bool UseOpacityColor { get; set; }
     public string ColorRangeProperty { get; set; }
 
-    public ScreenPointEditPropertyAttribute(int order = 0, string title = "Get X and Y", bool showColorBox = false, string colorRangeProperty = null) : base(order, title)
+    public ScreenPointEditPropertyAttribute(int order = 0, string title = "Get X and Y", bool showColorBox = false, bool useOpacityColor = false, string colorRangeProperty = null) : base(order, title)
     {
         ShowColorBox = showColorBox;
+        UseOpacityColor = useOpacityColor;
         ColorRangeProperty = colorRangeProperty;
     }
 }

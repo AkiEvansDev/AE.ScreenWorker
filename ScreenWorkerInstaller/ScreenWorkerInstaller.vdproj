@@ -253,15 +253,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{9D4D4209-B9A8-4E2D-A827-6B7F9F7760A1}"
-        "PackageCode" = "8:{CB2C6E8B-DF9F-4E22-803A-1D0F844B5AEB}"
+        "ProductCode" = "8:{87095DA8-D59E-4E75-81F1-B2A864BFAA2B}"
+        "PackageCode" = "8:{ACF05D18-14A3-40B3-A0D6-12BA15A41A1C}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.6.6009"
+        "ProductVersion" = "8:4.7.1001"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/AkiEvansDev/AE.ScreenWorker"
@@ -803,7 +803,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_73F8B12AA2EE463AB9DE357CC0C79A25"
             {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -831,7 +831,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_AA14053AF5B34AD8AEDC8DFCEC988A59"
             {
-            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"

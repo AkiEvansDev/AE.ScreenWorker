@@ -93,7 +93,7 @@ public class FindColorPositionAction : BaseAction<FindColorPositionAction>, ICoo
         }
     }
 
-    [ScreenPointEditProperty(11, "Get color", true, nameof(Range))]
+    [ScreenPointEditProperty(11, "Get color", showColorBox: true, colorRangeProperty: nameof(Range))]
     public ScreenPoint ColorPoint
     {
         get => color;

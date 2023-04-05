@@ -18,7 +18,7 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
     public override ActionType Type => ActionType.ExtractText;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)}{(ClearBackground ? $", clearBackground: {GetValueString(ClearBackground)}" : "" )});";
+        => $"{GetResultString(Result)} = ExtractText({GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)}{(ClearBackground ? $", clearBackground: {GetValueString(ClearBackground)}" : "")});";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = ExtractText({GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(Lang)}, {GetValueString(OcrType)}, {GetValueString(PixelFormat)}{(ClearBackground ? $", {GetValueString(TextColor.GetColor())} with {GetValueString(Accuracy)} accuracy" : "")});";
 
@@ -213,7 +213,7 @@ public class ExtractTextAction : BaseAction<ExtractTextAction>, ICoordinateActio
 
             using var page = engine.Process(part, OcrType);
             var result = page.GetText();
-            
+
             if (result.IsNull())
                 result = "";
 

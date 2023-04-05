@@ -14,8 +14,8 @@
     Title="Window Helper" 
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
-    Height="450" Width="340"
-    MinHeight="450" MinWidth="340"
+    Height="450" Width="300"
+    MinHeight="450" MinWidth="300"
     Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}">
     <Window.Resources>
         <ResourceDictionary>

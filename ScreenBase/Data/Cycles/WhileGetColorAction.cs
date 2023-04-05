@@ -47,7 +47,7 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
         }
     }
 
-    [ScreenPointEditProperty(8, "Get data", true)]
+    [ScreenPointEditProperty(8, "Get data", showColorBox: true)]
     public ScreenPoint ColorPoint
     {
         get => point;

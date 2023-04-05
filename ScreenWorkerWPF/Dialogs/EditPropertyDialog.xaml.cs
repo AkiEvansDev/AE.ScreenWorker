@@ -417,7 +417,11 @@ public partial class EditPropertyDialog : ContentDialog
 
     private UIElement GetScreenPointEditControl(PropertyInfo property, IEditProperties clone, ScreenPointEditPropertyAttribute pAttr)
     {
-        var viewColor = new ColorPicker();
+        var viewColor = new ColorPicker
+        {
+            ColorOpacityEnabled = pAttr.UseOpacityColor,
+        };
+
         var control = new Button
         {
             Content = pAttr.Title,

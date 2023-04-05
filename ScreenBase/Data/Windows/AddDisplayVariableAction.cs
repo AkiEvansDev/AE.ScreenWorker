@@ -27,7 +27,7 @@ public class AddDisplayVariableAction : BaseAction<AddDisplayVariableAction>, IA
 
     private ScreenPoint colorPoint;
 
-    [ScreenPointEditProperty(4, "Get text color", true)]
+    [ScreenPointEditProperty(4, "Get text color", showColorBox: true)]
     public ScreenPoint ColorPoint
     {
         get => colorPoint;

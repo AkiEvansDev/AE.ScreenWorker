@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 using AE.Core;
 
@@ -42,6 +43,14 @@ public partial class ExecuteWindow : Window
                     Window.Top = ScreenSize.Height / 2 - Window.Height / 2 + margin;
                     break;
             }
+
+            var color = Color.FromArgb(
+                App.CurrentSettings.ExecuteWindowColor.A,
+                App.CurrentSettings.ExecuteWindowColor.R,
+                App.CurrentSettings.ExecuteWindowColor.G,
+                App.CurrentSettings.ExecuteWindowColor.B
+            );
+            Window.Background = new SolidColorBrush(color);
 
             Window.Info.Text = $"Press Ctrl+Alt+{App.CurrentSettings.StopKey.Name().Substring(3)} to stop";
 

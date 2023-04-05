@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -130,6 +131,9 @@ public class ScriptSettings : IEditProperties
     [NumberEditProperty(3, "Execute window margin")]
     public int ExecuteWindowMargin { get; set; }
 
+    [ScreenPointEditProperty(4, "Execute window color", showColorBox: true, useOpacityColor: true)]
+    public ScreenPoint ExecuteWindowColor { get; set; } 
+
     public Dictionary<ActionType, HelpInfo> HelpInfo { get; set; }
 
     public ScriptSettings()
@@ -138,6 +142,7 @@ public class ScriptSettings : IEditProperties
         StopKey = KeyFlags.KeyF2;
         ExecuteWindowLocation = WindowLocation.RightBottom;
         ExecuteWindowMargin = 0;
+        ExecuteWindowColor = new ScreenPoint(0, 0, 180, 0, 0, 0);
         HelpInfo = new Dictionary<ActionType, HelpInfo>();
     }
 

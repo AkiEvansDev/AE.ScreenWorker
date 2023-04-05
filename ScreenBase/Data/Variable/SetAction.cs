@@ -191,7 +191,7 @@ public class SetColorAction : BaseAction<SetColorAction>
 
     private ScreenPoint colorPoint;
 
-    [ScreenPointEditProperty(1, "Get color", true)]
+    [ScreenPointEditProperty(1, "Get color", showColorBox: true)]
     public ScreenPoint ColorPoint
     {
         get => colorPoint;
