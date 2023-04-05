@@ -21,7 +21,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_257303C89AA14391A98F43AA968F1509"
+        "MsmKey" = "8:_59979E892487467894C302B2E10CB7B5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_73F8B12AA2EE463AB9DE357CC0C79A25"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AA14053AF5B34AD8AEDC8DFCEC988A59"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -142,6 +154,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_59979E892487467894C302B2E10CB7B5"
+            {
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\icon2.ico"
+            "TargetName" = "8:icon2.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -155,7 +187,7 @@
             "IconIndex" = "3:0"
                 "Command"
                 {
-                "Command" = "8:_0E53B9EB3092486B92CAC77C2E45F4D3"
+                "Command" = "8:_73F8B12AA2EE463AB9DE357CC0C79A25"
                 }
                 "Verbs"
                 {
@@ -186,7 +218,7 @@
             {
             "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:TARGETDIR"
@@ -197,7 +229,7 @@
             "{1525181F-901A-416C-8A58-119130FE478E}:_3C0C5908C92B415DB9DF9A3B559C39B9"
             {
             "Name" = "8:#1919"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:ProgramMenuFolder"
@@ -221,15 +253,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{BE173061-7583-4C75-9458-BE586DB02D2C}"
-        "PackageCode" = "8:{1B1EC048-9F29-42E4-8C48-D0B28EC13E3D}"
+        "ProductCode" = "8:{9D4D4209-B9A8-4E2D-A827-6B7F9F7760A1}"
+        "PackageCode" = "8:{CB2C6E8B-DF9F-4E22-803A-1D0F844B5AEB}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.6.6008"
+        "ProductVersion" = "8:4.6.6009"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/AkiEvansDev/AE.ScreenWorker"
@@ -342,15 +374,29 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_4C895479E5B645D5962EEF9864E14159"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6EE36A7842624BA290D07B2562DF2C9D"
             {
-            "Name" = "8:ScreenWorker"
+            "Name" = "8:WindowHelper"
+            "Arguments" = "8:-winhelper"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_73F8B12AA2EE463AB9DE357CC0C79A25"
+            "Folder" = "8:_3C0C5908C92B415DB9DF9A3B559C39B9"
+            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Icon" = "8:_59979E892487467894C302B2E10CB7B5"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AE5BC264029E4246BBF9DEE120452E70"
+            {
+            "Name" = "8:ScreenWindow"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_0E53B9EB3092486B92CAC77C2E45F4D3"
+            "Target" = "8:_73F8B12AA2EE463AB9DE357CC0C79A25"
             "Folder" = "8:_3C0C5908C92B415DB9DF9A3B559C39B9"
             "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Icon" = "8:_06C946F794234E11822126631A118441"
@@ -755,7 +801,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0E53B9EB3092486B92CAC77C2E45F4D3"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_73F8B12AA2EE463AB9DE357CC0C79A25"
             {
             "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
@@ -775,7 +821,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{7427F90D-67FC-4D53-A297-D61396E54A04}"
             "ShowKeyOutput" = "11:TRUE"
@@ -783,9 +829,9 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_257303C89AA14391A98F43AA968F1509"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_AA14053AF5B34AD8AEDC8DFCEC988A59"
             {
-            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"

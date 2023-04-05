@@ -28,6 +28,7 @@ public partial class MainWindow : Window
     public MainWindow(string path)
     {
         InitializeComponent();
+
         CheckUpdateLoginAndLoad(path);
     }
 

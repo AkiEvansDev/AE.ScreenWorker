@@ -154,15 +154,15 @@
             Margin="12 6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="6"/>
-                <ColumnDefinition Width="32"/>
+                <!--<ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="32"/>-->
             </Grid.ColumnDefinitions>
             <Button
                 HorizontalAlignment="Stretch"
                 Content="Apply"
                 FocusVisualStyle="{x:Null}"
                 Click="OnApplyClick"/>
-            <Button
+            <!--<Button
                 Grid.Column="2"
                 Height="32"
                 Width="32"
@@ -173,7 +173,7 @@
                 <ui:SymbolIcon 
                     Symbol="Pin"
                     FontSize="14"/>
-            </Button>
+            </Button>-->
         </Grid>
     </Grid>
 </Window>

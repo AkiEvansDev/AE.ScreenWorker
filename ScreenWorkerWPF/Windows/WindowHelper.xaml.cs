@@ -1,45 +1,18 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 
 using AE.Core;
 
-using ModernWpf.Controls;
-
 using ScreenBase.Data.Base;
 
 using ScreenWindows;
-
-using ScreenWorkerWPF.Common;
-
-using File = System.IO.File;
 
 namespace ScreenWorkerWPF.Windows;
 
 public partial class WindowHelper : Window
 {
-    public static void Open()
-    {
-        var exePath = Assembly.GetExecutingAssembly().Location;
-        if (exePath.EndsWith(".dll"))
-            exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
-
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = exePath,
-            Arguments = "-winhelper",
-        };
-
-        var process = new Process
-        {
-            StartInfo = startInfo
-        };
-        process.Start();
-    }
-
     public WindowHelper()
     {
         InitializeComponent();
@@ -102,41 +75,41 @@ public partial class WindowHelper : Window
         }
     }
 
-    private async void PinClick(object sender, RoutedEventArgs e)
-    {
-        var shortcutAddress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"WindowHelper.lnk");
+    //private async void PinClick(object sender, RoutedEventArgs e)
+    //{
+    //    var shortcutAddress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"WindowHelper.lnk");
         
-        if (File.Exists(shortcutAddress))
-        {
-            CommonHelper.ShowError($"Location: `Desktop`.", "Shortcut already exists!");
-        }
-        else if (await CommonHelper.ShowMessage($"Path: `Desktop`.", "Create shortcut?") == ContentDialogResult.Primary)
-        {
-            var exePath = Assembly.GetExecutingAssembly().Location;
-            if (exePath.EndsWith(".dll"))
-                exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
+    //    if (File.Exists(shortcutAddress))
+    //    {
+    //        CommonHelper.ShowError($"Location: `Desktop`.", "Shortcut already exists!");
+    //    }
+    //    else if (await CommonHelper.ShowMessage($"Path: `Desktop`.", "Create shortcut?") == ContentDialogResult.Primary)
+    //    {
+    //        var exePath = Assembly.GetExecutingAssembly().Location;
+    //        if (exePath.EndsWith(".dll"))
+    //            exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
 
-            var cmd = $"$s=(New-Object -COM WScript.Shell).CreateShortcut('{shortcutAddress}');" +
-                $"$s.TargetPath='{exePath}';" +
-                $"$s.IconLocation='{Path.Combine(Path.GetDirectoryName(exePath), "icon2.ico")}';" +
-                $"$s.Arguments='-winhelper';" +
-                $"$s.Save()";
+    //        var cmd = $"$s=(New-Object -COM WScript.Shell).CreateShortcut('{shortcutAddress}');" +
+    //            $"$s.TargetPath='{exePath}';" +
+    //            $"$s.IconLocation='{Path.Combine(Path.GetDirectoryName(exePath), "icon2.ico")}';" +
+    //            $"$s.Arguments='-winhelper';" +
+    //            $"$s.Save()";
 
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = @"powershell.exe",
-                Arguments = cmd,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+    //        var startInfo = new ProcessStartInfo
+    //        {
+    //            FileName = @"powershell.exe",
+    //            Arguments = cmd,
+    //            RedirectStandardOutput = true,
+    //            RedirectStandardError = true,
+    //            UseShellExecute = false,
+    //            CreateNoWindow = true
+    //        };
 
-            var process = new Process
-            {
-                StartInfo = startInfo
-            };
-            process.Start();
-        }
-    }
+    //        var process = new Process
+    //        {
+    //            StartInfo = startInfo
+    //        };
+    //        process.Start();
+    //    }
+    //}
 }
