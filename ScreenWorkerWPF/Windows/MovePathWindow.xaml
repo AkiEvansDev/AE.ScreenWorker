@@ -9,7 +9,7 @@
     ui:WindowHelper.UseModernWindowStyle="True"
     ui:TitleBar.ExtendViewIntoTitleBar="True"
     Title="Edit move path"
-    Icon="../icon.ico"
+    Icon="../sw.ico"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     Height="Auto" Width="814"

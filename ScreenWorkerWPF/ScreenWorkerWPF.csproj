@@ -4,20 +4,24 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-	<Version>4.7.1001</Version>
+    <ApplicationIcon>sw.ico</ApplicationIcon>
+	<Version>4.7.1002</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<StartupObject>ScreenWorkerWPF.App</StartupObject>
+	<AssemblyName>ScreenWorker</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="icon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="FileSW.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="icon2.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="SW.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WH.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -35,7 +39,7 @@
 
   <ItemGroup>
     <None Update="app.manifest">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

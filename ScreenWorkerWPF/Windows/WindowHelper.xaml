@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     ui:WindowHelper.UseModernWindowStyle="True"
     ui:TitleBar.ExtendViewIntoTitleBar="True"
-    Icon="../icon2.ico"
+    Icon="../wh.ico"
     Title="Window Helper" 
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
