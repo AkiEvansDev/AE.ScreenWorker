@@ -18,13 +18,11 @@ static bool UninstallProgram(string programName)
                 program.InvokeMethod("Uninstall", null);
         }
 
-        return false;
+        return true;
+    }
+    catch { }
 
-    }
-    catch
-    {
-        return false;
-    }
+    return false;
 }
 
 UninstallProgram("ScreenWorker");
