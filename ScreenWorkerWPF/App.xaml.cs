@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Shell;
 
 using ScreenBase;
 using ScreenBase.Data.Base;
@@ -22,6 +24,24 @@ public partial class App : Application
     public static ScriptSettings CurrentSettings { get; private set; }
 
     private readonly List<int> keysPressed = new();
+
+    public App()
+    {
+        var exePath = Assembly.GetExecutingAssembly().Location;
+        exePath = Path.Combine(Path.GetDirectoryName(exePath), "WindowHelper.exe");
+
+        if (File.Exists(exePath))
+        {
+            var jt = new JumpTask
+            {
+                ApplicationPath = exePath,
+                IconResourcePath= exePath,
+                Title = "WindowHelper",
+            };
+
+            JumpList.AddToRecentCategory(jt);
+        }
+    }
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
@@ -48,19 +68,10 @@ public partial class App : Application
         DriveHelper.Invoke = a => Current.Dispatcher.Invoke(a);
         GithubHelper.GetVersionString = CommonHelper.GetVersionString;
 
-        if (args == "-winhelper")
-        {
-            MainWindow = new WindowHelper();
+        if (!File.Exists(args))
             args = null;
-        }
-        else
-        {
-            if (!File.Exists(args))
-                args = null;
 
-            MainWindow = new MainWindow(args);
-        }
-
+        MainWindow = new MainWindow(args);
         MainWindow.Show();
     }
 

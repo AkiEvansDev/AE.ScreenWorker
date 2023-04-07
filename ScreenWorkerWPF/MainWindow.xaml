@@ -115,7 +115,7 @@
                 </DataTemplate>
             </common:MenuItemTemplateSelector.SeparatorTemplate>
         </common:MenuItemTemplateSelector>
-        
+
     </Window.Resources>
     <Grid 
         x:Name="MainGrid">

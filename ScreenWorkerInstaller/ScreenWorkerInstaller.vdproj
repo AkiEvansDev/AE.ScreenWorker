@@ -21,7 +21,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1C1DA8C1DBF04260BFCDB36E2BAD5EE6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5AEE352371904B34A9B1850428D92058"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_99909648CAE84037B0D3E0C1F4CE9E55"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A86CFB6E122D4D25B47CDC8B1C012958"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EC7E5DA4BE294403BF12AD2391C0E1EA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -140,6 +146,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1C1DA8C1DBF04260BFCDB36E2BAD5EE6"
+            {
+            "SourcePath" = "8:..\\WindowHelperWPF\\WH.ico"
+            "TargetName" = "8:WH.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9FB52DC7CE534D279C3316D4600E76B3"
             {
             "SourcePath" = "8:..\\ScreenWorkerWPF\\FileSW.ico"
@@ -164,26 +190,6 @@
             {
             "SourcePath" = "8:..\\ScreenWorkerWPF\\SW.ico"
             "TargetName" = "8:SW.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EC7E5DA4BE294403BF12AD2391C0E1EA"
-            {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\WH.ico"
-            "TargetName" = "8:WH.ico"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Condition" = "8:"
@@ -290,8 +296,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{C0824905-7FB4-4224-8F04-883934276AE2}"
-        "PackageCode" = "8:{BC59DF6E-8D6F-4617-A647-54CF158052C5}"
+        "ProductCode" = "8:{660286C8-83CA-4B4F-A892-26790D54EC60}"
+        "PackageCode" = "8:{776B702E-2A9A-4E30-8169-65B2D5F66C2B}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -411,20 +417,6 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_03D38B89E85042FDA0E31E2AE78BF730"
-            {
-            "Name" = "8:WindowHelper"
-            "Arguments" = "8:-winhelper"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_0AF54BD0C1214347BECC6C74599EDE4D"
-            "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
-            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
-            "Icon" = "8:_EC7E5DA4BE294403BF12AD2391C0E1EA"
-            "Feature" = "8:"
-            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6FA10DFD43AA4DB8ADC550E5B86316C7"
             {
             "Name" = "8:ScreenWorker"
@@ -437,6 +429,20 @@
             "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
             "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Icon" = "8:_A86CFB6E122D4D25B47CDC8B1C012958"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_97279FFE5FCF437C8602670C6796A183"
+            {
+            "Name" = "8:WindowHelper"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_99909648CAE84037B0D3E0C1F4CE9E55"
+            "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
+            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Icon" = "8:_1C1DA8C1DBF04260BFCDB36E2BAD5EE6"
             "Feature" = "8:"
             }
         }
@@ -747,8 +753,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1237"
+                            "Setting" = "3:2"
+                            "Value" = "8:Install WindowHelper"
                             "DefaultValue" = "8:#1237"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -761,7 +767,7 @@
                             "ContextData" = "8:Public"
                             "Attributes" = "3:2"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXA4"
+                            "Value" = "8:CHECKBOXWINHELPER"
                             "DefaultValue" = "8:CHECKBOXA4"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -774,7 +780,7 @@
                             "ContextData" = "8:Unchecked=;Checked=1"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:"
+                            "Value" = "8:1"
                             "DefaultValue" = "8:"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -787,7 +793,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:0"
+                            "Value" = "3:1"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1096,7 +1102,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0AF54BD0C1214347BECC6C74599EDE4D"
             {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1124,7 +1130,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5AEE352371904B34A9B1850428D92058"
             {
-            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1145,6 +1151,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{13A91869-93DB-4D15-86B9-1F490807779C}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99909648CAE84037B0D3E0C1F4CE9E55"
+            {
+            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:CHECKBOXWINHELPER=1"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{0280ADC8-EE60-4F83-BBF7-E22225E667D2}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

@@ -9,7 +9,9 @@ using ScreenBase.Data.Base;
 
 using ScreenWindows;
 
-namespace ScreenWorkerWPF.Windows;
+using ScreenWorkerWPF.Windows;
+
+namespace WindowHelperWPF;
 
 public partial class WindowHelper : Window
 {
