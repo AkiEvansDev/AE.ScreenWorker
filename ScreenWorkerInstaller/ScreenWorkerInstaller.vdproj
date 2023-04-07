@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_99F888560BCF468CB4EF2176A1AD7911"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9FB52DC7CE534D279C3316D4600E76B3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -46,6 +52,12 @@
         "Entry"
         {
         "MsmKey" = "8:_A86CFB6E122D4D25B47CDC8B1C012958"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B39625DD0BD64E3DAFF714DB2B86E973"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -121,6 +133,34 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7A51B9EA0BC44AE7B3F02E2176CAEDB4"
+            {
+            "Name" = "8:Publish Items from Uninstall (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_B39625DD0BD64E3DAFF714DB2B86E973"
+            "FileType" = "3:2"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_E194E570_9630_45BA_9B9E_18F8DEB14B55"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_FDCB4E6887CF4659B34A89395A018C01"
+            {
+            "Name" = "8:Publish Items from RunApp (Active)"
+            "Condition" = "8:CHECKBOXRUN=1"
+            "Object" = "8:_99F888560BCF468CB4EF2176A1AD7911"
+            "FileType" = "3:2"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:/Commit"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_FD4AB140_63C1_4B11_87AA_F021E9A4124E"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
         }
         "DefaultFeature"
         {
@@ -297,13 +337,13 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
         "ProductCode" = "8:{660286C8-83CA-4B4F-A892-26790D54EC60}"
-        "PackageCode" = "8:{776B702E-2A9A-4E30-8169-65B2D5F66C2B}"
+        "PackageCode" = "8:{F0639DE0-F332-4843-A782-E386C6BA53D4}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:TRUE"
+        "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:4.7.1002"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
@@ -598,7 +638,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Create shortcut on the Desktop"
+                            "Value" = "8:Install WindowHelper"
                             "DefaultValue" = "8:#1234"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -611,7 +651,7 @@
                             "ContextData" = "8:Public"
                             "Attributes" = "3:2"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXDESKTOP"
+                            "Value" = "8:CHECKBOXWINHELPER"
                             "DefaultValue" = "8:CHECKBOXA1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -624,7 +664,7 @@
                             "ContextData" = "8:Unchecked=;Checked=1"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:"
+                            "Value" = "8:1"
                             "DefaultValue" = "8:"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -637,7 +677,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:0"
+                            "Value" = "3:1"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -702,7 +742,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Run ScreenWorker after install"
+                            "Value" = "8:Run ScreenWorker"
                             "DefaultValue" = "8:#1236"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -741,7 +781,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:0"
+                            "Value" = "3:1"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -754,7 +794,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Install WindowHelper"
+                            "Value" = "8:CHECKBOX4"
                             "DefaultValue" = "8:#1237"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -767,7 +807,7 @@
                             "ContextData" = "8:Public"
                             "Attributes" = "3:2"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXWINHELPER"
+                            "Value" = "8:CHECKBOX4"
                             "DefaultValue" = "8:CHECKBOXA4"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -780,7 +820,7 @@
                             "ContextData" = "8:Unchecked=;Checked=1"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:1"
+                            "Value" = "8:"
                             "DefaultValue" = "8:"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -793,7 +833,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1102,7 +1142,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0AF54BD0C1214347BECC6C74599EDE4D"
             {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1130,7 +1170,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5AEE352371904B34A9B1850428D92058"
             {
-            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1158,7 +1198,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99909648CAE84037B0D3E0C1F4CE9E55"
             {
-            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1179,6 +1219,62 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{0280ADC8-EE60-4F83-BBF7-E22225E667D2}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99F888560BCF468CB4EF2176A1AD7911"
+            {
+            "SourcePath" = "8:..\\RunApp\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{20D903B3-87B4-49C2-A684-136DC27848A3}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B39625DD0BD64E3DAFF714DB2B86E973"
+            {
+            "SourcePath" = "8:..\\Uninstall\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{14393234-D0D3-4202-9198-410415365A8B}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

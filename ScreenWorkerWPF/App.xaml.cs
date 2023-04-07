@@ -35,7 +35,7 @@ public partial class App : Application
             var jt = new JumpTask
             {
                 ApplicationPath = exePath,
-                IconResourcePath= exePath,
+                IconResourcePath = exePath,
                 Title = "WindowHelper",
             };
 
