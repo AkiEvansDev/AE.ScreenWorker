@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Interop;
 
 using AE.Core;
 
@@ -18,6 +20,9 @@ public partial class WindowHelper : Window
     public WindowHelper()
     {
         InitializeComponent();
+
+        WindowLocationType.ItemsSource = WindowLocation.Center.Values();
+        WindowLocationType.SelectedItem = WindowLocation.LeftTop;
 
         LoadWindows();
     }
@@ -48,6 +53,8 @@ public partial class WindowHelper : Window
 
         if (range != null)
         {
+            WindowLocationType.SelectedItem = WindowLocation.LeftTop;
+
             Left.Value = range.Point1.X;
             Top.Value = range.Point1.Y;
 
@@ -67,8 +74,38 @@ public partial class WindowHelper : Window
 
         if (proc != null)
         {
+            var hwnd = new WindowInteropHelper(this).EnsureHandle();
+            var screenSize = WindowsHelper.GetMonitorSize(hwnd);
+
+            var left = 0;
+            var top = 0;
+
+            switch (WindowLocationType.SelectedItem)
+            {
+                case WindowLocation.LeftTop:
+                    left = (int)Left.Value;
+                    top = (int)Top.Value;
+                    break;
+                case WindowLocation.LeftBottom:
+                    left = (int)Left.Value;
+                    top = screenSize.Height - (int)Height.Value - (int)Top.Value;
+                    break;
+                case WindowLocation.RightTop:
+                    left = screenSize.Width - (int)Width.Value - (int)Left.Value;
+                    top = (int)Top.Value;
+                    break;
+                case WindowLocation.RightBottom:
+                    left = screenSize.Width - (int)Width.Value - (int)Left.Value;
+                    top = screenSize.Height - (int)Height.Value - (int)Top.Value;
+                    break;
+                case WindowLocation.Center:
+                    left = screenSize.Width / 2 - (int)Width.Value / 2 + (int)Left.Value;
+                    top = screenSize.Height / 2 - (int)Height.Value / 2 + (int)Top.Value;
+                    break;
+            }
+
             WindowsHelper.SetWindowOptions(proc.MainWindowHandle,
-                (int)Left.Value, (int)Top.Value,
+                left, top,
                 (int)Width.Value, (int)Height.Value,
                 (byte)Opacity.Value,
                 TopmostCB.IsChecked.Value,

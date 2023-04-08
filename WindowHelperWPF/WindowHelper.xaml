@@ -14,8 +14,8 @@
     Title="Window Helper" 
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
-    Height="450" Width="300"
-    MinHeight="450" MinWidth="300"
+    Height="450" Width="330"
+    MinHeight="450" MinWidth="330"
     Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}">
     <Window.Resources>
         <ResourceDictionary>
@@ -79,6 +79,28 @@
                     <ColumnDefinition Width="6"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <ComboBox 
+                    x:Name="WindowLocationType"
+                    ui:ControlHelper.Header="Window location"
+                    HorizontalAlignment="Stretch"
+                    FocusVisualStyle="{x:Null}"/>
+                <ui:NumberBox 
+                    x:Name="Opacity"
+                    Grid.Column="2"
+                    Minimum="0"
+                    Maximum="255"
+                    Value="255"
+                    ui:ControlHelper.Header="Opacity"
+                    HorizontalAlignment="Stretch"
+                    SpinButtonPlacementMode="Inline"
+                    FocusVisualStyle="{x:Null}"/>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <ui:NumberBox 
                     x:Name="Left"
                     SmallChange="10"
@@ -128,16 +150,6 @@
                 Content="Get data from screen"
                 FocusVisualStyle="{x:Null}"
                 Click="OnGetDataClick"/>
-            <ui:NumberBox 
-                x:Name="Opacity"
-                Grid.Column="2"
-                Minimum="0"
-                Maximum="255"
-                Value="255"
-                ui:ControlHelper.Header="Opacity"
-                HorizontalAlignment="Stretch"
-                SpinButtonPlacementMode="Inline"
-                FocusVisualStyle="{x:Null}"/>
             <CheckBox
                 x:Name="TopmostCB"
                 Content="Topmost"/>
