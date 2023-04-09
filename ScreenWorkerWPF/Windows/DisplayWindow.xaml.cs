@@ -46,7 +46,8 @@ public partial class DisplayWindow : Window
 
         public override void Stop(bool fromClosed = false)
         {
-            Executor.OnVariableChange -= OnExecutorVariableChange;
+            if (Executor != null)
+                Executor.OnVariableChange -= OnExecutorVariableChange;
 
             base.Stop(fromClosed);
         }
