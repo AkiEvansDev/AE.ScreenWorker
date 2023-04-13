@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using ABI.Windows.UI.Composition;
+
 using ScreenBase.Data.Base;
 
 namespace TimersWPF;
@@ -25,6 +27,9 @@ public partial class Timers : Window
     private void OnPreviewMouseMove(object sender, MouseEventArgs e)
     {
         var position = e.GetPosition(Scroll);
+
+        if (position.X < 320)
+            return;
 
         if (e.LeftButton == MouseButtonState.Pressed
             && Position != null && (Math.Abs(position.X - Position?.X ?? 0) + Math.Abs(position.Y - Position?.Y ?? 0) > 2)

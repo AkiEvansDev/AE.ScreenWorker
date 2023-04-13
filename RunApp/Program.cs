@@ -2,6 +2,7 @@
 using System.Reflection;
 
 var exePath = Assembly.GetExecutingAssembly().Location;
+exePath = Path.GetDirectoryName(exePath);
 exePath = Path.Combine(Path.GetDirectoryName(exePath), "ScreenWorker.exe");
 
 if (File.Exists(exePath))
