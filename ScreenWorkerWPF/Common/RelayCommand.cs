@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace ScreenWorkerWPF.Common;
 
-internal class RelayCommand : ICommand
+public class RelayCommand : ICommand
 {
     private readonly Action execute;
     private readonly Func<bool> canExecute;

@@ -2,25 +2,26 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>wh.ico</ApplicationIcon>
+	<ApplicationIcon>t.ico</ApplicationIcon>
 	<Version>4.7.1006</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
-	<StartupObject>WindowHelperWPF.App</StartupObject>
-	<AssemblyName>WindowHelper</AssemblyName>
+	<StartupObject>TimersWPF.App</StartupObject>
+	<AssemblyName>Timers</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="WH.ico">
+    <Content Include="T.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AE.CoreWPF" Version="3.2.3" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
   </ItemGroup>
 
   <ItemGroup>

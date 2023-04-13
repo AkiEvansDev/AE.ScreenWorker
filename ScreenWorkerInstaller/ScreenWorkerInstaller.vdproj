@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2C4194058E37437B9C6C0FD1F567F536"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5AEE352371904B34A9B1850428D92058"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,6 +64,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B39625DD0BD64E3DAFF714DB2B86E973"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E9AFE494C408454BAF0B40CAB33EB17F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -133,21 +145,7 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7A51B9EA0BC44AE7B3F02E2176CAEDB4"
-            {
-            "Name" = "8:Publish Items from Uninstall (Active)"
-            "Condition" = "8:"
-            "Object" = "8:_B39625DD0BD64E3DAFF714DB2B86E973"
-            "FileType" = "3:2"
-            "InstallAction" = "3:2"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_E194E570_9630_45BA_9B9E_18F8DEB14B55"
-            "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_FDCB4E6887CF4659B34A89395A018C01"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C3842EA6980941D0A297A10CB5BBED7E"
             {
             "Name" = "8:Publish Items from RunApp (Active)"
             "Condition" = "8:CHECKBOXRUN=1"
@@ -157,7 +155,21 @@
             "Arguments" = "8:/Commit"
             "EntryPoint" = "8:"
             "Sequence" = "3:2"
-            "Identifier" = "8:_FD4AB140_63C1_4B11_87AA_F021E9A4124E"
+            "Identifier" = "8:_DAA400A4_2B0B_47A2_9AD3_1ECC8F2C2512"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_E23F4E4DCB1445D1AA19EB91F730EF0B"
+            {
+            "Name" = "8:Publish Items from Uninstall (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_B39625DD0BD64E3DAFF714DB2B86E973"
+            "FileType" = "3:2"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:/Commit"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_AA9CAAA6_F9BE_4CD8_94A7_E97ACD4E5B21"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -246,6 +258,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9AFE494C408454BAF0B40CAB33EB17F"
+            {
+            "SourcePath" = "8:..\\TimersWPF\\T.ico"
+            "TargetName" = "8:T.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -296,6 +328,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1F1BD6D074DF45A9A8A43CF1A14066EA"
+                    {
+                    "Name" = "8:Tools"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_2310CF7598534EE59E4591CA44645A16"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_3C0C5908C92B415DB9DF9A3B559C39B9"
@@ -336,15 +379,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{442F52BA-45AB-48DC-85CB-6ACC6BB3B1EC}"
-        "PackageCode" = "8:{6DCC0C36-9AFD-43CC-B3E1-E99296491955}"
+        "ProductCode" = "8:{65830FC2-3841-49B8-9142-2692900D4EEB}"
+        "PackageCode" = "8:{8EDC1C05-95E2-4100-A210-EA0EA4B28460}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.7.1005"
+        "ProductVersion" = "8:4.7.1006"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/AkiEvansDev/AE.ScreenWorker"
@@ -457,6 +500,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_51505F5F82BE4E15950B6F7935CE771A"
+            {
+            "Name" = "8:Timers"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_2C4194058E37437B9C6C0FD1F567F536"
+            "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
+            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Icon" = "8:_E9AFE494C408454BAF0B40CAB33EB17F"
+            "Feature" = "8:"
+            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6FA10DFD43AA4DB8ADC550E5B86316C7"
             {
             "Name" = "8:ScreenWorker"
@@ -690,7 +747,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Install console starter"
+                            "Value" = "8:Install timers"
                             "DefaultValue" = "8:#1235"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -703,7 +760,7 @@
                             "ContextData" = "8:Public"
                             "Attributes" = "3:2"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXCONSOLE"
+                            "Value" = "8:CHECKBOXTIMERS"
                             "DefaultValue" = "8:CHECKBOXA2"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -742,7 +799,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Run ScreenWorker"
+                            "Value" = "8:Install console starter"
                             "DefaultValue" = "8:#1236"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -755,7 +812,7 @@
                             "ContextData" = "8:Public"
                             "Attributes" = "3:2"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXRUN"
+                            "Value" = "8:CHECKBOXCONSOLE"
                             "DefaultValue" = "8:CHECKBOXA3"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -768,7 +825,7 @@
                             "ContextData" = "8:Unchecked=;Checked=1"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:1"
+                            "Value" = "8:"
                             "DefaultValue" = "8:"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -794,7 +851,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOX4"
+                            "Value" = "8:Run ScreenWorker"
                             "DefaultValue" = "8:#1237"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -807,7 +864,7 @@
                             "ContextData" = "8:Public"
                             "Attributes" = "3:2"
                             "Setting" = "3:2"
-                            "Value" = "8:CHECKBOX4"
+                            "Value" = "8:CHECKBOXRUN"
                             "DefaultValue" = "8:CHECKBOXA4"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -820,7 +877,7 @@
                             "ContextData" = "8:Unchecked=;Checked=1"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:"
+                            "Value" = "8:1"
                             "DefaultValue" = "8:"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -833,7 +890,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:0"
+                            "Value" = "3:1"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1168,6 +1225,34 @@
                 {
                 }
             }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2C4194058E37437B9C6C0FD1F567F536"
+            {
+            "SourcePath" = "8:..\\TimersWPF\\obj\\Debug\\net6.0-windows10.0.18362.0\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Condition" = "8:CHECKBOXTIMERS=1"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{FD3DC9C6-F517-4555-B3F9-BBFA29E803CB}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5AEE352371904B34A9B1850428D92058"
             {
             "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
@@ -1229,7 +1314,7 @@
             "SourcePath" = "8:..\\RunApp\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1257,7 +1342,7 @@
             "SourcePath" = "8:..\\Uninstall\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
+            "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"

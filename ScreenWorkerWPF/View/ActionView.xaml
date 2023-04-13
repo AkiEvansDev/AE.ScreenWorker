@@ -115,14 +115,15 @@
         </ScrollViewer>
         <ui:ListView
             x:Name="VisualDrag"
+            Width="{Binding ElementName=MainList, Path=ActualWidth}"
             ItemTemplate="{StaticResource ItemTemplate}"
+            Opacity="0.6"
             FocusVisualStyle="{x:Null}"
             SelectionMode="Extended"
             Visibility="Collapsed"
             VerticalAlignment="Top"
             HorizontalAlignment="Left"
-            MaxHeight="200"
-            Width="400">
+            MaxHeight="200">
             <ui:ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ui:ListViewItem}" BasedOn="{StaticResource {x:Type ui:ListViewItem}}">
                     <Setter Property="Visibility" Value="{Binding Visibility}"/>

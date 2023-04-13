@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -11,6 +10,7 @@ using ScreenBase.Data.Base;
 
 using ScreenWindows;
 
+using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Windows;
 
 namespace WindowHelperWPF;
@@ -20,6 +20,8 @@ public partial class WindowHelper : Window
     public WindowHelper()
     {
         InitializeComponent();
+
+        CommonHelper.CheckAdmin(Assembly.GetExecutingAssembly().Location);
 
         WindowLocationType.ItemsSource = WindowLocation.Center.Values();
         WindowLocationType.SelectedItem = WindowLocation.LeftTop;

@@ -60,11 +60,11 @@ public partial class ActionView : UserControl
         {
             Position = null;
 
-            VisualDrag.Margin = new Thickness(position.X + 10, position.Y + 20, -position.X - 10, -position.Y - 20);
+            VisualDrag.ItemsSource = ViewModel.GetDragItems();
+            VisualDrag.Margin = new Thickness(0, position.Y + 5, 0, -position.Y - 5);
             VisualDrag.Visibility = Visibility.Visible;
 
             VisualDrag.UpdateLayout();
-            VisualDrag.ItemsSource = ViewModel.GetDragItems();
 
             DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.All);
 
@@ -76,7 +76,7 @@ public partial class ActionView : UserControl
     private void OnDragOver(object sender, DragEventArgs e)
     {
         var position = e.GetPosition(Scroll);
-        VisualDrag.Margin = new Thickness(position.X + 10, position.Y + 20, -position.X - 10, -position.Y - 20);
+        VisualDrag.Margin = new Thickness(0, position.Y + 5, 0, -position.Y - 5);
 
         if (position.Y < 20)
             Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset - 20);

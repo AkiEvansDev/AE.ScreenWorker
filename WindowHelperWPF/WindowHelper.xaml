@@ -16,7 +16,8 @@
     WindowStartupLocation="CenterScreen"
     Height="450" Width="330"
     MinHeight="450" MinWidth="330"
-    Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}">
+    Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+    FocusVisualStyle="{x:Null}">
     <Window.Resources>
         <ResourceDictionary>
             <common:PixelsToGridLengthConverter x:Key="PixelsToGridLength"/>

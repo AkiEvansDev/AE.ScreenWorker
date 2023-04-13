@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,11 +23,47 @@ using WebWork;
 
 namespace ScreenWorkerWPF.Common;
 
-internal static class CommonHelper
+public static class CommonHelper
 {
-    public async static Task<HelpInfo> GetHelpInfo(ActionType actionType)
+    public async static void CheckAdmin(string exePath)
     {
-        HelpInfo result = null;
+        using var identity = WindowsIdentity.GetCurrent();
+        var principal = new WindowsPrincipal(identity);
+
+        if (!principal.IsInRole(WindowsBuiltInRole.Administrator) && await ShowMessage("Application may not work properly, restart?", "No administrator rights!") == ContentDialogResult.Primary)
+        {
+            try
+            {
+                if (exePath.EndsWith(".dll"))
+                    exePath = Path.Combine(Path.GetDirectoryName(exePath), Path.GetFileNameWithoutExtension(exePath)) + ".exe";
+
+                if (File.Exists(exePath))
+                {
+                    var process = new Process();
+                    process.StartInfo.FileName = exePath;
+                    process.StartInfo.UseShellExecute = true;
+                    process.StartInfo.Verb = "runas";
+
+                    process.Start();
+
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    await ShowMessage("Please run application as administrator!", "Can't find exe path!", cancelBtn: null);
+                    Application.Current.Shutdown();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+        }
+    }
+
+    internal async static Task<HelpInfo> GetHelpInfo(ActionType actionType)
+    {
+        HelpInfo result;
         if (App.CurrentSettings.HelpInfo.ContainsKey(actionType))
         {
             result = App.CurrentSettings.HelpInfo[actionType];
@@ -57,7 +94,7 @@ internal static class CommonHelper
         });
     }
 
-    public async static Task<bool> Upload(ScriptInfo scriptInfo, string name, string description)
+    internal async static Task<bool> Upload(ScriptInfo scriptInfo, string name, string description)
     {
         scriptInfo = DataHelper.Clone<ScriptInfo>(scriptInfo);
         scriptInfo.Folder = "";
@@ -173,7 +210,7 @@ internal static class CommonHelper
         return isComplite;
     }
 
-    public async static Task<bool> Edit(string fileId, string newName, string newDescription, bool isUser)
+    internal async static Task<bool> Edit(string fileId, string newName, string newDescription, bool isUser)
     {
         if (newName.IsNull())
         {
@@ -265,7 +302,7 @@ internal static class CommonHelper
         return isComplite;
     }
 
-    public async static Task<ScriptInfo> Download(string fileId)
+    internal async static Task<ScriptInfo> Download(string fileId)
     {
         using var service = DriveHelper.GetDriveService();
 
@@ -310,10 +347,10 @@ internal static class CommonHelper
         return null;
     }
 
-    public static bool IsCheckLogin { get; private set; } = false;
+    internal static bool IsCheckLogin { get; private set; } = false;
     private static ContentDialog LoginWait { get; set; }
 
-    public async static Task<bool> Login(UserInfo userInfo, bool fromUser = false)
+    internal async static Task<bool> Login(UserInfo userInfo, bool fromUser = false)
     {
         if (!IsCheckLogin)
         {
@@ -498,10 +535,10 @@ internal static class CommonHelper
         return false;
     }
 
-    public static bool IsCheckUpdate { get; private set; } = false;
+    internal static bool IsCheckUpdate { get; private set; } = false;
     private static ContentDialog UpdateWait { get; set; }
 
-    public async static Task<bool> CheckUpdate(bool fromUser = false)
+    internal async static Task<bool> CheckUpdate(bool fromUser = false)
     {
         if (IsCheckUpdate && UpdateWait != null)
         {
@@ -676,7 +713,7 @@ internal static class CommonHelper
         return messageDialog.ShowAsync(ContentDialogPlacement.Popup);
     }
 
-    public static string GetVersionString()
+    internal static string GetVersionString()
     {
         var ver = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd('0', '.');
 

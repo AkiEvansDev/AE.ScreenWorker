@@ -2,7 +2,7 @@
 
 namespace ScreenWorkerWPF.Common;
 
-internal abstract class BaseModel : INotifyPropertyChanged
+public abstract class BaseModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
