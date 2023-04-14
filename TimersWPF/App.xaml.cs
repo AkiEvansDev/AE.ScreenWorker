@@ -107,10 +107,10 @@ public partial class App : Application
         var message = $"{timer.GetName(discord: discord)}: {(discord ? "**" : "")}5{(discord ? "**" : "")}-{(discord ? "**" : "")}30{(discord ? "**" : "")} seconds left!";
 
         if (next != null)
-            message += $"{Environment.NewLine}{next.GetName()} after {(discord ? "**" : "")}{Math.Round((next.NotifyTime - next.Time).TotalMinutes)}{(discord ? "**" : "")} min.";
+            message += $"{Environment.NewLine}{next.GetName(discord: discord)} after {(discord ? "**" : "")}{Math.Round((next.NotifyTime - next.Time).TotalMinutes)}{(discord ? "**" : "")} min.";
 
         if (count > 0)
-            message += $"{Environment.NewLine}{(discord ? "**" : "")}{count}{(discord ? "**" : "")} timers - {(discord ? "`" : "")}wait first start{(discord ? "`" : "")}.";
+            message += $"{Environment.NewLine}{(discord ? "**" : "")}{count}{(discord ? "**" : "")} timer{(count > 1 ? "s" : "")} - {(discord ? "`" : "")}wait first start{(discord ? "`" : "")}.";
 
         return message;
     }
@@ -188,8 +188,8 @@ public partial class App : Application
     private static string GetTimersPath()
     {
         return Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
-        "ScreenWorker",
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
+            "ScreenWorker",
             "timers.data"
         );
     }

@@ -352,7 +352,6 @@
                                     Margin="0 -6 0 0"
                                     Minimum="20" 
                                     Maximum="100"
-                                    Value="100"
                                     ValueChanged="OnOpacityValueChanged"/>
                             </ui:SimpleStackPanel>
                         </ui:Flyout>

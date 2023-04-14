@@ -10,6 +10,8 @@ namespace TimersWPF;
 
 public partial class Timers : Window
 {
+    private readonly bool WasLoad = false;
+
     public Timers(TimersInfo info)
     {
         InitializeComponent();
@@ -23,6 +25,7 @@ public partial class Timers : Window
         OpacitySlider.Value = App.Settings.Opacity * 100;
 
         DataContext = new TimersViewModel(info);
+        WasLoad = true;
     }
 
     private void ApplySettings()
@@ -36,12 +39,18 @@ public partial class Timers : Window
 
     private void OnTokenTextChanged(object sender, TextChangedEventArgs e)
     {
+        if (!WasLoad)
+            return;
+
         App.Settings.Token = Token.Text;
         App.Current.UpdateConnect();
     }
 
     private void OnChannelChanged(object sender, TextChangedEventArgs e)
     {
+        if (!WasLoad)
+            return;
+
         if (!Channel.Text.IsNull() && ulong.TryParse(Channel.Text, out ulong id))
         {
             App.Settings.ChannelId = id;
@@ -53,6 +62,9 @@ public partial class Timers : Window
 
     private void OnRoleTextChanged(object sender, TextChangedEventArgs e)
     {
+        if (!WasLoad)
+            return;
+
         if (!Role.Text.IsNull() && ulong.TryParse(Role.Text, out ulong id))
             App.Settings.RoleId = id;
         else
@@ -61,6 +73,9 @@ public partial class Timers : Window
 
     private void OnMessageTextChanged(object sender, TextChangedEventArgs e)
     {
+        if (!WasLoad)
+            return;
+
         App.Settings.Message = HellowMessage.Text;
     }
 
@@ -71,14 +86,16 @@ public partial class Timers : Window
 
     private void SendStartClick(object sender, RoutedEventArgs e)
     {
-        var message = $"{Environment.NewLine}**Farm start!**";
+        var message = $"{Environment.NewLine}**Farm start info!**";
         foreach (var timer in TimersViewModel.Current.Timers
             .ToList()
             .Where(t => t.NotifyDiscord)
-            .OrderBy(t => t.Name)
+            .OrderByDescending(t => t.IsWork)
+            .ThenBy(t => t.IsWork ? (t.NotifyTime - t.Time).TotalMinutes : double.MaxValue)
+            .ThenBy(t => t.Name)
         )
         {
-            message += $"{Environment.NewLine}{timer.GetName(true, true)} {(timer.IsWork ? "(`work`)" : "(`wait first start`)")}";
+            message += $"{Environment.NewLine}{timer.GetName(true, true)} {(timer.IsWork ? $"(after **{Math.Round((timer.NotifyTime - timer.Time).TotalMinutes)}** min)" : "(`wait first start`)")}";
         }
 
         App.Current.SendMessage(message);
@@ -89,7 +106,7 @@ public partial class Timers : Window
         var next = TimersViewModel.Current.Timers
             .ToList()
             .Where(t => t.IsWork && t.NotifyDiscord && t.NotifyTime > t.Time)
-            .OrderByDescending(t => t.NotifyTime - t.Time)
+            .OrderBy(t => t.NotifyTime - t.Time)
             .FirstOrDefault();
 
         if (next != null)
@@ -101,12 +118,18 @@ public partial class Timers : Window
 
     private void OnTopmost(object sender, RoutedEventArgs e)
     {
+        if (!WasLoad)
+            return;
+
         App.Settings.Topmost = TopmostCheckBox.IsChecked ?? false;
         ApplySettings();
     }
 
     private void OnOpacityValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
+        if (!WasLoad)
+            return;
+
         App.Settings.Opacity = e.NewValue / 100.0;
         ApplySettings();
     }
