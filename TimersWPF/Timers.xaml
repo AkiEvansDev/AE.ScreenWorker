@@ -14,10 +14,10 @@
     ui:TitleBar.ExtendViewIntoTitleBar="True"
     Icon="t.ico"
     Title="Timers" 
-    ResizeMode="NoResize"
+    ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
-    Height="450" Width="350"
-    MinHeight="450" MinWidth="350"
+    Height="450" Width="380"
+    MinHeight="450" MinWidth="380"
     BorderThickness="0"
     BorderBrush="Transparent"
     Background="Transparent"
@@ -42,9 +42,12 @@
                             <ColumnDefinition Width="24"/>
                             <ColumnDefinition Width="24"/>
                             <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="6"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock 
                             Text="{Binding DisplayTime}"
+                            Margin="6 0 0 0"
                             FontSize="16"
                             FontWeight="Bold"
                             VerticalAlignment="Center">
@@ -173,15 +176,46 @@
                                 FontSize="14"
                                 Symbol="Refresh"/>
                         </Button>
-                        <ui:SymbolIcon
+                        <Button
                             Grid.Column="5"
-                            Cursor="Hand"
-                            Opacity="0.6"
-                            Margin="3 6"
-                            FontSize="14"
-                            Symbol="Sort"/>
+                            Command="{Binding Up}"
+                            Padding="3 6"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            FocusVisualStyle="{x:Null}">
+                            <Button.Resources>
+                                <ResourceDictionary>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </Button.Resources>
+                            <ui:SymbolIcon
+                                FontSize="14"
+                                Symbol="Upload"/>
+                        </Button>
+                        <Button
+                            Grid.Column="6"
+                            Command="{Binding Down}"
+                            Padding="3 6"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            FocusVisualStyle="{x:Null}">
+                            <Button.Resources>
+                                <ResourceDictionary>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </Button.Resources>
+                            <ui:SymbolIcon
+                                FontSize="14"
+                                Symbol="Download"/>
+                        </Button>
                         <Border
-                            Grid.ColumnSpan="6"
+                            Grid.ColumnSpan="8"
                             BorderBrush="{DynamicResource NavigationViewItemSeparatorForeground}"
                             BorderThickness="0 1 0 0"
                             VerticalAlignment="Bottom" 
@@ -196,6 +230,7 @@
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
+            
         </ResourceDictionary>
     </Window.Resources>
     <Border
@@ -231,16 +266,12 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
                 Margin="6 0 0 0"
-                AllowDrop="True"
-                Drop="OnScrollDrop"
-                DragOver="OnScrollDragOver">
+                AllowDrop="True">
                 <ItemsControl
                     ItemsSource="{Binding Timers}"
                     ItemTemplate="{StaticResource TimerItem}"
                     Margin="6 6 12 6"
-                    FocusVisualStyle="{x:Null}"
-                    PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown"
-                    DragOver="OnDragOver">
+                    FocusVisualStyle="{x:Null}">
                     <ItemsControl.Resources>
                         <ResourceDictionary>
                             <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
@@ -252,15 +283,6 @@
                             Spacing="0"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="AllowDrop" Value="True"/>
-                            <EventSetter Event="PreviewMouseMove" Handler="OnPreviewMouseMove"/>
-                            <EventSetter Event="DragEnter" Handler="OnDragEnter"/>
-                            <EventSetter Event="DragLeave" Handler="OnDragLeave"/>
-                            <EventSetter Event="Drop" Handler="OnDrop"/>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
             </ScrollViewer>
             <ContentControl 
@@ -281,12 +303,13 @@
                 Margin="12 6">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Button
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Padding="6"
                     Background="Transparent"
                     BorderBrush="Transparent"
@@ -304,6 +327,7 @@
                             Placement="TopEdgeAlignedLeft">
                             <ui:SimpleStackPanel>
                                 <CheckBox
+                                    x:Name="TopmostCheckBox"
                                     Content="Topmost"
                                     FontWeight="SemiBold"
                                     FocusVisualStyle="{x:Null}"
@@ -315,6 +339,7 @@
                                 </CheckBox>
                                 <TextBlock Text="Opacity"/>
                                 <Slider 
+                                    x:Name="OpacitySlider"
                                     Margin="0 -6 0 0"
                                     Minimum="20" 
                                     Maximum="100"
@@ -324,12 +349,96 @@
                         </ui:Flyout>
                     </ui:FlyoutService.Flyout>
                     <ui:SymbolIcon
-                        x:Name="Clock"
                         FontSize="16"
                         Symbol="Setting"/>
                 </Button>
                 <Button
-                    Grid.Column="2"
+                    Grid.Column="1"
+                    Padding="6"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    FocusVisualStyle="{x:Null}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent"/>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                    <ui:FlyoutService.Flyout>
+                        <ui:Flyout
+                            Placement="TopEdgeAlignedLeft">
+                            <ui:SimpleStackPanel
+                                Spacing="6">
+                                <TextBox
+                                    x:Name="Token"
+                                    Width="250"
+                                    MaxWidth="250"
+                                    ui:ControlHelper.Header="Discord BOT"
+                                    ui:ControlHelper.PlaceholderText="Token"
+                                    FocusVisualStyle="{x:Null}"
+                                    TextChanged="OnTokenTextChanged"/>
+                                <TextBox
+                                    x:Name="Channel"
+                                    Width="250"
+                                    MaxWidth="250"
+                                    ui:ControlHelper.Header="Channel Id"
+                                    ui:ControlHelper.PlaceholderText="Id"
+                                    FocusVisualStyle="{x:Null}"
+                                    TextChanged="OnChannelChanged"/>
+                                <TextBox
+                                    x:Name="Role"
+                                    Width="250"
+                                    MaxWidth="250"
+                                    ui:ControlHelper.Header="Role Id"
+                                    ui:ControlHelper.PlaceholderText="Id"
+                                    FocusVisualStyle="{x:Null}"
+                                    TextChanged="OnRoleTextChanged"/>
+                                <TextBox
+                                    x:Name="HellowMessage"
+                                    Width="250"
+                                    MaxWidth="250"
+                                    ui:ControlHelper.Header="Message"
+                                    ui:ControlHelper.PlaceholderText="Message"
+                                    FocusVisualStyle="{x:Null}"
+                                    TextChanged="OnMessageTextChanged"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="6"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="6"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Stretch"
+                                        Content="Start"
+                                        FocusVisualStyle="{x:Null}"
+                                        Click="SendStartClick"/>
+                                    <Button
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Stretch"
+                                        Content="Wait"
+                                        FocusVisualStyle="{x:Null}"
+                                        Click="SendWaitClick"/>
+                                    <Button
+                                        Grid.Column="4"
+                                        HorizontalAlignment="Stretch"
+                                        Content="Send"
+                                        FocusVisualStyle="{x:Null}"
+                                        Click="SendClick"/>
+                                </Grid>
+                            </ui:SimpleStackPanel>
+                        </ui:Flyout>
+                    </ui:FlyoutService.Flyout>
+                    <ui:SymbolIcon
+                        FontSize="16"
+                        Symbol="People"/>
+                </Button>
+                <Button
+                    Grid.Column="3"
                     Command="{Binding Add}"
                     Padding="6"
                     Background="Transparent"
@@ -348,7 +457,7 @@
                         Symbol="Add"/>
                 </Button>
                 <Button
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Command="{Binding Delete}"
                     Padding="6"
                     Background="Transparent"

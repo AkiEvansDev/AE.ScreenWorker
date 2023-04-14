@@ -1,12 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 
-using ABI.Windows.UI.Composition;
-
-using ScreenBase.Data.Base;
+using AE.Core;
 
 namespace TimersWPF;
 
@@ -15,126 +13,90 @@ public partial class Timers : Window
     public Timers(TimersInfo info)
     {
         InitializeComponent();
+        ApplySettings();
+
+        Token.Text = App.Settings.Token;
+        Channel.Text = App.Settings.ChannelId.ToString();
+        Role.Text = App.Settings.RoleId.ToString();
+        TopmostCheckBox.IsChecked = App.Settings.Topmost;
+        OpacitySlider.Value = App.Settings.Opacity * 100;
+
         DataContext = new TimersViewModel(info);
     }
 
-    private Point? Position = null;
-    private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void ApplySettings()
     {
-        Position = e.GetPosition(Scroll);
-    }
-
-    private void OnPreviewMouseMove(object sender, MouseEventArgs e)
-    {
-        var position = e.GetPosition(Scroll);
-
-        if (position.X < 320)
-            return;
-
-        if (e.LeftButton == MouseButtonState.Pressed
-            && Position != null && (Math.Abs(position.X - Position?.X ?? 0) + Math.Abs(position.Y - Position?.Y ?? 0) > 2)
-            && sender is ContentPresenter draggedItem)
+        Topmost = App.Settings.Topmost;
+        Border.Background = new SolidColorBrush((Border.Background as SolidColorBrush).Color)
         {
-            wasDrap = false;
-            Position = null;
-
-            VisualDrag.Content = DataHelper.Clone<TimerModel>(draggedItem.DataContext);
-            VisualDrag.Margin = new Thickness(12, position.Y + 5, 12, -position.Y - 5);
-
-            draggedItem.Opacity = 0.4;
-            VisualDrag.Visibility = Visibility.Visible;
-
-            VisualDrag.UpdateLayout();
-
-            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.All);
-
-            draggedItem.Opacity = 1;
-            VisualDrag.Visibility = Visibility.Collapsed;
-        }
+            Opacity = App.Settings.Opacity
+        };
     }
 
-    private void OnDragOver(object sender, DragEventArgs e)
+    private void OnTokenTextChanged(object sender, TextChangedEventArgs e)
     {
-        var position = e.GetPosition(Scroll);
-        VisualDrag.Margin = new Thickness(12, position.Y + 5, 12, -position.Y - 5);
-
-        if (position.Y < 20)
-            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset - 20);
-        else if (position.Y > Scroll.ActualHeight - 20)
-            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + 20);
+        App.Settings.Token = Token.Text;
     }
 
-    private void OnDragEnter(object sender, DragEventArgs e)
+    private void OnChannelChanged(object sender, TextChangedEventArgs e)
     {
-        if (sender is ContentPresenter item && item.Opacity == 1)
-            (item.ContentTemplate.FindName("Item", item) as Grid).Height = 24;
+        if (!Channel.Text.IsNull() && ulong.TryParse(Channel.Text, out ulong id))
+            App.Settings.ChannelId = id;
+        else
+            Channel.Text = "";
     }
 
-    private void OnDragLeave(object sender, DragEventArgs e)
+    private void OnRoleTextChanged(object sender, TextChangedEventArgs e)
     {
-        if (sender is ContentPresenter item && item.Opacity == 1)
-            (item.ContentTemplate.FindName("Item", item) as Grid).Height = 0;
+        if (!Role.Text.IsNull() && ulong.TryParse(Role.Text, out ulong id))
+            App.Settings.RoleId = id;
+        else
+            Role.Text = "";
     }
 
-    private bool wasDrap = false;
-    private void OnDrop(object sender, DragEventArgs e)
+    private void OnMessageTextChanged(object sender, TextChangedEventArgs e)
     {
-        if (sender is ContentPresenter item && item.Opacity == 1)
+        App.Settings.Message = HellowMessage.Text;
+    }
+
+    private void SendClick(object sender, RoutedEventArgs e)
+    {
+        App.Current.SendMessage(App.Settings.Message);
+    }
+
+    private void SendStartClick(object sender, RoutedEventArgs e)
+    {
+        var message = $"{Environment.NewLine}**Farm start!**";
+        foreach (var timer in TimersViewModel.Current.Timers.ToList().OrderBy(t => t.Name))
+            message += $"{Environment.NewLine}{timer.GetDiscordName(true)}";
+
+        App.Current.SendMessage(message);
+    }
+
+    private void SendWaitClick(object sender, RoutedEventArgs e)
+    {
+        var next = TimersViewModel.Current.Timers
+            .ToList()
+            .Where(t => t.IsWork && t.NotifyTime > t.Time)
+            .OrderByDescending(t => t.NotifyTime - t.Time)
+            .FirstOrDefault();
+
+        if (next != null)
         {
-            wasDrap = true;
-            (item.ContentTemplate.FindName("Item", item) as Grid).Height = 0;
-
-            var source = e.Data.GetData(typeof(TimerModel)) as TimerModel;
-            var target = item.DataContext as TimerModel;
-
-            var index = TimersViewModel.Current.Timers.IndexOf(source);
-            var newIndex = TimersViewModel.Current.Timers.IndexOf(target);
-
-            if (newIndex < 0)
-                newIndex = 0;
-
-            if (newIndex >= TimersViewModel.Current.Timers.Count)
-                newIndex = TimersViewModel.Current.Timers.Count - 1;
-
-            TimersViewModel.Current.Timers.Move(index, newIndex);
+            var message = $"**Pause for {Math.Round((next.NotifyTime - next.Time).TotalMinutes)} min.**";
+            App.Current.SendMessage(message);
         }
-    }
-
-    private void OnScrollDragOver(object sender, DragEventArgs e)
-    {
-        var position = e.GetPosition(Scroll);
-        VisualDrag.Margin = new Thickness(12, position.Y + 5, 12, -position.Y - 5);
-    }
-
-    private void OnScrollDrop(object sender, DragEventArgs e)
-    {
-        if (wasDrap)
-            return;
-
-        var position = e.GetPosition(Scroll);
-        var source = e.Data.GetData(typeof(TimerModel)) as TimerModel;
-
-        var index = TimersViewModel.Current.Timers.IndexOf(source);
-        var newIndex = position.Y < 10
-            ? 0
-            : TimersViewModel.Current.Timers.Count - 1;
-
-        TimersViewModel.Current.Timers.Move(index, newIndex);
     }
 
     private void OnTopmost(object sender, RoutedEventArgs e)
     {
-        if (sender is CheckBox checkBox)
-            Topmost = checkBox.IsChecked ?? false;
+        App.Settings.Topmost = TopmostCheckBox.IsChecked ?? false;
+        ApplySettings();
     }
 
     private void OnOpacityValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        var value = e.NewValue / 100.0;
-
-        Border.Background = new SolidColorBrush((Border.Background as SolidColorBrush).Color)
-        {
-            Opacity = value
-        };
+        App.Settings.Opacity = e.NewValue / 100.0;
+        ApplySettings();
     }
 }

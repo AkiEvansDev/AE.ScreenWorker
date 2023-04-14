@@ -1,20 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using AE.Core;
-
-using Microsoft.Toolkit.Uwp.Notifications;
 
 using ScreenWorkerWPF.Common;
 
 namespace TimersWPF;
 
 [AESerializable]
+public class TimersSettings
+{
+    public string Token { get; set; }
+    public ulong ChannelId { get; set; }
+    public ulong RoleId { get; set; }
+    public string Message { get; set; }
+
+    public bool Topmost { get; set; }
+    public double Opacity { get; set; }
+
+    public TimersSettings()
+    {
+        Opacity = 1;
+    }
+}
+
+[AESerializable]
 public class TimersInfo
 {
+    public TimersSettings Settings { get; set; }
     public List<TimerModel> Timers { get; set; }
 
     public TimersInfo()
     {
+        Settings = new TimersSettings();
         Timers = new List<TimerModel>();
     }
 }
@@ -36,6 +55,9 @@ public class TimerModel : BaseModel
             NotifyPropertyChanged(nameof(Name));
         }
     }
+
+    public TimeSpan Time => new(Hours, Minutes, Seconds);
+
     private int hours;
     public int Hours
     {
@@ -107,6 +129,8 @@ public class TimerModel : BaseModel
         }
     }
 
+    public TimeSpan NotifyTime => new(NotifyHours, NotifyMinutes, NotifySeconds);
+
     private int notifyHours;
     public int NotifyHours
     {
@@ -164,6 +188,10 @@ public class TimerModel : BaseModel
     public RelayCommand Stop { get; }
     [AEIgnore]
     public RelayCommand Reset { get; }
+    [AEIgnore]
+    public RelayCommand Up { get; }
+    [AEIgnore]
+    public RelayCommand Down { get; }
 
     public TimerModel()
     {
@@ -187,9 +215,19 @@ public class TimerModel : BaseModel
 
             NotifyPropertyChanged(nameof(DisplayTime));
         });
+        Up = new RelayCommand(() =>
+        {
+            var index = TimersViewModel.Current.Timers.IndexOf(this);
+            TimersViewModel.Current.Timers.Move(index, index - 1);
+        }, () => TimersViewModel.Current.Timers[0] != this);
+        Down = new RelayCommand(() =>
+        {
+            var index = TimersViewModel.Current.Timers.IndexOf(this);
+            TimersViewModel.Current.Timers.Move(index, index + 1);
+        }, () => TimersViewModel.Current.Timers.LastOrDefault() != this);
     }
 
-    public void UpTime()
+    public void UpTime(Action<TimerModel> onNotify)
     {
         if (IsNotWork)
             return;
@@ -198,12 +236,27 @@ public class TimerModel : BaseModel
         NotifyPropertyChanged(nameof(DisplayTime));
 
         if (Notify && Hours == NotifyHours && Minutes == NotifyMinutes && Seconds == NotifySeconds)
+            onNotify?.Invoke(this);
+    }
+
+    public string GetDiscordName(bool forStart = false)
+    {
+        var n = Name;
+        if (n.IsNull())
+            n = $"Timer({TimersViewModel.Current.Timers.IndexOf(this) + 1})";
+
+        if (n.Contains(" - "))
         {
-            new ToastContentBuilder()
-                .SetToastScenario(ToastScenario.Alarm)
-                .AddText("Timer complited!")
-                .AddText($"{DisplayTime} {Name ?? "time"}")
-                .Show();
+            var p1 = n.Substring(0, n.IndexOf(" - "));
+            var p2 = n.Substring(n.IndexOf(" - ") + 3);
+
+            return forStart
+                ? $"**{p1}** - {p2}"
+                : $"**{p2}**({p1})";
         }
+
+        return forStart
+            ? $"**{n}**"
+            : n;
     }
 }
