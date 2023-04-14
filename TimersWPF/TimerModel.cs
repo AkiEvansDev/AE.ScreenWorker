@@ -129,6 +129,20 @@ public class TimerModel : BaseModel
         }
     }
 
+    private bool notifyDiscord;
+    public bool NotifyDiscord
+    {
+        get => notifyDiscord;
+        set
+        {
+            if (value)
+                Notify = value;
+
+            notifyDiscord = value;
+            NotifyPropertyChanged(nameof(NotifyDiscord));
+        }
+    }
+
     public TimeSpan NotifyTime => new(NotifyHours, NotifyMinutes, NotifySeconds);
 
     private int notifyHours;
@@ -239,7 +253,7 @@ public class TimerModel : BaseModel
             onNotify?.Invoke(this);
     }
 
-    public string GetDiscordName(bool forStart = false)
+    public string GetName(bool forStart = false, bool discord = false)
     {
         var n = Name;
         if (n.IsNull())
@@ -251,12 +265,12 @@ public class TimerModel : BaseModel
             var p2 = n.Substring(n.IndexOf(" - ") + 3);
 
             return forStart
-                ? $"**{p1}** - {p2}"
-                : $"**{p2}**({p1})";
+                ? $"{(discord ? "**" : "")}{p1}{(discord ? "**" : "")} - {p2}"
+                : $"{(discord ? "**" : "")}{p2}{(discord ? "**" : "")}({p1})";
         }
 
         return forStart
-            ? $"**{n}**"
+            ? $"{(discord ? "**" : "")}{n}(discord ? \"**\" : \"\")"
             : n;
     }
 }

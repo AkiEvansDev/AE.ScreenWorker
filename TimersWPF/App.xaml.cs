@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -70,23 +71,48 @@ public partial class App : Application
 
     private void OnNotify(TimerModel timer)
     {
-        var next = TimersViewModel.Current.Timers
-            .ToList()
-            .Where(t => t.IsWork && t != timer && t.Time < t.NotifyTime)
-            .OrderByDescending(t => t.Time)
-            .FirstOrDefault();
+        if (timer.Notify)
+        {
+            var timers = TimersViewModel.Current.Timers.ToList();
+            var message = GetMessage(timers, timer, false);
 
-        var message = $"{timer.GetDiscordName()}: **5**-**30** seconds left!";
+            new ToastContentBuilder()
+                .SetToastScenario(ToastScenario.Alarm)
+                .AddText("Timer complited!")
+                .AddText(message)
+                .Show();
+        }
+
+        if (timer.NotifyDiscord)
+        {
+            var timers = TimersViewModel.Current.Timers.ToList();
+            var message = GetMessage(timers, timer, true);
+
+            SendMessage(message);
+        }
+    }
+
+    private string GetMessage(List<TimerModel> timers, TimerModel timer, bool discord)
+    {
+        bool IsNotify(TimerModel model) => discord ? model.NotifyDiscord : model.Notify;
+
+        var next = timers
+          .Where(t => IsNotify(t) && t.IsWork && t != timer && t.Time < t.NotifyTime)
+          .OrderByDescending(t => t.Time)
+          .FirstOrDefault();
+
+        var count = timers
+            .Count(t => IsNotify(t) && t.IsNotWork);
+
+        var message = $"{timer.GetName(discord: discord)}: {(discord ? "**" : "")}5{(discord ? "**" : "")}-{(discord ? "**" : "")}30{(discord ? "**" : "")} seconds left!";
+
         if (next != null)
-            message += $"{Environment.NewLine}{next.GetDiscordName()} after **{Math.Round((next.NotifyTime - next.Time).TotalMinutes)}** min.";
+            message += $"{Environment.NewLine}{next.GetName()} after {(discord ? "**" : "")}{Math.Round((next.NotifyTime - next.Time).TotalMinutes)}{(discord ? "**" : "")} min.";
 
-        new ToastContentBuilder()
-            .SetToastScenario(ToastScenario.Alarm)
-            .AddText("Timer complited!")
-            .AddText(message.Replace("**", ""))
-            .Show();
+        if (count > 0)
+            message += $"{Environment.NewLine}{(discord ? "**" : "")}{count}{(discord ? "**" : "")} timers - {(discord ? "`" : "")}wait first start{(discord ? "`" : "")}.";
 
-        SendMessage(message);
+        return message;
     }
 
     public async void SendMessage(string message)
@@ -104,6 +130,17 @@ public partial class App : Application
         catch (Exception ex)
         {
             CommonHelper.ShowError(ex.Message);
+        }
+    }
+
+    public async void UpdateConnect()
+    {
+        if (DiscordClient != null)
+        {
+            DiscordChannel = null;
+
+            await DiscordClient.DisposeAsync();
+            await Connect();
         }
     }
 
@@ -126,13 +163,17 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
-        CancellationToken.Cancel();
-
-        if (DiscordClient != null)
+        try
         {
-            DiscordChannel = null;
-            DiscordClient.Dispose();
+            CancellationToken.Cancel();
+
+            if (DiscordClient != null)
+            {
+                DiscordChannel = null;
+                DiscordClient.Dispose();
+            }
         }
+        catch { }
 
         var info = new TimersInfo
         {
@@ -143,6 +184,7 @@ public partial class App : Application
 
         base.OnExit(e);
     }
+
     private static string GetTimersPath()
     {
         return Path.Combine(

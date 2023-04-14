@@ -18,6 +18,7 @@ public partial class Timers : Window
         Token.Text = App.Settings.Token;
         Channel.Text = App.Settings.ChannelId.ToString();
         Role.Text = App.Settings.RoleId.ToString();
+        HellowMessage.Text = App.Settings.Message;
         TopmostCheckBox.IsChecked = App.Settings.Topmost;
         OpacitySlider.Value = App.Settings.Opacity * 100;
 
@@ -36,12 +37,16 @@ public partial class Timers : Window
     private void OnTokenTextChanged(object sender, TextChangedEventArgs e)
     {
         App.Settings.Token = Token.Text;
+        App.Current.UpdateConnect();
     }
 
     private void OnChannelChanged(object sender, TextChangedEventArgs e)
     {
         if (!Channel.Text.IsNull() && ulong.TryParse(Channel.Text, out ulong id))
+        {
             App.Settings.ChannelId = id;
+            App.Current.UpdateConnect();
+        }
         else
             Channel.Text = "";
     }
@@ -67,8 +72,14 @@ public partial class Timers : Window
     private void SendStartClick(object sender, RoutedEventArgs e)
     {
         var message = $"{Environment.NewLine}**Farm start!**";
-        foreach (var timer in TimersViewModel.Current.Timers.ToList().OrderBy(t => t.Name))
-            message += $"{Environment.NewLine}{timer.GetDiscordName(true)}";
+        foreach (var timer in TimersViewModel.Current.Timers
+            .ToList()
+            .Where(t => t.NotifyDiscord)
+            .OrderBy(t => t.Name)
+        )
+        {
+            message += $"{Environment.NewLine}{timer.GetName(true, true)} {(timer.IsWork ? "(`work`)" : "(`wait first start`)")}";
+        }
 
         App.Current.SendMessage(message);
     }
@@ -77,7 +88,7 @@ public partial class Timers : Window
     {
         var next = TimersViewModel.Current.Timers
             .ToList()
-            .Where(t => t.IsWork && t.NotifyTime > t.Time)
+            .Where(t => t.IsWork && t.NotifyDiscord && t.NotifyTime > t.Time)
             .OrderByDescending(t => t.NotifyTime - t.Time)
             .FirstOrDefault();
 

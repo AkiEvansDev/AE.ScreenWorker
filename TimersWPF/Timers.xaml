@@ -94,6 +94,15 @@
                                                 <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
                                             </CheckBox.RenderTransform>
                                         </CheckBox>
+                                        <CheckBox
+                                            IsChecked="{Binding NotifyDiscord}"
+                                            Content="Discord notification"
+                                            FontWeight="SemiBold"
+                                            FocusVisualStyle="{x:Null}">
+                                            <CheckBox.RenderTransform>
+                                                <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                            </CheckBox.RenderTransform>
+                                        </CheckBox>
                                         <ui:NumberBox
                                             Value="{Binding NotifyHours}"
                                             SpinButtonPlacementMode="Inline"
