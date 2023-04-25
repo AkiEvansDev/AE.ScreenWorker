@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 
 using AE.Core;
@@ -42,6 +44,67 @@ public partial class WindowHelper : Window
             .Select(p => $"[{p.ProcessName}] {p.MainWindowTitle}")
             .OrderBy(t => t)
             .ToList();
+    }
+
+    private void OnSelectWindowChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var select = (string)SelectWindow.SelectedItem;
+
+        var proc = Process
+            .GetProcesses()
+            .Where(p => $"[{p.ProcessName}] {p.MainWindowTitle}" == select)
+            .FirstOrDefault();
+
+        try
+        {
+            var size = WindowsHelper.GetWindowSize(proc.MainWindowHandle);
+
+            WindowLocationType.SelectedItem = WindowLocation.LeftTop;
+
+            Left.Value = size.X;
+            Top.Value = size.Y;
+
+            Width.Value = size.Width;
+            Height.Value = size.Height;
+        }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowError(ex.Message);
+        }
+    }
+
+    private void OnGetWindowDataClick(object sender, RoutedEventArgs e)
+    {
+        var select = (string)SelectWindow.SelectedItem;
+
+        var proc = Process
+            .GetProcesses()
+            .Where(p => $"[{p.ProcessName}] {p.MainWindowTitle}" == select)
+            .FirstOrDefault();
+
+        if (proc != null)
+        {
+            try
+            {
+                var size = WindowsHelper.GetWindowSize(proc.MainWindowHandle);
+
+                WindowLocationType.SelectedItem = WindowLocation.LeftTop;
+
+                Left.Value = size.X;
+                Top.Value = size.Y;
+
+                Width.Value = size.Width;
+                Height.Value = size.Height;
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowError(ex.Message);
+            }
+        }
+        else
+        {
+            CommonHelper.ShowError($"Process `{select ?? "(null)"}` not found!");
+        }
     }
 
     private void OnGetDataClick(object sender, RoutedEventArgs e)
@@ -106,13 +169,25 @@ public partial class WindowHelper : Window
                     break;
             }
 
-            WindowsHelper.SetWindowOptions(proc.MainWindowHandle,
-                left, top,
-                (int)Width.Value, (int)Height.Value,
-                (byte)Opacity.Value,
-                TopmostCB.IsChecked.Value,
-                !Clickable.IsChecked.Value
-            );
+            try
+            {
+                WindowsHelper.SetWindowOptions(proc.MainWindowHandle,
+                    left, top,
+                    (int)Width.Value, (int)Height.Value,
+                    (byte)Opacity.Value,
+                    TopmostCB.IsChecked.Value,
+                    !Clickable.IsChecked.Value
+                );
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowError(ex.Message);
+            }
+        }
+        else
+        {
+            LoadWindows();
+            CommonHelper.ShowError($"Process `{select ?? "(null)"}` not found!");
         }
     }
 

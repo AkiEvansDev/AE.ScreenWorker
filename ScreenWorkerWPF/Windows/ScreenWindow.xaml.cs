@@ -151,7 +151,8 @@ public partial class ScreenWindow : Window
         {
             ShowInTaskbar = false,
             Topmost = true,
-            Owner = owner ?? Application.Current.MainWindow
+            Owner = owner ?? Application.Current.MainWindow,
+            Icon = Application.Current.MainWindow.Icon,
         };
 
         window.ShowDialog();
@@ -172,7 +173,8 @@ public partial class ScreenWindow : Window
         {
             ShowInTaskbar = false,
             Topmost = true,
-            Owner = owner ?? Application.Current.MainWindow
+            Owner = owner ?? Application.Current.MainWindow,
+            Icon = Application.Current.MainWindow.Icon,
         };
 
         window.ShowDialog();

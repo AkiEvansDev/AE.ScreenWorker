@@ -176,6 +176,9 @@ internal class MainViewModel : BaseModel
                 new ExtractTextAction(),
                 new ParseNumberAction(),
                 new TranslateAction(),
+                new StartDiscordAction(),
+                new StopDiscordAction(),
+                new DiscordMessageAction(),
             }),
             new ActionsNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
             {

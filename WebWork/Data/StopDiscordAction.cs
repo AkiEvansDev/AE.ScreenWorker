@@ -2,27 +2,27 @@
 
 using ScreenBase.Data.Base;
 
-namespace ScreenBase.Data.Game;
+namespace ScreenBase.Data;
 
 [AESerializable]
-public class StopTimerAction : BaseAction<StopTimerAction>
+public class StopDiscordAction : BaseAction<StopDiscordAction>
 {
-    public override ActionType Type => ActionType.StopTimer;
+    public override ActionType Type => ActionType.StopDiscord;
 
-    public override string GetTitle() => $"StopTimer({GetValueString(Name, useEmptyStringDisplay: true)});";
+    public override string GetTitle() => $"StopDiscord({GetResultString(Name)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]
     public string Name { get; set; }
 
-    public StopTimerAction()
+    public StopDiscordAction()
     {
-        Name = "Timer";
+        Name = "Discord";
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        executor.StopTimer(Name);
+        executor.RemoveDisposableData(Name);
         return ActionResultType.Completed;
     }
 }

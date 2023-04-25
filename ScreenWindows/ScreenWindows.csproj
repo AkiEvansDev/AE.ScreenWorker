@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-	<Version>5.0.1</Version>
+	<Version>5.1.1</Version>
 	<Authors>AkiEvans</Authors>
   </PropertyGroup>
 

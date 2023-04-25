@@ -23,6 +23,7 @@ public class StartTimerAction : BaseAction<StartTimerAction>
 
     public StartTimerAction()
     {
+        Name = "Timer";
         Step = 1000;
     }
 

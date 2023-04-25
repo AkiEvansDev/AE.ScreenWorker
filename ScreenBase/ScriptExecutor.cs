@@ -34,6 +34,7 @@ public class ScriptExecutor : IScriptExecutor
     private Dictionary<string, object> Variables;
     private Dictionary<string, List<string[]>> Tables;
     private Dictionary<string, CancellationTokenSource> Timers;
+    private Dictionary<string, IDisposable> DisposableData;
 
     public IReadOnlyDictionary<string, IAction[]> Functions { get; private set; }
 
@@ -48,6 +49,7 @@ public class ScriptExecutor : IScriptExecutor
         Variables = new Dictionary<string, object>();
         Tables = new Dictionary<string, List<string[]>>();
         Timers = new Dictionary<string, CancellationTokenSource>();
+        DisposableData = new Dictionary<string, IDisposable>();
 
         Functions = script.Data;
 
@@ -167,6 +169,9 @@ public class ScriptExecutor : IScriptExecutor
 
         foreach (var name in Timers.Keys.ToList())
             StopTimer(name);
+
+        foreach (var name in DisposableData.Keys.ToList())
+            RemoveDisposableData(name);
 
         space = 0;
         needStop = true;
@@ -377,6 +382,31 @@ public class ScriptExecutor : IScriptExecutor
         {
             Timers[name].Cancel();
             Timers.Remove(name);
+        }
+    }
+
+    public void AddDisposableData(string name, IDisposable disposable)
+    {
+        if (DisposableData.ContainsKey(name))
+            RemoveDisposableData(name);
+
+        DisposableData.Add(name, disposable);
+    }
+
+    public IDisposable GetDisposableData(string name)
+    {
+        if (DisposableData.ContainsKey(name))
+            return DisposableData[name];
+
+        return null;
+    }
+
+    public void RemoveDisposableData(string name)
+    {
+        if (DisposableData.ContainsKey(name))
+        {
+            DisposableData[name].Dispose();
+            DisposableData.Remove(name);
         }
     }
 

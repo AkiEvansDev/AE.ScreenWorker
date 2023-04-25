@@ -63,8 +63,11 @@ public partial class App : Application
             {
                 await Task.Delay(1000);
 
-                foreach (var timer in TimersViewModel.Current.Timers.ToList())
-                    timer.UpTime(OnNotify);
+                _ = Task.Run(() =>
+                {
+                    foreach (var timer in TimersViewModel.Current.Timers.ToList())
+                        timer.UpTime(OnNotify);
+                });
             }
         }, CancellationToken.Token);
     }
@@ -125,7 +128,10 @@ public partial class App : Application
 
         try
         {
-            await DiscordChannel.SendMessageAsync($"{MentionUtils.MentionRole(Settings.RoleId)} {message}", allowedMentions: AllowedMentions.All);
+            if (Settings.RoleId > 0)
+                message = $"{MentionUtils.MentionRole(Settings.RoleId)} {message}";
+
+            await DiscordChannel.SendMessageAsync(message, allowedMentions: AllowedMentions.All);
         }
         catch (Exception ex)
         {

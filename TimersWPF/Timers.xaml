@@ -31,10 +31,8 @@
             <DataTemplate x:Key="TimerItem">
                 <ui:SimpleStackPanel>
                     <Grid
-                        x:Name="Item"
-                        Background="{Binding Background, ElementName=Border}"/>
-                    <Grid
-                        Background="{Binding Background, ElementName=Border}">
+                        x:Name="Item"/>
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
@@ -45,13 +43,47 @@
                             <ColumnDefinition Width="24"/>
                             <ColumnDefinition Width="6"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock 
-                            Text="{Binding DisplayTime}"
-                            Margin="6 0 0 0"
-                            FontSize="16"
-                            FontWeight="Bold"
-                            VerticalAlignment="Center">
-                        </TextBlock>
+                        <Button
+                            Padding="6 3"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            FocusVisualStyle="{x:Null}">
+                            <Button.Resources>
+                                <ResourceDictionary>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </Button.Resources>
+                            <ui:FlyoutService.Flyout>
+                                <ui:Flyout
+                                    Placement="BottomEdgeAlignedRight">
+                                    <ui:SimpleStackPanel>
+                                        <ui:NumberBox
+                                            Value="{Binding Hours}"
+                                            SpinButtonPlacementMode="Inline"
+                                            ui:ControlHelper.Header="Hours"
+                                            FocusVisualStyle="{x:Null}"/>
+                                        <ui:NumberBox
+                                            Value="{Binding Minutes}"
+                                            SpinButtonPlacementMode="Inline"
+                                            ui:ControlHelper.Header="Minutes"
+                                            FocusVisualStyle="{x:Null}"/>
+                                        <ui:NumberBox
+                                            Value="{Binding Seconds}"
+                                            SpinButtonPlacementMode="Inline"
+                                            ui:ControlHelper.Header="Seconds"
+                                            FocusVisualStyle="{x:Null}"/>
+                                    </ui:SimpleStackPanel>
+                                </ui:Flyout>
+                            </ui:FlyoutService.Flyout>
+                            <TextBlock 
+                                Text="{Binding DisplayTime}"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                VerticalAlignment="Center"/>
+                        </Button>
                         <TextBox
                             Grid.Column="1"
                             Text="{Binding Name}"

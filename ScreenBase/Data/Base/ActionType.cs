@@ -64,6 +64,10 @@ public enum ActionType
 
     Translate = 210,
 
+    StartDiscord = 220,
+    StopDiscord = 221,
+    DiscordMessage = 222,
+
     GetImagePartPosition = 250,
 
     SetWindowPosition = 300,

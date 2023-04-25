@@ -133,7 +133,9 @@ public static class WindowsHelper
         public int top;
         public int right;
         public int bottom;
+
         public Size Size => new(right - left, bottom - top);
+        public Rectangle Rectangle => new(left, top, right - left, bottom - top);
 
         public RECT(int left, int top, int right, int bottom)
         {
@@ -217,6 +219,14 @@ public static class WindowsHelper
         catch { }
 
         return screen;
+    }
+
+    public static Rectangle GetWindowSize(IntPtr window)
+    {
+        var rect = new RECT();
+        GetWindowRect(window, ref rect);
+
+        return rect.Rectangle;
     }
 
     public static void SetWindowPos(string windowName, int x, int y)

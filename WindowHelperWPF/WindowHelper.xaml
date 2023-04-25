@@ -14,8 +14,8 @@
     Title="Window Helper" 
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
-    Height="450" Width="330"
-    MinHeight="450" MinWidth="330"
+    Height="450" Width="360"
+    MinHeight="450" MinWidth="360"
     Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
     FocusVisualStyle="{x:Null}">
     <Window.Resources>
@@ -146,11 +146,24 @@
                     SpinButtonPlacementMode="Inline"
                     FocusVisualStyle="{x:Null}"/>
             </Grid>
-            <Button
-                HorizontalAlignment="Stretch"
-                Content="Get data from screen"
-                FocusVisualStyle="{x:Null}"
-                Click="OnGetDataClick"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    HorizontalAlignment="Stretch"
+                    Content="Get size from window"
+                    FocusVisualStyle="{x:Null}"
+                    Click="OnGetWindowDataClick"/>
+                <Button
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    Content="Get size from screen"
+                    FocusVisualStyle="{x:Null}"
+                    Click="OnGetDataClick"/>
+            </Grid>
             <CheckBox
                 x:Name="TopmostCB"
                 Content="Topmost"/>

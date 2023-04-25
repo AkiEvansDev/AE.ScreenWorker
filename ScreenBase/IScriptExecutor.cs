@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 using ScreenBase.Data.Base;
@@ -45,6 +46,10 @@ public interface IScriptExecutor
 
     void StartTimer(string name, int delay, string function);
     void StopTimer(string name);
+
+    void AddDisposableData(string name, IDisposable disposable);
+    IDisposable GetDisposableData(string name);
+    void RemoveDisposableData(string name);
 
     bool IsColor(Color color1, Color color2, double accuracy = 0.8);
     void Log(string message, bool needDisplay = false);

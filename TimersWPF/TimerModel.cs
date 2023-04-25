@@ -70,6 +70,9 @@ public class TimerModel : BaseModel
                 hours = 0;
             else
                 hours = value;
+
+            NotifyPropertyChanged(nameof(DisplayTime));
+            NotifyPropertyChanged(nameof(Hours));
         }
     }
 
@@ -90,7 +93,12 @@ public class TimerModel : BaseModel
                 Hours += 1;
             }
             else
+            {
                 minutes = value;
+                NotifyPropertyChanged(nameof(DisplayTime));
+            }
+
+            NotifyPropertyChanged(nameof(Minutes));
         }
     }
 
@@ -112,7 +120,12 @@ public class TimerModel : BaseModel
                 Minutes += 1;
             }
             else
+            {
                 seconds = value;
+                NotifyPropertyChanged(nameof(DisplayTime));
+            }
+
+            NotifyPropertyChanged(nameof(Seconds));
         }
     }
 
@@ -247,7 +260,6 @@ public class TimerModel : BaseModel
             return;
 
         Seconds += 1;
-        NotifyPropertyChanged(nameof(DisplayTime));
 
         if (Notify && Hours == NotifyHours && Minutes == NotifyMinutes && Seconds == NotifySeconds)
             onNotify?.Invoke(this);
