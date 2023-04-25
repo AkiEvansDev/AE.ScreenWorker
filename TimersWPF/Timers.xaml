@@ -58,7 +58,7 @@
                             </Button.Resources>
                             <ui:FlyoutService.Flyout>
                                 <ui:Flyout
-                                    Placement="BottomEdgeAlignedRight">
+                                    Placement="BottomEdgeAlignedLeft">
                                     <ui:SimpleStackPanel>
                                         <ui:NumberBox
                                             Value="{Binding Hours}"

@@ -148,9 +148,6 @@ public class TimerModel : BaseModel
         get => notifyDiscord;
         set
         {
-            if (value)
-                Notify = value;
-
             notifyDiscord = value;
             NotifyPropertyChanged(nameof(NotifyDiscord));
         }
@@ -261,7 +258,7 @@ public class TimerModel : BaseModel
 
         Seconds += 1;
 
-        if (Notify && Hours == NotifyHours && Minutes == NotifyMinutes && Seconds == NotifySeconds)
+        if ((Notify || NotifyDiscord) && Hours == NotifyHours && Minutes == NotifyMinutes && Seconds == NotifySeconds)
             onNotify?.Invoke(this);
     }
 
