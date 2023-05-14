@@ -270,8 +270,8 @@ public class TimerModel : BaseModel
 
         if (n.Contains(" - "))
         {
-            var p1 = n.Substring(0, n.IndexOf(" - "));
-            var p2 = n.Substring(n.IndexOf(" - ") + 3);
+            var p1 = n[..n.IndexOf(" - ")];
+            var p2 = n[(n.IndexOf(" - ") + 3)..];
 
             return forStart
                 ? $"{(discord ? "**" : "")}{p1}{(discord ? "**" : "")} - {p2}"

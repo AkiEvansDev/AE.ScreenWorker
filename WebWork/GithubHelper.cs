@@ -100,8 +100,8 @@ public static class GithubHelper
                 var index = line.IndexOf("**");
                 if (index > 0)
                 {
-                    result += $"{line.Substring(0, index)}<{(first ? "" : "/")}B>";
-                    line = line.Substring(index + 2);
+                    result += $"{line[..index]}<{(first ? "" : "/")}B>";
+                    line = line[(index + 2)..];
                     first = !first;
                 }
                 else

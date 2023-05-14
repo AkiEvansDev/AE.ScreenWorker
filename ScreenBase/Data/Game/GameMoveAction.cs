@@ -56,32 +56,32 @@ public class GameMoveAction : BaseDelayAction<GameMoveAction>
             switch (part.MoveType)
             {
                 case MoveType.Forward:
-                    result += W.Name().Substring(3);
+                    result += W.Name()[3..];
                     break;
                 case MoveType.ForwardLeft:
-                    result += W.Name().Substring(3);
-                    result += A.Name().Substring(3);
+                    result += W.Name()[3..];
+                    result += A.Name()[3..];
                     break;
                 case MoveType.ForwardRight:
-                    result += W.Name().Substring(3);
-                    result += D.Name().Substring(3);
+                    result += W.Name()[3..];
+                    result += D.Name()[3..];
                     break;
                 case MoveType.Left:
-                    result += A.Name().Substring(3);
+                    result += A.Name()[3..];
                     break;
                 case MoveType.Right:
-                    result += D.Name().Substring(3);
+                    result += D.Name()[3..];
                     break;
                 case MoveType.Backward:
-                    result += S.Name().Substring(3);
+                    result += S.Name()[3..];
                     break;
                 case MoveType.BackwardLeft:
-                    result += S.Name().Substring(3);
-                    result += A.Name().Substring(3);
+                    result += S.Name()[3..];
+                    result += A.Name()[3..];
                     break;
                 case MoveType.BackwardRight:
-                    result += S.Name().Substring(3);
-                    result += D.Name().Substring(3);
+                    result += S.Name()[3..];
+                    result += D.Name()[3..];
                     break;
             }
 

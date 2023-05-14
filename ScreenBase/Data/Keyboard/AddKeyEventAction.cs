@@ -9,34 +9,47 @@ public class AddKeyEventAction : BaseAction<AddKeyEventAction>
 {
     public override ActionType Type => ActionType.AddKeyEvent;
 
-    public override string GetTitle() => $"AddKey{Event.Name().Substring(3)}Event(<P>{(Key != 0 ? Key.Name().Substring(3) : "...")}</P>, <F>{(Function.IsNull() ? "..." : Function.Substring(0, Function.Length - 3))}</F>);";
+    public override string GetTitle() => $"AddKeyEvent(<P>{Key.Name()[3..]}</P>, <F>{(Function.IsNull() ? "..." : Function[..^3])}</F>);";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [ComboBoxEditProperty(0, trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
     public KeyFlags Key { get; set; }
 
-    [ComboBoxEditProperty(0, source: ComboBoxEditPropertySource.Enum)]
-    public KeyEventType Event { get; set; }
-
     [ComboBoxEditProperty(1, source: ComboBoxEditPropertySource.Functions)]
     public string Function { get; set; }
 
+    [Group(0, 0)]
+    [CheckBoxEditProperty(2)]
+    public bool IsControl { get; set; }
+
+    [Group(0, 0)]
+    [CheckBoxEditProperty(3)]
+    public bool IsAlt { get; set; }
+
+    [Group(0, 1)]
+    [CheckBoxEditProperty(4)]
+    public bool IsShift { get; set; }
+
+    [Group(0, 1)]
+    [CheckBoxEditProperty(5)]
+    public bool IsWin { get; set; }
+
+    [CheckBoxEditProperty(6)]
+    public bool Handled { get; set; }
+
     public AddKeyEventAction()
     {
-        Event = KeyEventType.KeyDown;
+        Key = KeyFlags.Key1;
     }
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         if (!Function.IsNull())
         {
-            worker.OnKeyEvent += (k, e) =>
+            worker.AddKeyEvent(Key, IsControl, IsAlt, IsShift, IsWin, Handled, () =>
             {
-                if (k == Key && (e == Event || (e == KeyEventType.KeyDown && Event == KeyEventType.KeyPress)))
-                {
-                    executor.Execute(executor.Functions[Function]);
-                }
-            };
+                executor.Execute(executor.Functions[Function]);
+            });
             return ActionResultType.Completed;
         }
         else

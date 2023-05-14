@@ -5,11 +5,9 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase;
 
-public delegate void OnKeyEventDelegate(KeyFlags key, KeyEventType keyEvent);
-
 public interface IScreenWorker : IDisposable
 {
-    event OnKeyEventDelegate OnKeyEvent;
+    void Init();
 
     void Screen();
     Color GetColor(int x, int y);
@@ -20,6 +18,8 @@ public interface IScreenWorker : IDisposable
     void MouseClick(int x, int y, MouseEventType type = MouseEventType.Left);
     void KeyDown(KeyFlags key, bool extended);
     void KeyUp(KeyFlags key);
+    void AddKeyEvent(KeyFlags key, bool isControl, bool isAlt, bool isShift, bool isWin, bool handled, Action action);
+    //void AddMouseEvent(MouseEventType type, bool handled, Action<int, int> action);
     void StartProcess(string path, string arguments);
     void SetWindowPosition(string windowName, int x, int y);
     void Copy(string value);

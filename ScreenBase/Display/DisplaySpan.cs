@@ -167,7 +167,7 @@ public class DisplaySpan
             if (GetTokenInfo(value, out var token, out var tokenStartIndex, out var tokenEndIndex))
             {
                 if (tokenStartIndex > 0)
-                    sections.Add(value.Substring(0, tokenStartIndex));
+                    sections.Add(value[..tokenStartIndex]);
 
                 sections.Add(value[tokenStartIndex..tokenEndIndex]);
                 value = value[tokenEndIndex..];

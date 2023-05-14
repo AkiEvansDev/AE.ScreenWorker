@@ -148,10 +148,5 @@ public partial class MainWindow : Window
         }
 
     }
-
-    private void ThumbButtonInfo_Click(object sender, EventArgs e)
-    {
-
-    }
 }
 

@@ -82,7 +82,7 @@ internal static class FormattedTextBlockBehavior
                 span.SetResourceReference(TextElement.ForegroundProperty, "SystemControlErrorTextForegroundBrush");
                 break;
             case DisplaySpanType.Color:
-                var color = value.Text.Substring(6).Trim(')');
+                var color = value.Text[6..].Trim(')');
                 var split = color.Split(';');
 
                 if (split.Length == 4)

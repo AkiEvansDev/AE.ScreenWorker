@@ -1,6 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
+using System.Windows;
+using System.Windows.Input;
+
+using AE.WinHook;
+using AE.WinHook.Hook;
 
 using ScreenBase;
 using ScreenBase.Data.Base;
@@ -9,12 +15,13 @@ using TextCopy;
 
 using static ScreenWindows.WindowsHelper;
 
+//using MouseEventHookType = AE.WinHook.Hook.MouseEventType;
+using MouseEventType = ScreenBase.MouseEventType;
+
 namespace ScreenWindows;
 
 public class WindowsScreenWorker : IScreenWorker
 {
-    public event OnKeyEventDelegate OnKeyEvent;
-
     private readonly int width;
     private readonly int height;
     private Bitmap screen = null;
@@ -23,19 +30,15 @@ public class WindowsScreenWorker : IScreenWorker
     {
         this.width = width;
         this.height = height;
-        GlobalKeyboardHook.Current.KeyboardPressed += OnKeyboardPressed;
     }
 
-    private void OnKeyboardPressed(object sender, GlobalKeyboardHookEventArgs e)
+    public void Init()
     {
-        var key = (KeyFlags)e.KeyboardData.VirtualCode;
-        var keyEvent = KeyEventType.KeyDown;
-
-        if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyUp)
-            keyEvent = KeyEventType.KeyUp;
-
-        if (key != 0)
-            OnKeyEvent?.Invoke(key, keyEvent);
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            HotKeyRegister.UnregAllHotKey();
+            //MouseEventRegister.UnregAllMouseEvent();
+        });
     }
 
     public void Screen()
@@ -161,6 +164,36 @@ public class WindowsScreenWorker : IScreenWorker
         keybd_event((uint)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
     }
 
+    public void AddKeyEvent(KeyFlags key, bool isControl, bool isAlt, bool isShift, bool isWin, bool handled, Action action)
+    {
+        var keyModifiers = KeyModifiers.None;
+        var keyCode = KeyInterop.KeyFromVirtualKey((int)key);
+
+        if (isControl)
+            keyModifiers |= KeyModifiers.Control;
+        if (isAlt)
+            keyModifiers |= KeyModifiers.Alt;
+        if (isShift)
+            keyModifiers |= KeyModifiers.Shift;
+        if (isWin)
+            keyModifiers |= KeyModifiers.Win;
+
+        HotKeyRegister.RegHotKey(keyModifiers, keyCode, action, handled);
+    }
+
+    //public void AddMouseEvent(MouseEventType type, bool handled, Action<int, int> action)
+    //{
+    //    var hookType = type switch
+    //    {
+    //        MouseEventType.Left => MouseButtonType.Left,
+    //        MouseEventType.Middle => MouseButtonType.Middle,
+    //        MouseEventType.Right => MouseButtonType.Right,
+    //        _ => MouseButtonType.None,
+    //    };
+
+    //    MouseEventRegister.RegMouseEvent(hookType, MouseEventHookType.MouseDown, action, handled);
+    //}
+
     public void StartProcess(string path, string arguments)
     {
         var proc = new Process
@@ -196,6 +229,12 @@ public class WindowsScreenWorker : IScreenWorker
 
     public void Dispose()
     {
-        GlobalKeyboardHook.Current.KeyboardPressed -= OnKeyboardPressed;
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            HotKeyRegister.UnregAllHotKey();
+            //MouseEventRegister.UnregAllMouseEvent();
+        });
+
+        GC.SuppressFinalize(this);
     }
 }

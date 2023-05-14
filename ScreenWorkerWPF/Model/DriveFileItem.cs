@@ -57,25 +57,25 @@ internal class DriveFileItem : BaseModel, IEditProperties
         DisplaySize = BytesToString(size);
 
         if (name.EndsWith(".sw"))
-            name = name.Substring(0, name.Length - 3);
+            name = name[..^3];
         else if (name.EndsWith(".u"))
-            name = name.Substring(0, name.Length - 2);
+            name = name[..^2];
 
         Name = name;
 
         if (!description.IsNull() && description.Contains("|"))
         {
             var index = description.IndexOf('|');
-            var len = int.Parse(description.Substring(0, index));
+            var len = int.Parse(description[..index]);
 
-            description = description.Substring(index + 1);
-            User = description.Substring(0, len);
+            description = description[(index + 1)..];
+            User = description[..len];
 
-            description = description.Substring(len + 1);
+            description = description[(len + 1)..];
             if (description.Length >= 10 && description.StartsWith('['))
             {
-                Version = description.Substring(0, 10).Trim(']', '[');
-                Description = description.Substring(10);
+                Version = description[..10].Trim(']', '[');
+                Description = description[10..];
             }
             else
                 Description = description;

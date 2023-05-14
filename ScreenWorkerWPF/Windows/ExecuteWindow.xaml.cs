@@ -52,7 +52,7 @@ public partial class ExecuteWindow : Window
             );
             Window.Background = new SolidColorBrush(color);
 
-            Window.Info.Text = $"Press Ctrl+Alt+{App.CurrentSettings.StopKey.Name().Substring(3)} to stop";
+            Window.Info.Text = $"Press Ctrl+Alt+{App.CurrentSettings.StopKey.Name()[3..]} to stop";
 
             base.OnStart(scriptData, isDebug);
         }

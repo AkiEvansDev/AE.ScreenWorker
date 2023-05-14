@@ -70,6 +70,8 @@ public class ScriptExecutor : IScriptExecutor
                 Log($"Script <F>{BaseAction<IAction>.GetTextForDisplay(script.Name)}</F> start");
 
             IsRun = true;
+            Worker.Init();
+
             Execute(script.Main);
 
             OnExecutorComplite?.Invoke();
@@ -175,6 +177,7 @@ public class ScriptExecutor : IScriptExecutor
 
         space = 0;
         needStop = true;
+        Worker.Dispose();
 
         if (force)
         {

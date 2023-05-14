@@ -4,9 +4,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 
 using AE.Core;
+using AE.WinHook;
+using AE.WinHook.Hook;
 
 using ModernWpf.Controls;
 
@@ -127,6 +130,7 @@ internal class MainViewModel : BaseModel
                 new MouseDownAction(),
                 new MouseUpAction(),
                 new MouseClickAction(),
+                //new AddMouseEventAction(),
             }),
             new ActionsNavigationMenuItem("Keyboard", Symbol.Keyboard, Symbol.Placeholder, OnClick, new List<IAction>
             {
@@ -217,12 +221,12 @@ internal class MainViewModel : BaseModel
         FooterItems = new ObservableCollection<NavigationMenuItemBase>
         {
             LoginAction,
-            //new ActionNavigationMenuItem("Window helper", Symbol.NewWindow, OnWindowHleper),
             new ActionNavigationMenuItem("Check update", Symbol.Refresh, async () => await CommonHelper.CheckUpdate(true)),
             new ActionNavigationMenuItem("Settings", Symbol.Setting, OnSettings),
         };
 
         OnOpen(path);
+        RegHotKeys();
     }
 
     public void DeleteFunction(NavigationMenuItem removeItem)
@@ -295,11 +299,6 @@ internal class MainViewModel : BaseModel
             CommonHelper.ShowError("No logs, start script debug before!", "Warning!");
     }
 
-    //private void OnWindowHleper()
-    //{
-    //    WindowHelper.Open();
-    //}
-
     private async void OnUpload()
     {
         if (App.CurrentSettings.User != null && App.CurrentSettings.User.IsLogin && SaveData())
@@ -324,7 +323,26 @@ internal class MainViewModel : BaseModel
 
     private async void OnSettings()
     {
+        HotKeyRegister.UnregHotKey(KeyModifiers.Control | KeyModifiers.Alt, KeyInterop.KeyFromVirtualKey((int)App.CurrentSettings.StartKey));
+        HotKeyRegister.UnregHotKey(KeyModifiers.Control | KeyModifiers.Alt, KeyInterop.KeyFromVirtualKey((int)App.CurrentSettings.StopKey));
+
         await EditPropertyDialog.ShowAsync(App.CurrentSettings, "Settings");
+
+        RegHotKeys();
+    }
+
+    private void RegHotKeys()
+    {
+        HotKeyRegister.RegHotKey(KeyModifiers.Control | KeyModifiers.Alt, KeyInterop.KeyFromVirtualKey((int)App.CurrentSettings.StartKey), () =>
+        {
+            OnStart(false);
+        }, saved: true);
+
+        HotKeyRegister.RegHotKey(KeyModifiers.Control | KeyModifiers.Alt, KeyInterop.KeyFromVirtualKey((int)App.CurrentSettings.StopKey), () =>
+        {
+            ExecuteWindow.Worker?.Stop();
+            DisplayWindow.Worker?.Stop();
+        }, saved: true);
     }
 
     private async void OnLogin()

@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-	<Version>5.1.1</Version>
+	<UseWPF>true</UseWPF>
+	<Version>5.1.2</Version>
 	<Authors>AkiEvans</Authors>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AE.WinHook" Version="2.0.1" />
     <PackageReference Include="TextCopy" Version="6.2.1" />
   </ItemGroup>
 

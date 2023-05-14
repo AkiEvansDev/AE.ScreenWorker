@@ -16,8 +16,8 @@ public class TranslateAction : BaseAction<TranslateAction>
 
     private string GetFuncPart()
     {
-        var f1 = Function.IsNull() ? "" : $", <F>{Function.Substring(0, Function.Length - 3)}</F>";
-        var f2 = ErrorFunction.IsNull() ? "" : $", <F>{ErrorFunction.Substring(0, ErrorFunction.Length - 3)}</F>";
+        var f1 = Function.IsNull() ? "" : $", <F>{Function[..^3]}</F>";
+        var f2 = ErrorFunction.IsNull() ? "" : $", <F>{ErrorFunction[..^3]}</F>";
 
         return f1 + f2;
     }

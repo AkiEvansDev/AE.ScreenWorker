@@ -11,7 +11,7 @@ public class ExecuteAction : BaseDelayAction<ExecuteAction>
 {
     public override ActionType Type => ActionType.Execute;
 
-    public override string GetTitle() => $"<F>{(Function.IsNull() ? "..." : Function.Substring(0, Function.Length - 3))}</F>();";
+    public override string GetTitle() => $"<F>{(Function.IsNull() ? "..." : Function[..^3])}</F>();";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [ComboBoxEditProperty(source: ComboBoxEditPropertySource.Functions)]

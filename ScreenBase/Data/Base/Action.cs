@@ -31,7 +31,7 @@ public abstract class BaseAction<T> : IAction
             return "";
 
         if (substringText && text.Length > 80)
-            text = text.Substring(0, 39) + "..." + string.Concat(text.Reverse().Take(39).Reverse());
+            text = string.Concat(text.AsSpan(0, 39), "...", string.Concat(text.Reverse().Take(39).Reverse()));
 
         return text.Replace("<", "<AR></AR>").Replace(">", "<AL></AL>");
     }

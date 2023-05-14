@@ -9,7 +9,7 @@ public class StartTimerAction : BaseAction<StartTimerAction>
 {
     public override ActionType Type => ActionType.StartTimer;
 
-    public override string GetTitle() => $"StartTimer({GetValueString(Name, useEmptyStringDisplay: true)}, <F>{(Function.IsNull() ? "..." : Function.Substring(0, Function.Length - 3))}</F>, {GetValueString(Step)});";
+    public override string GetTitle() => $"StartTimer({GetValueString(Name, useEmptyStringDisplay: true)}, <F>{(Function.IsNull() ? "..." : Function[..^3])}</F>, {GetValueString(Step)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]

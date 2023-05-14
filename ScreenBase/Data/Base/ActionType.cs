@@ -20,6 +20,7 @@ public enum ActionType
 
     KeyEvent = 20,
     AddKeyEvent = 21,
+    AddMouseEvent = 22,
 
     For = 30,
     ForeachColor = 31,
