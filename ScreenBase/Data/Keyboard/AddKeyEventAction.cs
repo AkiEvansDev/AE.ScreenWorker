@@ -9,7 +9,7 @@ public class AddKeyEventAction : BaseAction<AddKeyEventAction>
 {
     public override ActionType Type => ActionType.AddKeyEvent;
 
-    public override string GetTitle() => $"AddKeyEvent(<P>{Key.Name()[3..]}</P>, <F>{(Function.IsNull() ? "..." : Function[..^3])}</F>);";
+    public override string GetTitle() => $"AddKeyEvent(<P>{(Key != 0 ? Key.Name()[3..] : "...")}</P>, <F>{(Function.IsNull() ? "..." : Function[..^3])}</F>);";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [ComboBoxEditProperty(0, trimStart: "Key", source: ComboBoxEditPropertySource.Enum)]
@@ -37,14 +37,9 @@ public class AddKeyEventAction : BaseAction<AddKeyEventAction>
     [CheckBoxEditProperty(6)]
     public bool Handled { get; set; }
 
-    public AddKeyEventAction()
-    {
-        Key = KeyFlags.Key1;
-    }
-
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        if (!Function.IsNull())
+        if (!Function.IsNull() && Key != 0)
         {
             worker.AddKeyEvent(Key, IsControl, IsAlt, IsShift, IsWin, Handled, () =>
             {
