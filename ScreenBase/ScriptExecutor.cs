@@ -148,7 +148,7 @@ public class ScriptExecutor : IScriptExecutor
                             if (IsDebug)
                                 Log($"DelayActer({BaseAction<IAction>.GetValueString(delayAction.DelayAfter)});");
 
-                            Thread.Sleep(delayAction.DelayAfter);
+                            delayAction.Delay(this);
                         }
 
                         break;

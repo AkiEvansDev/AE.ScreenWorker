@@ -24,6 +24,7 @@ public interface ICoordinateAction
 public interface IDelayAction
 {
     int DelayAfter { get; set; }
+    void Delay(IScriptExecutor executor);
 }
 
 public interface IGroupAction

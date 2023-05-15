@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 
 using AE.Core;
 
@@ -66,7 +67,7 @@ public class MouseClickAction : BaseDelayAction<MouseClickAction>, ICoordinateAc
         worker.MouseMove(x, y);
         worker.MouseDown(Event);
         if (PressDelay > 0)
-            Thread.Sleep(PressDelay);
+            Delay(executor, PressDelay);
         worker.MouseUp(Event);
 
         return ActionResultType.Completed;

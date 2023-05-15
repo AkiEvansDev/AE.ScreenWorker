@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 using AE.Core;
 
@@ -92,6 +94,31 @@ public abstract class BaseDelayAction<T> : BaseAction<T>, IDelayAction
 {
     [NumberEditProperty(1000, $"{nameof(DelayAfter)} (ms)", minValue: 0, smallChange: 50, largeChange: 1000)]
     public int DelayAfter { get; set; }
+
+    public void Delay(IScriptExecutor executor)
+    {
+        if (DelayAfter > 0)
+            Delay(executor, DelayAfter);
+    }
+
+    protected void Delay(IScriptExecutor executor, int value)
+    {
+        CancellationToken = new CancellationTokenSource();
+        var task = Task.Run(async () =>
+        {
+            await Task.Delay(value, CancellationToken.Token);
+        }, CancellationToken.Token);
+
+        executor.OnExecutorForceStop += CancelDelay;
+        task.Wait();
+        executor.OnExecutorForceStop -= CancelDelay;
+    }
+
+    private CancellationTokenSource CancellationToken;
+    private void CancelDelay()
+    {
+        CancellationToken.Cancel();
+    }
 }
 
 public abstract class BaseGroupAction<T> : BaseAction<T>, IGroupAction

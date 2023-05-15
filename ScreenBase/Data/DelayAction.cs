@@ -32,38 +32,24 @@ public class DelayAction : BaseAction<DelayAction>
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
         var token = new CancellationTokenSource();
-        var value = Infinity ? 1000 : executor.GetValue(Delay, DelayVariable);
+        var value = Infinity ? int.MaxValue : executor.GetValue(Delay, DelayVariable);
 
+        CancellationToken = new CancellationTokenSource();
         var task = Task.Run(async () =>
         {
-            do
-            {
-                await Task.Delay(value);
+            await Task.Delay(value, CancellationToken.Token);
+        }, CancellationToken.Token);
 
-                if (token.IsCancellationRequested)
-                    break;
-
-                if (Infinity)
-                    value = 10000;
-
-            } while (Infinity);
-        }, token.Token);
-
-        executor.OnExecutorForceStop += () => token.Cancel();
-
+        executor.OnExecutorForceStop += CancelDelay;
         task.Wait();
-
-        //if (Infinity)
-        //{
-        //    while (Infinity)
-        //        Thread.Sleep(int.MaxValue);
-        //}
-        //else
-        //{
-        //    var value = executor.GetValue(Delay, DelayVariable);
-        //    Thread.Sleep(value);
-        //}
+        executor.OnExecutorForceStop -= CancelDelay;
 
         return ActionResultType.Completed;
+    }
+
+    private CancellationTokenSource CancellationToken;
+    private void CancelDelay()
+    {
+        CancellationToken.Cancel();
     }
 }

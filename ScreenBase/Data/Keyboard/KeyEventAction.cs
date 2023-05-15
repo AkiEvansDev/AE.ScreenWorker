@@ -47,7 +47,7 @@ public class KeyEventAction : BaseDelayAction<KeyEventAction>
                 case KeyEventType.KeyPress:
                     worker.KeyDown(Key, Extended);
                     if (PressDelay > 0)
-                        Thread.Sleep(PressDelay);
+                        Delay(executor, PressDelay);
                     worker.KeyUp(Key);
                     break;
             }

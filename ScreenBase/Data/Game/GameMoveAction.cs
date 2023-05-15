@@ -141,7 +141,7 @@ public class GameMoveAction : BaseDelayAction<GameMoveAction>
                         worker.KeyDown(k2.Value, false);
 
                     if (PressDelay > 0)
-                        Thread.Sleep(PressDelay);
+                        Delay(executor, PressDelay);
 
                     worker.KeyUp(k1.Value);
                     if (k2 != null)
@@ -149,7 +149,7 @@ public class GameMoveAction : BaseDelayAction<GameMoveAction>
                 }
 
                 if (part.DelayAfter > 0)
-                    Thread.Sleep(part.DelayAfter);
+                    Delay(executor, part.DelayAfter);
             }
 
             return ActionResultType.Completed;
