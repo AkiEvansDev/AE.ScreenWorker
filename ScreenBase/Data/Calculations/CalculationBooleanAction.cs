@@ -10,9 +10,9 @@ public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
     public override ActionType Type => ActionType.CalculationBoolean;
 
     public override string GetTitle()
-        => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} {GetSumb()} {GetValueString(Value2, Value2Variable)};";
+        => $"{GetResultString(Result)} = {(Value1Not ? "<P>!</P>" : "")}{GetValueString(Value1, Value1Variable)} {GetSumb()} {(Value2Not ? "<P>!</P>" : "")}{GetValueString(Value2, Value2Variable)};";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSumb()} {GetValueString(executor.GetValue(Value2, Value2Variable))};";
+        => $"{GetResultString(Result)} = {(Value1Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSumb()} {(Value2Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(Value2, Value2Variable))};";
 
     private string GetSumb()
     {
@@ -42,6 +42,12 @@ public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
     [ComboBoxEditProperty(5, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Boolean)]
     public string Result { get; set; }
 
+    [CheckBoxEditProperty(6)]
+    public bool Value1Not { get; set; }
+
+    [CheckBoxEditProperty(6)]
+    public bool Value2Not { get; set; }
+
     public CalculationBooleanAction()
     {
         Action = CalculationBooleanType.And;
@@ -53,6 +59,12 @@ public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
         {
             var value1 = executor.GetValue(Value1, Value1Variable);
             var value2 = executor.GetValue(Value2, Value2Variable);
+
+            if (Value1Not)
+                value1 = !value1;
+
+            if (Value2Not) 
+                value2 = !value2;
 
             switch (Action)
             {

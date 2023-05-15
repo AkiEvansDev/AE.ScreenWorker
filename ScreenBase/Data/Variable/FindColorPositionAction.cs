@@ -110,10 +110,10 @@ public class FindColorPositionAction : BaseAction<FindColorPositionAction>, ICoo
     [NumberEditProperty(12, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
     public double Accuracy { get; set; }
 
-    [ComboBoxEditProperty(13, source: ComboBoxEditPropertySource.Enum)]
+    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Enum)]
     public PositionType FindType { get; set; }
 
-    [ComboBoxEditProperty(14, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Point)]
+    [ComboBoxEditProperty(13, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Point)]
     public string Result { get; set; }
 
     public FindColorPositionAction()
