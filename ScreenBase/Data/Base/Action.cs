@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
 
 using AE.Core;
@@ -103,21 +102,7 @@ public abstract class BaseDelayAction<T> : BaseAction<T>, IDelayAction
 
     protected void Delay(IScriptExecutor executor, int value)
     {
-        CancellationToken = new CancellationTokenSource();
-        var task = Task.Run(async () =>
-        {
-            await Task.Delay(value, CancellationToken.Token);
-        }, CancellationToken.Token);
-
-        executor.OnExecutorForceStop += CancelDelay;
-        task.Wait();
-        executor.OnExecutorForceStop -= CancelDelay;
-    }
-
-    private CancellationTokenSource CancellationToken;
-    private void CancelDelay()
-    {
-        CancellationToken.Cancel();
+        Thread.Sleep(value);
     }
 }
 

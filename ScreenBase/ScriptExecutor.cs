@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 using AE.Core;
 
 using ScreenBase.Data.Base;
+
+using Timer = System.Timers.Timer;
 
 namespace ScreenBase;
 
@@ -34,7 +35,7 @@ public class ScriptExecutor : IScriptExecutor
     private string Arguments;
     private Dictionary<string, object> Variables;
     private Dictionary<string, List<string[]>> Tables;
-    private Dictionary<string, CancellationTokenSource> Timers;
+    private Dictionary<string, Timer> Timers;
     private Dictionary<string, IDisposable> DisposableData;
 
     public IReadOnlyDictionary<string, IAction[]> Functions { get; private set; }
@@ -49,7 +50,7 @@ public class ScriptExecutor : IScriptExecutor
         Arguments = script.Arguments;
         Variables = new Dictionary<string, object>();
         Tables = new Dictionary<string, List<string[]>>();
-        Timers = new Dictionary<string, CancellationTokenSource>();
+        Timers = new Dictionary<string, Timer>();
         DisposableData = new Dictionary<string, IDisposable>();
 
         Functions = script.Data;
@@ -362,31 +363,20 @@ public class ScriptExecutor : IScriptExecutor
         if (Timers.ContainsKey(name))
             StopTimer(name);
 
-        var tokenSource = new CancellationTokenSource();
-        var ct = tokenSource.Token;
+        var timer = new Timer(delay);
+        Timers.Add(name, timer);
 
-        Timers.Add(name, tokenSource);
+        timer.Elapsed += (s, e) => Execute(Functions[function]);
 
-        Task.Run(async () =>
-        {
-            ct.ThrowIfCancellationRequested();
-
-            while (true)
-            {
-                Execute(Functions[function]);
-
-                await Task.Delay(delay);
-
-                ct.ThrowIfCancellationRequested();
-            }
-        }, tokenSource.Token);
+        Execute(Functions[function]);
+        timer.Start();
     }
 
     public void StopTimer(string name)
     {
         if (Timers.ContainsKey(name))
         {
-            Timers[name].Cancel();
+            Timers[name].Stop();
             Timers.Remove(name);
         }
     }

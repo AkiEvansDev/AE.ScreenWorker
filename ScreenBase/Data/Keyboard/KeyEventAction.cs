@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-using AE.Core;
+﻿using AE.Core;
 
 using ScreenBase.Data.Base;
 
