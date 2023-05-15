@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 
 using AE.Core;
 
@@ -30,16 +31,38 @@ public class DelayAction : BaseAction<DelayAction>
 
     public override ActionResultType Do(IScriptExecutor executor, IScreenWorker worker)
     {
-        if (Infinity)
+        var token = new CancellationTokenSource();
+        var value = Infinity ? 1000 : executor.GetValue(Delay, DelayVariable);
+
+        var task = Task.Run(async () =>
         {
-            while (Infinity)
-                Thread.Sleep(int.MaxValue);
-        }
-        else
-        {
-            var value = executor.GetValue(Delay, DelayVariable);
-            Thread.Sleep(value);
-        }
+            do
+            {
+                await Task.Delay(value);
+
+                if (token.IsCancellationRequested)
+                    break;
+
+                if (Infinity)
+                    value = 10000;
+
+            } while (Infinity);
+        }, token.Token);
+
+        executor.OnExecutorForceStop += () => token.Cancel();
+
+        task.Wait();
+
+        //if (Infinity)
+        //{
+        //    while (Infinity)
+        //        Thread.Sleep(int.MaxValue);
+        //}
+        //else
+        //{
+        //    var value = executor.GetValue(Delay, DelayVariable);
+        //    Thread.Sleep(value);
+        //}
 
         return ActionResultType.Completed;
     }

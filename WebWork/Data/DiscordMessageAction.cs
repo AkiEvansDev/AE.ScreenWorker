@@ -1,4 +1,7 @@
-﻿using AE.Core;
+﻿using System;
+using System.Threading.Tasks;
+
+using AE.Core;
 
 using Discord;
 using Discord.Rest;
@@ -43,17 +46,28 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
         {
             if (ulong.TryParse(ChannelId, out ulong channelId) && channelId > 0)
             {
-                var task = discordClient.GetChannelAsync(channelId).AsTask();
-                task.Wait();
-
-                var channel = task.Result as RestTextChannel;
                 var message = Message;
 
                 if (ulong.TryParse(RoleId, out ulong roleId) && roleId > 0)
                     message = $"{MentionUtils.MentionRole(roleId)} {message}";
 
-                var sendTask = channel.SendMessageAsync(message, allowedMentions: AllowedMentions.All);
-                sendTask.Wait();
+                var task = discordClient.GetChannelAsync(channelId).AsTask();
+                task.Wait();
+
+                if (task.Result is RestTextChannel restTextChannel)
+                {
+                    var sendTask = restTextChannel.SendMessageAsync(message, allowedMentions: AllowedMentions.All);
+                    sendTask.Wait();
+                }
+                else if (task.Result is SocketTextChannel socketTextChannel)
+                {
+                    var sendTask = socketTextChannel.SendMessageAsync(message, allowedMentions: AllowedMentions.All);
+                    sendTask.Wait();
+                }
+                else
+                {
+                    throw new NotImplementedException($"Type {task.Result.GetType()} not implemented!");
+                }
 
                 return ActionResultType.Completed;
             }

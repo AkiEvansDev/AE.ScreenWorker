@@ -14,6 +14,7 @@ namespace ScreenBase;
 public class ScriptExecutor : IScriptExecutor
 {
     public event OnExecutorCompliteDelegate OnExecutorComplite;
+    public event OnExecutorCompliteDelegate OnExecutorForceStop;
     public event OnMessageDelegate OnMessage;
     public event OnVariableChangeDelegate OnVariableChange;
 
@@ -181,6 +182,8 @@ public class ScriptExecutor : IScriptExecutor
 
         if (force)
         {
+            OnExecutorForceStop?.Invoke();
+
             if (IsDebug)
                 Log($"<E>Script force stop</E>");
 
