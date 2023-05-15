@@ -63,7 +63,7 @@ public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
             if (Value1Not)
                 value1 = !value1;
 
-            if (Value2Not) 
+            if (Value2Not)
                 value2 = !value2;
 
             switch (Action)

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-
-using AE.Core;
 
 using ModernWpf.Controls;
 
@@ -11,7 +7,6 @@ using ScreenBase.Data.Base;
 using ScreenBase.Display;
 
 using ScreenWorkerWPF.Common;
-using ScreenWorkerWPF.Dialogs;
 using ScreenWorkerWPF.ViewModel;
 
 namespace ScreenWorkerWPF.Model;
@@ -85,56 +80,12 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
             Click = new RelayCommand(onClick);
 
         Edit = new RelayCommand(OnEdit);
-        Delete = new RelayCommand(() => MainViewModel.Current.DeleteFunction(this));
+        Delete = new RelayCommand(OnDelete);
     }
 
-    private async void OnEdit()
-    {
-        var clone = Clone();
-        if (await EditPropertyDialog.ShowAsync(clone, $"Rename") == ContentDialogResult.Primary)
-        {
-            var oldTitle = Title;
-            Title = ValidateTitle((clone as NavigationMenuItem).Title);
+    protected virtual void OnDelete() { }
 
-            MainViewModel.Current.OnFunctionRename(oldTitle, Title);
-        }
-    }
-
-    public void ValidateTitle()
-    {
-        Title = ValidateTitle(Title);
-    }
-
-    private string ValidateTitle(string newTitle)
-    {
-        if (newTitle.IsNull())
-            newTitle = "NewFunction();";
-
-        newTitle = newTitle
-            .Trim()
-            .Replace("<", "")
-            .Replace(">", "");
-
-        if (newTitle.IsNull())
-            newTitle = "NewFunction();";
-
-        if (!newTitle.EndsWith("();"))
-            newTitle = newTitle.TrimEnd('(', ')', ';') + "();";
-
-        if (newTitle.Length == 3)
-            newTitle = "NewFunction" + newTitle;
-
-        var count = 0;
-        var title = newTitle;
-
-        while (MainViewModel.Current.Functions.Any(f => f != this && f.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase)))
-        {
-            count++;
-            title = newTitle.Insert(newTitle.Length - 3, $"{count}");
-        }
-
-        return title;
-    }
+    protected virtual void OnEdit() { }
 
     public event Action NeedUpdate;
     public void NeedUpdateInvoke()
@@ -150,133 +101,5 @@ internal class NavigationMenuItem : NavigationMenuHeader, IEditProperties
     public override string ToString()
     {
         return Title;
-    }
-}
-
-internal class VariableNavigationMenuItem : NavigationMenuItem
-{
-    public VariableNavigationMenuItem() : base("Variables", Symbol.AllApps, new VariablesViewModel(), null) { }
-
-    public void OnAddVariable()
-    {
-        (Tab as VariablesViewModel).OnAdd();
-    }
-}
-
-internal class MainNavigationMenuItem : NavigationMenuItem
-{
-    public override bool IsExpanded
-    {
-        get => true;
-        set => NotifyPropertyChanged(nameof(NavigationMenuItem.IsExpanded));
-    }
-
-    public MainNavigationMenuItem() : base("Main();", Symbol.Document, new MainFunctionViewModel(), null)
-    {
-        Items.Add(new ActionNavigationMenuItem("New function", Symbol.NewFolder, OnAddFunction));
-    }
-
-    public void MoveItemUp(int index)
-    {
-        var item = Items[index];
-        Items.RemoveAt(index);
-        Items.Insert(index - 1, item);
-    }
-
-    public void MoveItemDown(int index)
-    {
-        var item = Items[index];
-        Items.RemoveAt(index);
-        Items.Insert(index + 1, item);
-    }
-
-    private async void OnAddFunction()
-    {
-        var func = new CustomFunctionNavigationMenuItem();
-        func.ValidateTitle();
-
-        if (await EditPropertyDialog.ShowAsync(func, "Create function") == ContentDialogResult.Primary)
-        {
-            func.ValidateTitle();
-
-            Items.Insert(Items.Count - 1, func);
-        }
-    }
-}
-
-internal class CustomFunctionNavigationMenuItem : NavigationMenuItem
-{
-    public RelayCommand Up { get; }
-    public RelayCommand Down { get; }
-
-    public CustomFunctionNavigationMenuItem() : base(null, Symbol.Page, new CustomFunctionViewModel(), null)
-    {
-        Up = new RelayCommand(OnUp, CanUp);
-        Down = new RelayCommand(OnDown, CanDown);
-    }
-
-    private bool CanUp()
-    {
-        return MainViewModel.Current.CustomFunctions.First() != this;
-    }
-
-    private void OnUp()
-    {
-        var index = MainViewModel.Current.CustomFunctions.ToList().IndexOf(this);
-
-        MainViewModel.Current.MainMenuItem.MoveItemUp(index);
-    }
-
-    private bool CanDown()
-    {
-        return MainViewModel.Current.CustomFunctions.Last() != this;
-    }
-
-    private void OnDown()
-    {
-        var index = MainViewModel.Current.CustomFunctions.ToList().IndexOf(this);
-
-        MainViewModel.Current.MainMenuItem.MoveItemDown(index);
-    }
-}
-
-internal class ActionNavigationMenuItem : NavigationMenuItem
-{
-    public ActionNavigationMenuItem(string title, Symbol symbol, Action action)
-        : base(title, symbol, null, action) { }
-    public ActionNavigationMenuItem(IAction action, Symbol symbol, Action<IAction> onClick)
-        : base(action.Type.Name(), symbol, action, () => onClick?.Invoke(action)) { }
-
-}
-
-internal class ActionsNavigationMenuItem : NavigationMenuItem
-{
-    private bool isExpanded;
-    public override bool IsExpanded
-    {
-        get => isExpanded;
-        set
-        {
-            if (value)
-            {
-                foreach (var item in MainViewModel.Current.Items.OfType<NavigationMenuItem>())
-                    item.IsExpanded = false;
-
-                isExpanded = true;
-            }
-            else
-            {
-                isExpanded = value;
-            }
-
-            NotifyPropertyChanged(nameof(IsExpanded));
-        }
-    }
-
-    public ActionsNavigationMenuItem(string title, Symbol glyph, Symbol itemsGlyph, Action<IAction> itemClick, List<IAction> items)
-        : base(title, glyph, null, null)
-    {
-        foreach (var item in items)
-            Items.Add(new ActionNavigationMenuItem(item, itemsGlyph, itemClick));
     }
 }

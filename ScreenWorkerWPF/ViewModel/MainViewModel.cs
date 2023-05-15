@@ -229,33 +229,6 @@ internal class MainViewModel : BaseModel
         RegHotKeys();
     }
 
-    public void DeleteFunction(NavigationMenuItem removeItem)
-    {
-        if (removeItem.Tab is CustomFunctionViewModel)
-        {
-            MainMenuItem.Items.Remove(removeItem);
-
-            foreach (var menuItem in Functions)
-                foreach (var item in menuItem.Tab.Items)
-                    if (item.Action.Type == ActionType.Execute && item.Action is ExecuteAction execute && execute.Function == removeItem.Title)
-                    {
-                        execute.Function = "";
-                        item.UpdateTitle();
-                    }
-        }
-    }
-
-    public void OnFunctionRename(string oldName, string newName)
-    {
-        foreach (var menuItem in Functions)
-            foreach (var item in menuItem.Tab.Items)
-                if (item.Action.Type == ActionType.Execute && item.Action is ExecuteAction execute && execute.Function == oldName)
-                {
-                    execute.Function = newName;
-                    item.UpdateTitle();
-                }
-    }
-
     private void OnAddVariable()
     {
         VariablesMenuItem.OnAddVariable();
