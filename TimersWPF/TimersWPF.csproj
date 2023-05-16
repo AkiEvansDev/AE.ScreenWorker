@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
     <UseWPF>true</UseWPF>
 	<ApplicationIcon>t.ico</ApplicationIcon>
-	<Version>5.2.2006</Version>
+	<Version>5.3.2006</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>

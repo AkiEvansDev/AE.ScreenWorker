@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -49,6 +50,15 @@ public class WindowsScreenWorker : IScreenWorker
     public Color GetColor(int x, int y)
     {
         return screen.GetPixel(x, y);
+    }
+
+    public MemoryStream GetPart(int x1, int y1, int x2, int y2)
+    {
+        var stream = new MemoryStream();
+        var part = screen.Clone(new Rectangle(x1, y1, x2 - x1, y2 - y1), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+        part.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+        return stream;
     }
 
     public Bitmap GetPart(int x1, int y1, int x2, int y2, PixelFormat pixelFormat)

@@ -182,7 +182,10 @@ internal class MainViewModel : BaseModel
                 new TranslateAction(),
                 new StartDiscordAction(),
                 new StopDiscordAction(),
+                new DiscordClearAction(),
                 new DiscordMessageAction(),
+                new DiscordScreenAction(),
+                new AddDiscordEventAction(),
             }),
             new ActionsNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
             {

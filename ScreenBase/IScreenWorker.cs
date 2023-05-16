@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 
 using ScreenBase.Data.Base;
 
@@ -11,6 +12,7 @@ public interface IScreenWorker : IDisposable
 
     void Screen();
     Color GetColor(int x, int y);
+    MemoryStream GetPart(int x1, int y1, int x2, int y2);
     Bitmap GetPart(int x1, int y1, int x2, int y2, PixelFormat pixelFormat);
     void MouseMove(int x, int y);
     void MouseDown(MouseEventType type = MouseEventType.Left);

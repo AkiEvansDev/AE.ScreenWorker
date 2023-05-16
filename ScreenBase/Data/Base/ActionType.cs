@@ -68,6 +68,9 @@ public enum ActionType
     StartDiscord = 220,
     StopDiscord = 221,
     DiscordMessage = 222,
+    DiscordClear = 223,
+    DiscordScreen = 224,
+    AddDiscordEvent = 225,
 
     GetImagePartPosition = 250,
 

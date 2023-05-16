@@ -32,52 +32,24 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
     [VariableEditProperty(nameof(Y1), VariableType.Number, 2)]
     public string Y1Variable { get; set; }
 
-    //[AEIgnore]
-    //[Group(0, 0)]
-    //[ScreenPointEditProperty(4, $"Get {nameof(X1)} and {nameof(Y1)}")]
-    //public ScreenPoint Point1
-    //{
-    //    get => new(X1, Y1);
-    //    set
-    //    {
-    //        X1 = value.X;
-    //        Y1 = value.Y;
-    //        NeedUpdateInvoke();
-    //    }
-    //}
-
     [Group(0, 0)]
-    [NumberEditProperty(6, "-", minValue: 0)]
+    [NumberEditProperty(5, "-", minValue: 0)]
     public int X2 { get; set; }
 
     [Group(0, 0)]
-    [VariableEditProperty(nameof(X2), VariableType.Number, 5)]
+    [VariableEditProperty(nameof(X2), VariableType.Number, 4)]
     public string X2Variable { get; set; }
 
     [Group(0, 1)]
-    [NumberEditProperty(8, "-", minValue: 0)]
+    [NumberEditProperty(7, "-", minValue: 0)]
     public int Y2 { get; set; }
 
     [Group(0, 1)]
-    [VariableEditProperty(nameof(Y2), VariableType.Number, 7)]
+    [VariableEditProperty(nameof(Y2), VariableType.Number, 6)]
     public string Y2Variable { get; set; }
 
-    //[AEIgnore]
-    //[Group(0, 1)]
-    //[ScreenPointEditProperty(9, $"Get {nameof(X2)} and {nameof(Y2)}")]
-    //public ScreenPoint Point2
-    //{
-    //    get => new(X2, Y2);
-    //    set
-    //    {
-    //        X2 = value.X;
-    //        Y2 = value.Y;
-    //        NeedUpdateInvoke();
-    //    }
-    //}
-
     [AEIgnore]
-    [ScreenRangeEditProperty(9)]
+    [ScreenRangeEditProperty(8)]
     public ScreenRange Range
     {
         get => new(new ScreenPoint(X1, Y1), new ScreenPoint(X2, Y2));
@@ -91,7 +63,7 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
         }
     }
 
-    [ScreenPointEditProperty(11, "Get color", showColorBox: true, colorRangeProperty: nameof(Range))]
+    [ScreenPointEditProperty(10, "Get color", showColorBox: true, colorRangeProperty: nameof(Range))]
     public ScreenPoint ColorPoint
     {
         get => color;
@@ -102,13 +74,13 @@ public class GetColorCountAction : BaseAction<GetColorCountAction>, ICoordinateA
         }
     }
 
-    [VariableEditProperty("Color", VariableType.Color, 10, propertyNames: $"{nameof(ColorPoint)}")]
+    [VariableEditProperty("Color", VariableType.Color, 9, propertyNames: $"{nameof(ColorPoint)}")]
     public string ColorVariable { get; set; }
 
-    [NumberEditProperty(12, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
+    [NumberEditProperty(11, minValue: 0.1, maxValue: 1, smallChange: 0.01, largeChange: 0.1)]
     public double Accuracy { get; set; }
 
-    [ComboBoxEditProperty(13, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Number)]
+    [ComboBoxEditProperty(12, source: ComboBoxEditPropertySource.Variables, variablesFilter: VariablesFilter.Number)]
     public string Result { get; set; }
 
     public GetColorCountAction()

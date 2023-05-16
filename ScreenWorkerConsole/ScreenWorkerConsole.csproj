@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>sw.ico</ApplicationIcon>
-	<Version>5.2.2006</Version>
+	<Version>5.3.2006</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

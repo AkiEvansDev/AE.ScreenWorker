@@ -9,7 +9,7 @@ public class StopDiscordAction : BaseAction<StopDiscordAction>
 {
     public override ActionType Type => ActionType.StopDiscord;
 
-    public override string GetTitle() => $"StopDiscord({GetResultString(Name)});";
+    public override string GetTitle() => $"StopDiscord({GetValueString(Name, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]

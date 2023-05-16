@@ -14,7 +14,7 @@ public class StartDiscordAction : BaseAction<StartDiscordAction>
 {
     public override ActionType Type => ActionType.StartDiscord;
 
-    public override string GetTitle() => $"StartDiscord({GetResultString(Name)});";
+    public override string GetTitle() => $"StartDiscord({GetValueString(Name, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [TextEditProperty(0)]
