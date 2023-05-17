@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 
 using AE.Core;
 
@@ -21,7 +22,9 @@ else
     path = args[0];
 
 if (path.IsNull() || !File.Exists(path))
+{
     Console.WriteLine("No path!");
+}
 else
 {
     var data = DataHelper.Load<ScriptInfo>(path);
@@ -31,7 +34,10 @@ else
         if (args.Length > 1)
             data.Arguments = args[1];
 
-        Console.WriteLine($"Start {data.Name}, press eny key to stop!");
+        var app = new Application
+        {
+            ShutdownMode = ShutdownMode.OnExplicitShutdown
+        };
 
         var hwnd = Process.GetCurrentProcess().MainWindowHandle;
         var size = WindowsHelper.GetMonitorSize(hwnd);
@@ -39,16 +45,36 @@ else
         var worker = new WindowsScreenWorker(size.Width, size.Height);
         var executor = new ScriptExecutor();
 
+        var count = 0;
         executor.OnMessage += (message, needDisplay) =>
         {
             ConsoleHelper.Display(DisplaySpan.Parse(message));
             Console.WriteLine();
+
+            count++;
+            if (count > 1000)
+            {
+                count = 0;
+                Console.Clear();
+            }
         };
 
-        executor.Start(data, worker, true);
+        app.Startup += (s, e) =>
+        {
+            executor.Start(data, worker, true);
+        };
+        executor.OnExecutorComplite += () =>
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Press eny key to exit!");
+            Console.ReadLine();
 
-        Console.ReadLine();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                app.Shutdown();
+            });
+        };
 
-        executor.Stop(true);
+        app.Run();
     }
 }

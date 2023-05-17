@@ -35,6 +35,9 @@ public class DiscordClearAction : BaseAction<DiscordClearAction>
     [NumberEditProperty(3, minValue: 1)]
     public int Count { get; set; }
 
+    [CheckBoxEditProperty(4)]
+    public bool ClearThreads { get; set; }
+
     public DiscordClearAction()
     {
         Name = "Discord";
@@ -45,6 +48,7 @@ public class DiscordClearAction : BaseAction<DiscordClearAction>
     {
         var data = executor.GetDisposableData(Name);
         var channelIdValue = executor.GetValue(ChannelId, ChannelIdVariable);
+        var clearThreads = ClearThreads;
 
         if (data != null && data is DiscordSocketClient discordClient)
         {
@@ -63,6 +67,18 @@ public class DiscordClearAction : BaseAction<DiscordClearAction>
                         var deleteTask = restTextChannel.DeleteMessagesAsync(messagesTask.Result);
                         deleteTask.Wait();
                     }
+
+                    if (clearThreads)
+                    {
+                        var threadsTask = restTextChannel.GetActiveThreadsAsync();
+                        threadsTask.Wait();
+
+                        foreach (var thread in threadsTask.Result)
+                        {
+                            var deleteTask = thread.DeleteAsync();
+                            deleteTask.Wait();
+                        }
+                    }
                 }
                 else if (getChannelTask.Result is SocketTextChannel socketTextChannel)
                 {
@@ -73,6 +89,18 @@ public class DiscordClearAction : BaseAction<DiscordClearAction>
                     {
                         var deleteTask = socketTextChannel.DeleteMessagesAsync(messagesTask.Result);
                         deleteTask.Wait();
+                    }
+
+                    if (clearThreads)
+                    {
+                        var threadsTask = socketTextChannel.GetActiveThreadsAsync();
+                        threadsTask.Wait();
+
+                        foreach (var thread in threadsTask.Result)
+                        {
+                            var deleteTask = thread.DeleteAsync();
+                            deleteTask.Wait();
+                        }
                     }
                 }
                 else

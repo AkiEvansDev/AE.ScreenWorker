@@ -18,9 +18,9 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
     public override ActionType Type => ActionType.DiscordMessage;
 
     public override string GetTitle()
-        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(Message, MessageVariable)});";
+        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(Message, MessageVariable, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(Message, MessageVariable))});";
+        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(Message, MessageVariable), useEmptyStringDisplay: true)});";
 
     [TextEditProperty(0)]
     public string Name { get; set; }
@@ -43,6 +43,12 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
     [VariableEditProperty(nameof(Message), VariableType.Text, 5)]
     public string MessageVariable { get; set; }
 
+    [CheckBoxEditProperty(7)]
+    public bool CreateThread { get; set; }
+
+    [TextEditProperty(8)]
+    public string ThreadName { get; set; }
+
     public DiscordMessageAction()
     {
         Name = "Discord";
@@ -54,11 +60,13 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
         var message = executor.GetValue(Message, MessageVariable);
         var channelIdValue = executor.GetValue(ChannelId, ChannelIdVariable);
         var roleIdValue = executor.GetValue(RoleId, RoleIdVariable);
+        var createThread = CreateThread;
 
         if (!message.IsNull() && data != null && data is DiscordSocketClient discordClient)
         {
             if (ulong.TryParse(channelIdValue, out ulong channelId) && channelId > 0)
             {
+                var threadName = ThreadName ?? message;
                 if (ulong.TryParse(roleIdValue, out ulong roleId) && roleId > 0)
                     message = $"{MentionUtils.MentionRole(roleId)} {message}";
 
@@ -69,11 +77,23 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
                 {
                     var sendTask = restTextChannel.SendMessageAsync(message, allowedMentions: AllowedMentions.All);
                     sendTask.Wait();
+
+                    if (createThread)
+                    {
+                        var createThreadTask = restTextChannel.CreateThreadAsync(threadName, message: sendTask.Result);
+                        createThreadTask.Wait();
+                    }
                 }
                 else if (getChannelTask.Result is SocketTextChannel socketTextChannel)
                 {
                     var sendTask = socketTextChannel.SendMessageAsync(message, allowedMentions: AllowedMentions.All);
                     sendTask.Wait();
+
+                    if (createThread)
+                    {
+                        var createThreadTask = socketTextChannel.CreateThreadAsync(threadName, message: sendTask.Result);
+                        createThreadTask.Wait();
+                    }
                 }
                 else
                 {

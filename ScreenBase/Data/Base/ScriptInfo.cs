@@ -49,6 +49,7 @@ public class ScriptInfo : IEditProperties
         }
         catch { }
 
+        Variables = new VariableAction[0];
         Main = new IAction[1] { new CommentAction("Start Main();") };
         Data = new Dictionary<string, IAction[]>();
     }

@@ -76,8 +76,8 @@ public class ScriptExecutor : IScriptExecutor
 
             Execute(script.Main);
 
-            OnExecutorComplite?.Invoke();
             Stop(false);
+            OnExecutorComplite?.Invoke();
         })
         {
             IsBackground = true
