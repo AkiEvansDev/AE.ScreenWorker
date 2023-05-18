@@ -27,7 +27,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2435DDED83B043C6B2E0B31F899281C6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2C4194058E37437B9C6C0FD1F567F536"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2E0E601A1F6042679A315A00FEED73DF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -139,6 +151,20 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_0CC6ABCF781D498FAC8635CEC56FDFB5"
+            {
+            "Name" = "8:Publish Items from RemoveShortcut (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_2E0E601A1F6042679A315A00FEED73DF"
+            "FileType" = "3:2"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_AB2D8BA8_A900_4DA0_A92B_D7E074AF5E88"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C3842EA6980941D0A297A10CB5BBED7E"
             {
             "Name" = "8:Publish Items from RunApp (Active)"
@@ -150,6 +176,20 @@
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
             "Identifier" = "8:_DAA400A4_2B0B_47A2_9AD3_1ECC8F2C2512"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C9C9877ADDDE417691CBDC9ED24C2AE1"
+            {
+            "Name" = "8:Publish Items from CreateShortcut (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_2435DDED83B043C6B2E0B31F899281C6"
+            "FileType" = "3:2"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:/Commit"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_DA73D54B_D1F2_4B36_BF7A_F4FA5586649B"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -185,7 +225,7 @@
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Condition" = "8:"
-            "Transitive" = "11:TRUE"
+            "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
@@ -205,7 +245,7 @@
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Condition" = "8:"
-            "Transitive" = "11:TRUE"
+            "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
@@ -225,7 +265,7 @@
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Condition" = "8:"
-            "Transitive" = "11:TRUE"
+            "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
@@ -245,7 +285,7 @@
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
             "Condition" = "8:"
-            "Transitive" = "11:TRUE"
+            "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
@@ -300,7 +340,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_3535D5979A394ADF8533FFD3EAE14957"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
@@ -330,17 +370,6 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_66AE13A618784CA28234F4B1EEB736D6"
-                    {
-                    "Name" = "8:ScreenWorker"
-                    "AlwaysCreate" = "11:TRUE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_938A6873AC0A4EAD8081E700E15813D5"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
         }
@@ -359,15 +388,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{91C9FC39-BFCA-41CD-A15E-1CABD6ECEDEE}"
-        "PackageCode" = "8:{146155A5-AB23-43EC-89D6-8EC1EE7F1682}"
+        "ProductCode" = "8:{6A8DDB2B-9DAA-4FB1-88B8-7146388CA028}"
+        "PackageCode" = "8:{F3393794-F489-4BF6-96F2-95DAC5DAE5D7}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:5.3.3006"
+        "ProductVersion" = "8:5.3.4006"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/AkiEvansDev/AE.ScreenWorker"
@@ -381,7 +410,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -480,48 +509,6 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_51505F5F82BE4E15950B6F7935CE771A"
-            {
-            "Name" = "8:Timers"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_2C4194058E37437B9C6C0FD1F567F536"
-            "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
-            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
-            "Icon" = "8:_E9AFE494C408454BAF0B40CAB33EB17F"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6FA10DFD43AA4DB8ADC550E5B86316C7"
-            {
-            "Name" = "8:ScreenWorker"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_0AF54BD0C1214347BECC6C74599EDE4D"
-            "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
-            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
-            "Icon" = "8:_A86CFB6E122D4D25B47CDC8B1C012958"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_97279FFE5FCF437C8602670C6796A183"
-            {
-            "Name" = "8:WindowHelper"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_99909648CAE84037B0D3E0C1F4CE9E55"
-            "Folder" = "8:_66AE13A618784CA28234F4B1EEB736D6"
-            "WorkingFolder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
-            "Icon" = "8:_1C1DA8C1DBF04260BFCDB36E2BAD5EE6"
-            "Feature" = "8:"
-            }
         }
         "UserInterface"
         {
@@ -1179,7 +1166,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0AF54BD0C1214347BECC6C74599EDE4D"
             {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1205,9 +1192,37 @@
                 {
                 }
             }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2435DDED83B043C6B2E0B31F899281C6"
+            {
+            "SourcePath" = "8:..\\CreateShortcut\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{7C3C061A-381F-4802-8F6E-7DBC34008585}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2C4194058E37437B9C6C0FD1F567F536"
             {
-            "SourcePath" = "8:..\\TimersWPF\\obj\\Debug\\net6.0-windows10.0.18362.0\\apphost.exe"
+            "SourcePath" = "8:..\\TimersWPF\\obj\\Release\\net6.0-windows10.0.18362.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1233,9 +1248,37 @@
                 {
                 }
             }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E0E601A1F6042679A315A00FEED73DF"
+            {
+            "SourcePath" = "8:..\\RemoveShortcut\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{8A08C936-E75B-48A8-8C43-5295C36C735C}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5AEE352371904B34A9B1850428D92058"
             {
-            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1263,7 +1306,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99909648CAE84037B0D3E0C1F4CE9E55"
             {
-            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1291,7 +1334,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99F888560BCF468CB4EF2176A1AD7911"
             {
-            "SourcePath" = "8:..\\RunApp\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\RunApp\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"

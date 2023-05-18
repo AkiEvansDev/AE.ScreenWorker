@@ -19,28 +19,29 @@ public partial class ExecuteWindow : Window
 
         protected override void OnStart(ScriptInfo scriptData, bool isDebug)
         {
-            var margin = App.CurrentSettings.ExecuteWindowMargin;
+            var marginLeft = App.CurrentSettings.ExecuteWindowMarginLeft;
+            var marginTop = App.CurrentSettings.ExecuteWindowMarginTop;
             switch (App.CurrentSettings.ExecuteWindowLocation)
             {
                 case WindowLocation.LeftTop:
-                    Window.Left = margin;
-                    Window.Top = margin;
+                    Window.Left = marginLeft;
+                    Window.Top = marginTop;
                     break;
                 case WindowLocation.LeftBottom:
-                    Window.Left = margin;
-                    Window.Top = ScreenSize.Height - Window.Height - margin;
+                    Window.Left = marginLeft;
+                    Window.Top = ScreenSize.Height - Window.Height - marginTop;
                     break;
                 case WindowLocation.RightTop:
-                    Window.Left = ScreenSize.Width - Window.Width - margin;
-                    Window.Top = margin;
+                    Window.Left = ScreenSize.Width - Window.Width - marginLeft;
+                    Window.Top = marginTop;
                     break;
                 case WindowLocation.RightBottom:
-                    Window.Left = ScreenSize.Width - Window.Width - margin;
-                    Window.Top = ScreenSize.Height - Window.Height - margin;
+                    Window.Left = ScreenSize.Width - Window.Width - marginLeft;
+                    Window.Top = ScreenSize.Height - Window.Height - marginTop;
                     break;
                 case WindowLocation.Center:
-                    Window.Left = ScreenSize.Width / 2 - Window.Width / 2 + margin;
-                    Window.Top = ScreenSize.Height / 2 - Window.Height / 2 + margin;
+                    Window.Left = ScreenSize.Width / 2 - Window.Width / 2 + marginLeft;
+                    Window.Top = ScreenSize.Height / 2 - Window.Height / 2 + marginTop;
                     break;
             }
 

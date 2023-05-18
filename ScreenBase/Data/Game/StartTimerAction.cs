@@ -21,6 +21,9 @@ public class StartTimerAction : BaseAction<StartTimerAction>
     [ComboBoxEditProperty(2, source: ComboBoxEditPropertySource.Functions)]
     public string Function { get; set; }
 
+    [CheckBoxEditProperty(3)]
+    public bool ExecuteImmediately { get; set; }
+
     public StartTimerAction()
     {
         Name = "Timer";
@@ -31,6 +34,9 @@ public class StartTimerAction : BaseAction<StartTimerAction>
     {
         if (!Function.IsNull())
         {
+            if (ExecuteImmediately)
+                executor.Execute(executor.Functions[Function]);
+
             executor.StartTimer(Name, Step, Function);
             return ActionResultType.Completed;
         }

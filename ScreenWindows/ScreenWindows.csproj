@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
 	<UseWPF>true</UseWPF>
-	<Version>5.3.3</Version>
+	<Version>5.3.4</Version>
 	<Authors>AkiEvans</Authors>
   </PropertyGroup>
 

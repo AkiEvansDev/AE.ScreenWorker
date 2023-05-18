@@ -5,12 +5,16 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>wh.ico</ApplicationIcon>
-	<Version>5.3.3006</Version>
+	<Version>5.3.4006</Version>
 	<Authors>AkiEvans</Authors>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<StartupObject>WindowHelperWPF.App</StartupObject>
 	<AssemblyName>WindowHelper</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>

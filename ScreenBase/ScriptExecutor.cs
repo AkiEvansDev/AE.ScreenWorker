@@ -367,8 +367,6 @@ public class ScriptExecutor : IScriptExecutor
         Timers.Add(name, timer);
 
         timer.Elapsed += (s, e) => Execute(Functions[function]);
-
-        Execute(Functions[function]);
         timer.Start();
     }
 
@@ -377,6 +375,7 @@ public class ScriptExecutor : IScriptExecutor
         if (Timers.ContainsKey(name))
         {
             Timers[name].Stop();
+            Timers[name].Dispose();
             Timers.Remove(name);
         }
     }

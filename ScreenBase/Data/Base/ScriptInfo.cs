@@ -128,10 +128,13 @@ public class ScriptSettings : IEditProperties
     [ComboBoxEditProperty(2, "Execute window location", source: ComboBoxEditPropertySource.Enum)]
     public WindowLocation ExecuteWindowLocation { get; set; }
 
-    [NumberEditProperty(3, "Execute window margin")]
-    public int ExecuteWindowMargin { get; set; }
+    [NumberEditProperty(3, "Execute window margin left")]
+    public int ExecuteWindowMarginLeft { get; set; }
 
-    [ScreenPointEditProperty(4, "Execute window color", showColorBox: true, useOpacityColor: true)]
+    [NumberEditProperty(4, "Execute window margin top")]
+    public int ExecuteWindowMarginTop { get; set; }
+
+    [ScreenPointEditProperty(5, "Execute window color", showColorBox: true, useOpacityColor: true)]
     public ScreenPoint ExecuteWindowColor { get; set; }
 
     public Dictionary<ActionType, HelpInfo> HelpInfo { get; set; }
@@ -141,7 +144,8 @@ public class ScriptSettings : IEditProperties
         StartKey = KeyFlags.KeyF1;
         StopKey = KeyFlags.KeyF2;
         ExecuteWindowLocation = WindowLocation.RightBottom;
-        ExecuteWindowMargin = 0;
+        ExecuteWindowMarginLeft = 0;
+        ExecuteWindowMarginTop = 0;
         ExecuteWindowColor = new ScreenPoint(0, 0, 180, 0, 0, 0);
         HelpInfo = new Dictionary<ActionType, HelpInfo>();
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,8 +19,6 @@ namespace ScreenWorkerWPF;
 public partial class App : Application
 {
     public static ScriptSettings CurrentSettings { get; private set; }
-
-    private readonly List<int> keysPressed = new();
 
     public App()
     {
@@ -44,7 +41,7 @@ public partial class App : Application
     private void OnStartup(object sender, StartupEventArgs e)
     {
         var args = e.Args?.FirstOrDefault();
-        LogsWindow.AddLog(args, true);
+        LogsWindow.AddLog($"Args: `{args}`", true);
 
         var settingsPath = GetSettingsPath();
         var folder = Path.GetDirectoryName(settingsPath);
