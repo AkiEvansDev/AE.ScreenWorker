@@ -15,14 +15,12 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
-    - name: Add github source
-      run: dotnet nuget add source --username AkiEvansDev --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/AkiEvansDev/index.json"
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
     - name: Setup Windows SDK
       uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.5
-    - name: Build
-      run: dotnet build -c Release
-    - name: Test
-      run: dotnet test -c Release --no-build
+    - name: Add github source
+      run: dotnet nuget add source --username AkiEvansDev --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/AkiEvansDev/index.json"
     - name: Setup VS Dev Environment
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
     - name: Build the Installer
