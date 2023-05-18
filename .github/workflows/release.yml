@@ -19,10 +19,12 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
     - name: Setup Windows SDK
       uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.5
-    - name: Add github source
-      run: dotnet nuget add source --username AkiEvansDev --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/AkiEvansDev/index.json"
     - name: Setup VS Dev Environment
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
+    - name: Add github source
+      run: dotnet nuget add source --username AkiEvansDev --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/AkiEvansDev/index.json"
+    - name: Build
+      run: msbuild AE.ScreenWorker.sln /t:Rebuild /p:Configuration=Release
     - name: Build the Installer
       run: DevEnv AE.ScreenWorker.sln /project ScreenWorkerInstaller/ScreenWorkerInstaller.vdproj /rebuild Release
     - name: Get version
