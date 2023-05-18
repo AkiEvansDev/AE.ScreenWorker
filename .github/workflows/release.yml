@@ -23,6 +23,8 @@ jobs:
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
     - name: Add github source
       run: dotnet nuget add source --username AkiEvansDev --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/AkiEvansDev/index.json"
+    - name: Nuget restore
+      run: dotnet restore AE.ScreenWorker.sln
     - name: Build
       run: msbuild AE.ScreenWorker.sln /t:Rebuild /p:Configuration=Release
     - name: Build the Installer
