@@ -13,15 +13,16 @@ if (File.Exists(exePath))
     process.StartInfo.Verb = "runas";
 
     process.Start();
+    Process.GetCurrentProcess().Close();
 }
 
-try
-{
-    var proc = Process
-        .GetProcesses()
-        .Where(p => p.MainWindowTitle.Contains("ScreenWorker") && p.ProcessName == "msiexec")
-        .FirstOrDefault();
+//try
+//{
+//    var proc = Process
+//        .GetProcesses()
+//        .Where(p => p.MainWindowTitle.Contains("ScreenWorker") && p.ProcessName == "msiexec")
+//        .FirstOrDefault();
 
-    proc?.Kill();
-}
-catch { }
+//    proc?.Kill();
+//}
+//catch { }
