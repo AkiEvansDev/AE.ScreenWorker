@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
 	<TargetFramework>net6.0-windows</TargetFramework>
 	<ImplicitUsings>enable</ImplicitUsings>
-	<Version>1.0.1003</Version>
+	<Version>1.0.1004</Version>
   </PropertyGroup>
 
 </Project>
