@@ -388,15 +388,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ScreenWorker"
-        "ProductCode" = "8:{15A1959E-9FA3-4680-A2BF-D10999D9CCBB}"
-        "PackageCode" = "8:{8E0B568E-34DD-42FF-8DE2-4D6D1089D264}"
+        "ProductCode" = "8:{406F2AF4-2E62-4404-83D9-28012239E90E}"
+        "PackageCode" = "8:{14500883-ED03-4AA1-B74B-4CC07C5CD97B}"
         "UpgradeCode" = "8:{E2CDA786-78BF-4929-ADAD-BF419375FAFE}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:5.4.4006"
+        "ProductVersion" = "8:5.4.5006"
         "Manufacturer" = "8:AkiProjects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/AkiEvansDev/AE.ScreenWorker"
@@ -1166,7 +1166,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0AF54BD0C1214347BECC6C74599EDE4D"
             {
-            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1194,7 +1194,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2435DDED83B043C6B2E0B31F899281C6"
             {
-            "SourcePath" = "8:..\\CreateShortcut\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\CreateShortcut\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"
@@ -1222,7 +1222,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2C4194058E37437B9C6C0FD1F567F536"
             {
-            "SourcePath" = "8:..\\TimersWPF\\obj\\Release\\net6.0-windows10.0.18362.0\\apphost.exe"
+            "SourcePath" = "8:..\\TimersWPF\\obj\\Debug\\net6.0-windows10.0.18362.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1250,7 +1250,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E0E601A1F6042679A315A00FEED73DF"
             {
-            "SourcePath" = "8:..\\RemoveShortcut\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\RemoveShortcut\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"
@@ -1278,7 +1278,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5AEE352371904B34A9B1850428D92058"
             {
-            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\ScreenWorkerConsole\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1306,7 +1306,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99909648CAE84037B0D3E0C1F4CE9E55"
             {
-            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\WindowHelperWPF\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3535D5979A394ADF8533FFD3EAE14957"
@@ -1334,7 +1334,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99F888560BCF468CB4EF2176A1AD7911"
             {
-            "SourcePath" = "8:..\\RunApp\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\RunApp\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1F1BD6D074DF45A9A8A43CF1A14066EA"

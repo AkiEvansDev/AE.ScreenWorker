@@ -19,9 +19,9 @@ public class DiscordScreenAction : BaseAction<DiscordScreenAction>, ICoordinateA
     public override ActionType Type => ActionType.DiscordScreen;
 
     public override string GetTitle()
-        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)});";
+        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Message, MessageVariable, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))});";
+        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(executor.GetValue(Message, MessageVariable), useEmptyStringDisplay: true)});";
 
     [TextEditProperty(0)]
     public string Name { get; set; }

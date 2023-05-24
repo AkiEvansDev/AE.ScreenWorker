@@ -18,9 +18,9 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
     public override ActionType Type => ActionType.DiscordMessage;
 
     public override string GetTitle()
-        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(Message, MessageVariable, useEmptyStringDisplay: true)});";
+        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(Message, MessageVariable, useEmptyStringDisplay: true)}{(CreateThread ? $", createThread: {GetValueString(ThreadName, ThreadNameVariable, useEmptyStringDisplay: true)}" : "")});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(Message, MessageVariable), useEmptyStringDisplay: true)});";
+        => $"DiscordMessage({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(Message, MessageVariable), useEmptyStringDisplay: true)}{(CreateThread ? $", createThread: {GetValueString(executor.GetValue(ThreadName, ThreadNameVariable), useEmptyStringDisplay: true)}" : "")});";
 
     [TextEditProperty(0)]
     public string Name { get; set; }
@@ -46,8 +46,11 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
     [CheckBoxEditProperty(7)]
     public bool CreateThread { get; set; }
 
-    [TextEditProperty(8)]
+    [TextEditProperty(9, "-")]
     public string ThreadName { get; set; }
+
+    [VariableEditProperty(nameof(ThreadName), VariableType.Text, 8)]
+    public string ThreadNameVariable { get; set; }
 
     public DiscordMessageAction()
     {
@@ -66,7 +69,7 @@ public class DiscordMessageAction : BaseAction<DiscordMessageAction>
         {
             if (ulong.TryParse(channelIdValue, out ulong channelId) && channelId > 0)
             {
-                var threadName = ThreadName ?? message;
+                var threadName = executor.GetValue(ThreadName, ThreadNameVariable) ?? message;
                 if (ulong.TryParse(roleIdValue, out ulong roleId) && roleId > 0)
                     message = $"{MentionUtils.MentionRole(roleId)} {message}";
 

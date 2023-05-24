@@ -19,9 +19,9 @@ public class DiscordClearAction : BaseAction<DiscordClearAction>
     public override ActionType Type => ActionType.DiscordClear;
 
     public override string GetTitle()
-        => $"DiscordClear({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(ChannelId, ChannelIdVariable)});";
+        => $"DiscordClear({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(ChannelId, ChannelIdVariable)}{(ClearThreads ? $", clearThreads: {GetValueString(true)}" : "")});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"DiscordClear({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(ChannelId, ChannelIdVariable))});";
+        => $"DiscordClear({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(ChannelId, ChannelIdVariable))}{(ClearThreads ? $", clearThreads: {GetValueString(true)}" : "")});";
 
     [TextEditProperty(0)]
     public string Name { get; set; }
@@ -32,7 +32,7 @@ public class DiscordClearAction : BaseAction<DiscordClearAction>
     [VariableEditProperty(nameof(ChannelId), VariableType.Text, 1)]
     public string ChannelIdVariable { get; set; }
 
-    [NumberEditProperty(3, minValue: 1)]
+    [NumberEditProperty(3, minValue: 0)]
     public int Count { get; set; }
 
     [CheckBoxEditProperty(4)]
