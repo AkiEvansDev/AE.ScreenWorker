@@ -243,7 +243,7 @@ public class TimerModel : BaseModel
         {
             var index = TimersViewModel.Current.Timers.IndexOf(this);
             TimersViewModel.Current.Timers.Move(index, index - 1);
-        }, () => TimersViewModel.Current.Timers[0] != this);
+        }, () => TimersViewModel.Current.Timers.FirstOrDefault() != this);
         Down = new RelayCommand(() =>
         {
             var index = TimersViewModel.Current.Timers.IndexOf(this);

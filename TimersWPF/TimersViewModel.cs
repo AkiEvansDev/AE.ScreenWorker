@@ -27,7 +27,12 @@ internal class TimersViewModel : BaseModel
         Delete = new RelayCommand(() =>
         {
             if (Timers.Count > 0)
-                Timers.Remove(Timers.Last());
+            {
+                var timer = Timers.Last();
+                timer.Stop?.Execute(null);
+
+                Timers.Remove(timer);
+            }
         });
     }
 }
