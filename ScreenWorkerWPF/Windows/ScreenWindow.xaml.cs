@@ -1,6 +1,8 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,6 +34,8 @@ public partial class ScreenWindow : Window
         Step = 0;
         MaxStep = maxStep;
 
+        Left = 0;
+        Top = 0;
         Img.Width = Width = HorizontalLine.Width = OldHorizontalLine1.Width = OldHorizontalLine2.Width = image.Width;
         Img.Height = Height = VerticalLine.Height = OldVerticalLine1.Height = OldVerticalLine2.Height = image.Height;
 
@@ -156,6 +160,7 @@ public partial class ScreenWindow : Window
         };
 
         window.ShowDialog();
+        OnClose(owner ?? Application.Current.MainWindow);
 
         if (window.Result1 != null)
         {
@@ -178,6 +183,7 @@ public partial class ScreenWindow : Window
         };
 
         window.ShowDialog();
+        OnClose(owner ?? Application.Current.MainWindow);
 
         if (window.Result1 != null && window.Result2 != null)
         {
@@ -200,19 +206,24 @@ public partial class ScreenWindow : Window
         return null;
     }
 
+    private static WindowState SaveWindowState;
     private static Bitmap GetBitmap(Window owner)
     {
-        var state = owner.WindowState;
-        owner.WindowState = WindowState.Minimized;
-
         var hwnd = new WindowInteropHelper(owner).EnsureHandle();
         var size = WindowsHelper.GetMonitorSize(hwnd);
 
+        SaveWindowState = owner.WindowState;
+        owner.WindowState = WindowState.Minimized;
+
+        Task.Delay(250).Wait();
         var bitmap = WindowsHelper.GetScreen(size.Width, size.Height);
 
-        owner.WindowState = state;
-
         return bitmap;
+    }
+
+    private static void OnClose(Window owner)
+    {
+        owner.WindowState = SaveWindowState;
     }
 
     private static BitmapImage BitmapToImageSource(Bitmap bitmap)
