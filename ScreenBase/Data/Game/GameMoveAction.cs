@@ -44,6 +44,8 @@ public class GameMoveAction : BaseDelayAction<GameMoveAction>
         S = KeyFlags.KeyS;
         A = KeyFlags.KeyA;
         D = KeyFlags.KeyD;
+
+        PressDelay = 100;
     }
 
     private string GetPartsDisplay()

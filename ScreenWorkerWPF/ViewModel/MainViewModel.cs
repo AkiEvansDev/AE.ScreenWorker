@@ -318,7 +318,7 @@ internal class MainViewModel : BaseModel
         {
             ExecuteWindow.Worker?.Stop();
             DisplayWindow.Worker?.Stop();
-        }, saved: true);
+        }, saved: true, strong: false);
     }
 
     private async void OnLogin()
