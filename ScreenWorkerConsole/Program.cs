@@ -65,9 +65,19 @@ else
         };
         executor.OnExecutorComplite += () =>
         {
-            Console.WriteLine();
-            Console.WriteLine($"Press eny key to exit!");
-            Console.ReadLine();
+            var close = false;
+            if (args.Length > 1)
+            {
+                if (!args[1].IsNull() && args[1] == "autoclose")
+                    close = true;
+            }
+
+            if (!close)
+            {
+				Console.WriteLine();
+				Console.WriteLine($"Press eny key to exit!");
+				Console.ReadLine();
+			}
 
             Application.Current.Dispatcher.Invoke(() =>
             {

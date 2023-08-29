@@ -44,7 +44,7 @@ public class StartProcessAction : BaseDelayAction<StartProcessAction>
     public override string GetTitle() => $"StartProcess({GetValueString(Path, useEmptyStringDisplay: true)});";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
-    [FilePathEditProperty(0, filter: "Execute files (*.exe)|*.exe|Internet Shortcut (*.url)|*.url")]
+    [FilePathEditProperty(0, filter: "Execute files (*.exe)|*.exe|Command files (*.cmd)|*.cmd|Internet Shortcut (*.url)|*.url|Shortcut (*.lnk)|*.lnk")]
     public string Path { get; set; }
 
     [TextEditProperty(1)]
