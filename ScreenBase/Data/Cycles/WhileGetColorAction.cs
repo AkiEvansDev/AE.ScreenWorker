@@ -99,9 +99,12 @@ public class WhileGetColorAction : BaseGroupAction<WhileGetColorAction>, ICoordi
 
             whileResult = executor.IsColor(color1, color2, Accuracy);
 
-            if (Not)
+			if (Not)
                 whileResult = !whileResult;
 
+			if (executor.IsDebug)
+			    executor.Log($"c1: {BaseAction<IAction>.GetValueString(color1)}, c2: {BaseAction<IAction>.GetValueString(color2)} => {BaseAction<IAction>.GetValueString(whileResult)}");
+			
             if (whileResult)
             {
                 var result = executor.Execute(Items);

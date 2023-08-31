@@ -23,8 +23,9 @@ public interface IScriptExecutor
     event OnVariableChangeDelegate OnVariableChange;
 
     bool IsRun { get; }
+    bool IsDebug { get; }
 
-    SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
+	SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     AddDisplayVariableDelegate AddDisplayVariable { get; set; }
     AddDisplayImageDelegate AddDisplayImage { get; set; }
     UpdateDisplayDelegate UpdateDisplay { get; set; }

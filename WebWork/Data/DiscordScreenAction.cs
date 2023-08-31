@@ -19,9 +19,9 @@ public class DiscordScreenAction : BaseAction<DiscordScreenAction>, ICoordinateA
     public override ActionType Type => ActionType.DiscordScreen;
 
     public override string GetTitle()
-        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Message, MessageVariable, useEmptyStringDisplay: true)});";
+        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(X1, X1Variable)}, {GetValueString(Y1, Y1Variable)}, {GetValueString(X2, X2Variable)}, {GetValueString(Y2, Y2Variable)}, {GetValueString(Message, MessageVariable, useEmptyStringDisplay: true)}{(CreateThread ? $", createThread: {GetValueString(ThreadName, ThreadNameVariable, useEmptyStringDisplay: true)}" : "")});";
     public override string GetExecuteTitle(IScriptExecutor executor)
-        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(executor.GetValue(Message, MessageVariable), useEmptyStringDisplay: true)});";
+        => $"DiscordScreen({GetValueString(Name, useEmptyStringDisplay: true)}, {GetValueString(executor.GetValue(X1, X1Variable))}, {GetValueString(executor.GetValue(Y1, Y1Variable))}, {GetValueString(executor.GetValue(X2, X2Variable))}, {GetValueString(executor.GetValue(Y2, Y2Variable))}, {GetValueString(executor.GetValue(Message, MessageVariable), useEmptyStringDisplay: true)}{(CreateThread ? $", createThread: {GetValueString(executor.GetValue(ThreadName, ThreadNameVariable), useEmptyStringDisplay: true)}" : "")});";
 
     [TextEditProperty(0)]
     public string Name { get; set; }
@@ -91,7 +91,16 @@ public class DiscordScreenAction : BaseAction<DiscordScreenAction>, ICoordinateA
     [VariableEditProperty(nameof(Message), VariableType.Text, 14)]
     public string MessageVariable { get; set; }
 
-    public DiscordScreenAction()
+	[CheckBoxEditProperty(16)]
+	public bool CreateThread { get; set; }
+
+	[TextEditProperty(18, "-")]
+	public string ThreadName { get; set; }
+
+	[VariableEditProperty(nameof(ThreadName), VariableType.Text, 17)]
+	public string ThreadNameVariable { get; set; }
+
+	public DiscordScreenAction()
     {
         Name = "Discord";
         UseOptimizeCoordinate = true;
@@ -103,8 +112,9 @@ public class DiscordScreenAction : BaseAction<DiscordScreenAction>, ICoordinateA
         var message = executor.GetValue(Message, MessageVariable);
         var channelIdValue = executor.GetValue(ChannelId, ChannelIdVariable);
         var roleIdValue = executor.GetValue(RoleId, RoleIdVariable);
+		var createThread = CreateThread;
 
-        var x1 = executor.GetValue(X1, X1Variable);
+		var x1 = executor.GetValue(X1, X1Variable);
         var y1 = executor.GetValue(Y1, Y1Variable);
         var x2 = executor.GetValue(X2, X2Variable);
         var y2 = executor.GetValue(Y2, Y2Variable);
@@ -122,7 +132,8 @@ public class DiscordScreenAction : BaseAction<DiscordScreenAction>, ICoordinateA
                 if (message.IsNull())
                     message = "Screen";
 
-                if (ulong.TryParse(roleIdValue, out ulong roleId) && roleId > 0)
+				var threadName = executor.GetValue(ThreadName, ThreadNameVariable) ?? message;
+				if (ulong.TryParse(roleIdValue, out ulong roleId) && roleId > 0)
                     message = $"{MentionUtils.MentionRole(roleId)} {message}";
 
                 var getChannelTask = discordClient.GetChannelAsync(channelId).AsTask();
@@ -135,12 +146,24 @@ public class DiscordScreenAction : BaseAction<DiscordScreenAction>, ICoordinateA
                 {
                     var sendTask = restTextChannel.SendFileAsync(memoryStream, $"Screen{DateTime.Now:dd.MM.yyyy}.jpg", message, allowedMentions: AllowedMentions.All);
                     sendTask.Wait();
-                }
+
+					if (createThread)
+					{
+						var createThreadTask = restTextChannel.CreateThreadAsync(threadName, message: sendTask.Result);
+						createThreadTask.Wait();
+					}
+				}
                 else if (getChannelTask.Result is SocketTextChannel socketTextChannel)
                 {
                     var sendTask = socketTextChannel.SendFileAsync(memoryStream, $"Screen{DateTime.Now:dd.MM.yyyy}.jpg", message, allowedMentions: AllowedMentions.All);
                     sendTask.Wait();
-                }
+
+					if (createThread)
+					{
+						var createThreadTask = socketTextChannel.CreateThreadAsync(threadName, message: sendTask.Result);
+						createThreadTask.Wait();
+					}
+				}
                 else
                 {
                     throw new NotImplementedException($"Type {getChannelTask.Result.GetType()} not implemented!");

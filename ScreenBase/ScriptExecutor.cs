@@ -20,8 +20,9 @@ public class ScriptExecutor : IScriptExecutor
     public event OnVariableChangeDelegate OnVariableChange;
 
     public bool IsRun { get; private set; }
+    public bool IsDebug { get; private set; }
 
-    public SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
+	public SetupDisplayWindowDelegate SetupDisplayWindow { get; set; }
     public AddDisplayVariableDelegate AddDisplayVariable { get; set; }
     public AddDisplayImageDelegate AddDisplayImage { get; set; }
     public UpdateDisplayDelegate UpdateDisplay { get; set; }
@@ -30,7 +31,6 @@ public class ScriptExecutor : IScriptExecutor
     private bool needStop;
     private int space;
 
-    private bool IsDebug;
     private IScreenWorker Worker;
     private string Arguments;
     private Dictionary<string, object> Variables;
