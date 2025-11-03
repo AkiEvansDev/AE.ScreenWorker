@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -54,23 +55,37 @@ public partial class MainWindow : Window
         if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
         {
             var querySplit = sender.Text.Split(' ');
-            var matchingItems = ViewModel.MenuItems
-                .Where(item =>
-                {
-                    if (item == ViewModel.SelectedItem)
-                        return false;
+            var matchingItems = new List<NavigationMenuItem>();
 
-                    foreach (var queryToken in querySplit)
+			foreach (var item in ViewModel.MenuItems)
+			{
+                if (item == ViewModel.SelectedItem)
+                    continue;
+
+				foreach (var queryToken in querySplit)
+				{
+					if (item.Title.Contains(queryToken, StringComparison.CurrentCultureIgnoreCase))
+                        matchingItems.Add(item);
+
+                    if (item.Action != null && item.Action.Variants != null)
                     {
-                        if (item.Title.IndexOf(queryToken, StringComparison.CurrentCultureIgnoreCase) < 0)
-                            return false;
-                    }
+                        var isVariant = false;
+						foreach (var variant in item.Action.Variants)
+						{
+							if (variant.Key.Contains(queryToken, StringComparison.CurrentCultureIgnoreCase))
+                            {
+								isVariant = true;
+								matchingItems.Add(new ActionNavigationMenuItem(variant.Key, 0, () => ViewModel.OnSelectAction(variant.Value)));
+							}
+						}
 
-                    return true;
-                })
-                .ToList();
+                        if (isVariant)
+                            break;
+					}
+				}
+			}
 
-            if (matchingItems.Any())
+			if (matchingItems.Any())
             {
                 sender.ItemsSource = matchingItems
                     .OrderByDescending(i => i.Title.StartsWith(sender.Text, StringComparison.CurrentCultureIgnoreCase))

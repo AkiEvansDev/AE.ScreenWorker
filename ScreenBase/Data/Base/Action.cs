@@ -8,18 +8,21 @@ using AE.Core;
 
 namespace ScreenBase.Data.Base;
 
+[AESerializable]
 public abstract class BaseAction<T> : IAction
     where T : class, IAction
 {
-    public bool Disabled { get; set; }
-
     public event Action NeedUpdate;
     public void NeedUpdateInvoke()
     {
         NeedUpdate?.Invoke();
     }
 
-    public abstract ActionType Type { get; }
+    [AEIgnore]
+    public virtual IReadOnlyDictionary<string, IAction> Variants { get; }
+
+	public bool Disabled { get; set; }
+	public abstract ActionType Type { get; }
 
     public abstract string GetTitle();
     public abstract string GetExecuteTitle(IScriptExecutor executor);
@@ -131,7 +134,6 @@ public abstract class BaseGroupElseAction<T> : BaseGroupAction<T>, IElseAction
     public bool NeedElse { get; set; }
 }
 
-[AESerializable]
 public class EndAction : BaseAction<EndAction>
 {
     public override ActionType Type => ActionType.End;
@@ -145,7 +147,6 @@ public class EndAction : BaseAction<EndAction>
     }
 }
 
-[AESerializable]
 public class ElseAction : BaseAction<ElseAction>
 {
     public override ActionType Type => ActionType.Else;
@@ -159,12 +160,11 @@ public class ElseAction : BaseAction<ElseAction>
     }
 }
 
-[AESerializable]
 public class BreakAction : BaseAction<BreakAction>
 {
     public override ActionType Type => ActionType.Break;
 
-    public override string GetTitle() => $"{Do(null, null).Name()}();";
+    public override string GetTitle() => $"{(Through ? ActionResultType.BreakAll : ActionResultType.Break).Name()}();";
     public override string GetExecuteTitle(IScriptExecutor executor) => GetTitle();
 
     [CheckBoxEditProperty(0)]

@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AE.CoreWPF" Version="3.2.3" />
+    <PackageReference Include="AE.CoreWPF" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>

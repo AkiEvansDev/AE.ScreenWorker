@@ -1,17 +1,28 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using AE.Core;
 
 using ScreenBase.Data.Base;
+using ScreenBase.Data.Calculations;
 
 namespace ScreenBase.Data.Conditions;
 
-[AESerializable]
 public class IfCompareNumberAction : BaseGroupElseAction<IfCompareNumberAction>
 {
     public override ActionType Type => ActionType.IfCompareNumber;
 
-    public override string GetTitle()
+	public override IReadOnlyDictionary<string, IAction> Variants => variants;
+	private static readonly Dictionary<string, IAction> variants = new()
+	{
+		{ "If >", new IfCompareNumberAction { Action = CompareType.More } },
+		{ "If <", new IfCompareNumberAction { Action = CompareType.Less } },
+		{ "If >=", new IfCompareNumberAction { Action = CompareType.More } },
+		{ "If <=", new IfCompareNumberAction { Action = CompareType.LessOrEqual } },
+		{ "If =", new IfCompareNumberAction { Action = CompareType.Equal } },
+	};
+
+	public override string GetTitle()
         => $"If {(Not ? "<P>!</P>" : "")}({GetValueString(Value1, Value1Variable)} {GetSymb()} {GetValueString(Value2, Value2Variable)}) =<AL></AL> {GetResultString(Result)}";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"If {(Not ? "<P>!</P>" : "")}({GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSymb()} {GetValueString(executor.GetValue(Value2, Value2Variable))}) =<AL></AL> {GetResultString(Result)}";

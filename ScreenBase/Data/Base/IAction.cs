@@ -4,8 +4,9 @@ namespace ScreenBase.Data.Base;
 
 public interface IAction : IEditProperties<IAction>
 {
-    bool Disabled { get; set; }
+    IReadOnlyDictionary<string, IAction> Variants { get; }
 
+    bool Disabled { get; set; }
     ActionType Type { get; }
 
     string GetTitle();

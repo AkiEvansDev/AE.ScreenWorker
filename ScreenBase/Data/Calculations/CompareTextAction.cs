@@ -4,7 +4,6 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Calculations;
 
-[AESerializable]
 public class CompareTextAction : BaseAction<CompareTextAction>
 {
     public override ActionType Type => ActionType.CompareText;

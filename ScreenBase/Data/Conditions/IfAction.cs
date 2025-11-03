@@ -6,7 +6,6 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Conditions;
 
-[AESerializable]
 public class IfAction : BaseGroupElseAction<IfAction>
 {
     public override ActionType Type => ActionType.If;

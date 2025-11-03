@@ -6,14 +6,14 @@ using System.Windows.Interop;
 
 using Microsoft.Web.WebView2.Wpf;
 
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 
 using ScreenBase;
 using ScreenBase.Data.Base;
 
 using ScreenWindows;
 
-using WebWork;
+//using WebWork;
 
 using Size = System.Drawing.Size;
 
@@ -55,7 +55,7 @@ internal class BaseExecutorWorker<T>
             Executor.OnExecutorComplite += () => Stop();
             Executor.OnMessage += OnMessage;
 
-            TranslateHelper.OnTranslate = OnWeb;
+            //TranslateHelper.OnTranslate = OnWeb;
             Web.Margin = new Thickness(-ScreenSize.Width, -ScreenSize.Height, 0, 0);
             Web.NavigationCompleted += (s, e) => OnNavigationCompleted();
 
@@ -82,7 +82,7 @@ internal class BaseExecutorWorker<T>
 
         if (Executor != null)
         {
-            TranslateHelper.OnTranslate = null;
+            //TranslateHelper.OnTranslate = null;
 
             if (Executor.IsRun)
             {
@@ -175,8 +175,9 @@ internal class BaseExecutorWorker<T>
     {
         try
         {
-            var html = await Web.ExecuteScriptAsync("document.body.outerHTML");
-            return JsonConvert.DeserializeObject(html).ToString();
+            //var html = await Web.ExecuteScriptAsync("document.body.outerHTML");
+            //return JsonConvert.DeserializeObject(html).ToString();
+            return null;
         }
         catch
         {

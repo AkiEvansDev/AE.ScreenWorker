@@ -1,15 +1,23 @@
-﻿using AE.Core;
+﻿using System.Collections.Generic;
+
+using AE.Core;
 
 using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Calculations;
 
-[AESerializable]
 public class CalculationBooleanAction : BaseAction<CalculationBooleanAction>
 {
     public override ActionType Type => ActionType.CalculationBoolean;
 
-    public override string GetTitle()
+    public override IReadOnlyDictionary<string, IAction> Variants => variants;
+	private static readonly Dictionary<string, IAction> variants = new()
+	{
+		{ "&", new CalculationBooleanAction { Action = CalculationBooleanType.And } },
+		{ "|", new CalculationBooleanAction { Action = CalculationBooleanType.Or } },
+	};
+
+	public override string GetTitle()
         => $"{GetResultString(Result)} = {(Value1Not ? "<P>!</P>" : "")}{GetValueString(Value1, Value1Variable)} {GetSumb()} {(Value2Not ? "<P>!</P>" : "")}{GetValueString(Value2, Value2Variable)};";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {(Value1Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSumb()} {(Value2Not ? "<P>!</P>" : "")}{GetValueString(executor.GetValue(Value2, Value2Variable))};";

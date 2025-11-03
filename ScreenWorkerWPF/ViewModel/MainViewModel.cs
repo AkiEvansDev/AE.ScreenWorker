@@ -124,7 +124,7 @@ internal class MainViewModel : BaseModel
             new VariableNavigationMenuItem(),
             new MainNavigationMenuItem(),
             new NavigationMenuHeader("Functions"),
-            new ActionsNavigationMenuItem("Mouse", Symbol.TouchPointer, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Mouse", Symbol.TouchPointer, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new MouseMoveAction(),
                 new MouseDownAction(),
@@ -132,12 +132,12 @@ internal class MainViewModel : BaseModel
                 new MouseClickAction(),
                 //new AddMouseEventAction(),
             }),
-            new ActionsNavigationMenuItem("Keyboard", Symbol.Keyboard, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Keyboard", Symbol.Keyboard, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new KeyEventAction(),
                 new AddKeyEventAction(),
             }),
-            new ActionsNavigationMenuItem("Сycles", Symbol.Sync, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Сycles", Symbol.Sync, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new WhileAction(),
                 new WhileGetColorAction(),
@@ -146,7 +146,7 @@ internal class MainViewModel : BaseModel
                 new ForAction(),
                 new ForeachColorAction(),
             }),
-            new ActionsNavigationMenuItem("Сonditions", Symbol.Shuffle, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Сonditions", Symbol.Shuffle, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new IfAction(),
                 new IfColorAction(),
@@ -154,7 +154,7 @@ internal class MainViewModel : BaseModel
                 new IfGetColorCountAction(),
                 new IfCompareNumberAction(),
             }),
-            new ActionsNavigationMenuItem("Variable methods", Symbol.AllApps, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Variable methods", Symbol.AllApps, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new SetNumberAction(),
                 new SetBooleanAction(),
@@ -167,7 +167,7 @@ internal class MainViewModel : BaseModel
                 new ConcatAction(),
                 new GetArgumentsAction(),
             }),
-            new ActionsNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Calculations", Symbol.Calculator, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new CalculationNumberAction(),
                 new CalculationBooleanAction(),
@@ -175,25 +175,25 @@ internal class MainViewModel : BaseModel
                 new CompareTextAction(),
                 new IsColorAction(),
             }),
-            new ActionsNavigationMenuItem("Ocr & Api", Symbol.View, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Ocr & Api", Symbol.View, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new ExtractTextAction(),
                 new ParseNumberAction(),
-                new TranslateAction(),
-                new StartDiscordAction(),
-                new StopDiscordAction(),
-                new DiscordClearAction(),
-                new DiscordMessageAction(),
-                new DiscordScreenAction(),
-                new AddDiscordEventAction(),
+                //new TranslateAction(),
+                //new StartDiscordAction(),
+                //new StopDiscordAction(),
+                //new DiscordClearAction(),
+                //new DiscordMessageAction(),
+                //new DiscordScreenAction(),
+                //new AddDiscordEventAction(),
             }),
-            new ActionsNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Game", Symbol.Map, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new GameMoveAction(),
                 new StartTimerAction(),
                 new StopTimerAction(),
             }),
-            new ActionsNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Windows", Symbol.NewWindow, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new CopyAction(),
                 new PasteAction(),
@@ -203,13 +203,13 @@ internal class MainViewModel : BaseModel
                 new AddDisplayImageAction(),
                 new UpdateDisplayAction(),
             }),
-            new ActionsNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Table", Symbol.CalendarWeek, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new OpenFileTableAction(),
                 new GetFileTableLengthAction(),
                 new GetFileTableValueAction(),
             }),
-            new ActionsNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnClick, new List<IAction>
+            new ActionsNavigationMenuItem("Other", Symbol.Favorite, Symbol.Placeholder, OnSelectAction, new List<IAction>
             {
                 new DelayAction(),
                 new BreakAction(),
@@ -232,12 +232,30 @@ internal class MainViewModel : BaseModel
         RegHotKeys();
     }
 
-    private void OnAddVariable()
+	public void OnSelectAction(IAction action)
+	{
+		if (SelectedItem != null && SelectedItem.Tab is not VariablesViewModel)
+			SelectedItem.Tab.AddAction(action);
+	}
+
+	private void OnAddVariable()
     {
         VariablesMenuItem.OnAddVariable();
     }
 
-    public void OnStart(bool debug)
+	private void OptimizeCoordinate(IAction action, int oldWidth, int oldHeight, int newWidth, int newHeight)
+	{
+		if (action is ICoordinateAction coordinateAction)
+			coordinateAction.OptimizeCoordinate(oldWidth, oldHeight, newWidth, newHeight);
+
+		if (action is IGroupAction group)
+		{
+			foreach (var item in group.Items)
+				OptimizeCoordinate(item, oldWidth, oldHeight, newWidth, newHeight);
+		}
+	}
+
+	private void OnStart(bool debug)
     {
         LogsWindow.IsDebug = debug;
         if (SaveData() && !ScriptInfo.IsEmpty())
@@ -297,7 +315,38 @@ internal class MainViewModel : BaseModel
             CommonHelper.ShowError("Login first!", "Warning!");
     }
 
-    private async void OnSettings()
+	private async void OnLogin()
+	{
+		if (App.CurrentSettings.User != null && App.CurrentSettings.User.IsLogin)
+		{
+			var gallery = new OnlineScriptsWindow();
+			gallery.ShowDialog();
+		}
+		else
+		{
+			if (CommonHelper.IsCheckLogin)
+			{
+				await CommonHelper.Login(null, true);
+				return;
+			}
+
+			var user = new UserInfo();
+			if (await EditPropertyDialog.ShowAsync(user, "Login") == ContentDialogResult.Primary)
+			{
+				user.EncryptPassword();
+
+				if (await CommonHelper.Login(user, true))
+				{
+					user.IsLogin = true;
+					App.CurrentSettings.User = user;
+					LoginAction.Title = user.Login;
+					HeaderItems.Add(UploadAction);
+				}
+			}
+		}
+	}
+
+	private async void OnSettings()
     {
         HotKeyRegister.UnregHotKey(KeyModifiers.Control | KeyModifiers.Alt, KeyInterop.KeyFromVirtualKey((int)App.CurrentSettings.StartKey));
         HotKeyRegister.UnregHotKey(KeyModifiers.Control | KeyModifiers.Alt, KeyInterop.KeyFromVirtualKey((int)App.CurrentSettings.StopKey));
@@ -319,43 +368,6 @@ internal class MainViewModel : BaseModel
             ExecuteWindow.Worker?.Stop();
             DisplayWindow.Worker?.Stop();
         }, saved: true, strong: false);
-    }
-
-    private async void OnLogin()
-    {
-        if (App.CurrentSettings.User != null && App.CurrentSettings.User.IsLogin)
-        {
-            var gallery = new OnlineScriptsWindow();
-            gallery.ShowDialog();
-        }
-        else
-        {
-            if (CommonHelper.IsCheckLogin)
-            {
-                await CommonHelper.Login(null, true);
-                return;
-            }
-
-            var user = new UserInfo();
-            if (await EditPropertyDialog.ShowAsync(user, "Login") == ContentDialogResult.Primary)
-            {
-                user.EncryptPassword();
-
-                if (await CommonHelper.Login(user, true))
-                {
-                    user.IsLogin = true;
-                    App.CurrentSettings.User = user;
-                    LoginAction.Title = user.Login;
-                    HeaderItems.Add(UploadAction);
-                }
-            }
-        }
-    }
-
-    private void OnClick(IAction action)
-    {
-        if (SelectedItem != null && SelectedItem.Tab is not VariablesViewModel)
-            SelectedItem.Tab.AddAction(action);
     }
 
     private void OnSave()
@@ -428,7 +440,7 @@ internal class MainViewModel : BaseModel
         }
     }
 
-    public void OnOpen(ScriptInfo scriptInfo, bool needSave = false)
+	public void OnOpen(ScriptInfo scriptInfo, bool needSave = false)
     {
         async void open()
         {
@@ -461,18 +473,6 @@ internal class MainViewModel : BaseModel
             NeedSaveBeforeAction(open);
         else
             open();
-    }
-
-    private void OptimizeCoordinate(IAction action, int oldWidth, int oldHeight, int newWidth, int newHeight)
-    {
-        if (action is ICoordinateAction coordinateAction)
-            coordinateAction.OptimizeCoordinate(oldWidth, oldHeight, newWidth, newHeight);
-
-        if (action is IGroupAction group)
-        {
-            foreach (var item in group.Items)
-                OptimizeCoordinate(item, oldWidth, oldHeight, newWidth, newHeight);
-        }
     }
 
     private bool SaveData()

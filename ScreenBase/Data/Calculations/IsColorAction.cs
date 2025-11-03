@@ -4,7 +4,6 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Calculations;
 
-[AESerializable]
 public class IsColorAction : BaseAction<IsColorAction>
 {
     public override ActionType Type => ActionType.IsColor;

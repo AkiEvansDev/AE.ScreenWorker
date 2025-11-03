@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using AE.Core;
 
@@ -6,12 +7,21 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Conditions;
 
-[AESerializable]
 public class IfGetColorCountAction : BaseGroupElseAction<IfGetColorCountAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.IfGetColorCount;
 
-    public override string GetTitle()
+	public override IReadOnlyDictionary<string, IAction> Variants => variants;
+	private static readonly Dictionary<string, IAction> variants = new()
+	{
+		{ "If ColorCount() >", new IfGetColorCountAction { Action = CompareType.More } },
+		{ "If ColorCount() <", new IfGetColorCountAction { Action = CompareType.Less } },
+		{ "If ColorCount() >=", new IfGetColorCountAction { Action = CompareType.More } },
+		{ "If ColorCount() <=", new IfGetColorCountAction { Action = CompareType.LessOrEqual } },
+		{ "If ColorCount() =", new IfGetColorCountAction { Action = CompareType.Equal } },
+	};
+
+	public override string GetTitle()
         => $"If {(Not ? "<P>!</P>" : "")}({GetColorCount()} {GetSymb()} {GetValueString(Value, ValueVariable)}) =<AL></AL> {GetResultString(Result)}";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"If {(Not ? "<P>!</P>" : "")}({GetExecuteColorCount(executor)} {GetSymb()} {GetValueString(executor.GetValue(Value, ValueVariable))}) =<AL></AL> {GetResultString(Result)}";

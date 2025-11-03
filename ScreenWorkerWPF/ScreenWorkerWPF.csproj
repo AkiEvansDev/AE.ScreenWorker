@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AE.CoreWPF" Version="3.2.3" />
+    <PackageReference Include="AE.CoreWPF" Version="3.2.4" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1722.45" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
@@ -35,7 +35,6 @@
   <ItemGroup>
     <ProjectReference Include="..\NeuroImage\NeuroImage.csproj" />
     <ProjectReference Include="..\ScreenWindows\ScreenWindows.csproj" />
-    <ProjectReference Include="..\WebWork\WebWork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

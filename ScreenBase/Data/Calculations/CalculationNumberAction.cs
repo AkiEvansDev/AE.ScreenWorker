@@ -1,15 +1,25 @@
-﻿using AE.Core;
+﻿using System.Collections.Generic;
+
+using AE.Core;
 
 using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Calculations;
 
-[AESerializable]
 public class CalculationNumberAction : BaseAction<CalculationNumberAction>
 {
     public override ActionType Type => ActionType.CalculationNumber;
 
-    public override string GetTitle()
+    public override IReadOnlyDictionary<string, IAction> Variants => variants;
+	private static readonly Dictionary<string, IAction> variants = new()
+	{
+		{ "+", new CalculationNumberAction { Action = CalculationNumberType.Increment } },
+		{ "-", new CalculationNumberAction { Action = CalculationNumberType.Decrement } },
+		{ "*", new CalculationNumberAction { Action = CalculationNumberType.Multiply } },
+		{ "/", new CalculationNumberAction { Action = CalculationNumberType.Divide } },
+	};
+
+	public override string GetTitle()
         => $"{GetResultString(Result)} = {GetValueString(Value1, Value1Variable)} {GetSumb()} {GetValueString(Value2, Value2Variable)};";
     public override string GetExecuteTitle(IScriptExecutor executor)
         => $"{GetResultString(Result)} = {GetValueString(executor.GetValue(Value1, Value1Variable))} {GetSumb()} {GetValueString(executor.GetValue(Value2, Value2Variable))};";

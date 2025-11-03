@@ -6,7 +6,6 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Conditions;
 
-[AESerializable]
 public class IfColorAction : BaseGroupElseAction<IfColorAction>
 {
     public override ActionType Type => ActionType.IfColor;

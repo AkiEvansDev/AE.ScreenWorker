@@ -12,7 +12,7 @@ using ScreenBase.Data.Base;
 using ScreenWorkerWPF.Common;
 using ScreenWorkerWPF.Windows;
 
-using WebWork;
+//using WebWork;
 
 namespace ScreenWorkerWPF;
 
@@ -57,12 +57,12 @@ public partial class App : Application
         HotKeyRegister.UnregAllHotKey();
         //MouseEventRegister.UnregAllMouseEvent();
 
-        DriveHelper.OnLog = m => LogsWindow.AddLog(m, true);
-        GithubHelper.OnLog = m => LogsWindow.AddLog(m, true);
-        TranslateHelper.OnLog = m => LogsWindow.AddLog(m, true);
+        //DriveHelper.OnLog = m => LogsWindow.AddLog(m, true);
+        //GithubHelper.OnLog = m => LogsWindow.AddLog(m, true);
+        //TranslateHelper.OnLog = m => LogsWindow.AddLog(m, true);
 
-        DriveHelper.Invoke = a => Current.Dispatcher.Invoke(a);
-        GithubHelper.GetVersionString = CommonHelper.GetVersionString;
+        //DriveHelper.Invoke = a => Current.Dispatcher.Invoke(a);
+        //GithubHelper.GetVersionString = CommonHelper.GetVersionString;
 
         if (!File.Exists(args))
             args = null;

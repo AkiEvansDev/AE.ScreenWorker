@@ -6,7 +6,6 @@ using ScreenBase.Data.Base;
 
 namespace ScreenBase.Data.Conditions;
 
-[AESerializable]
 public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordinateAction
 {
     public override ActionType Type => ActionType.IfGetColor;
@@ -89,7 +88,10 @@ public class IfGetColorAction : BaseGroupElseAction<IfGetColorAction>, ICoordina
         if (Not)
             result = !result;
 
-        if (!Result.IsNull())
+		if (executor.IsDebug)
+			executor.Log($"c1: {BaseAction<IAction>.GetValueString(color1)}, c2: {BaseAction<IAction>.GetValueString(color2)} =<AL></AL> {BaseAction<IAction>.GetValueString(result)}");
+
+		if (!Result.IsNull())
             executor.SetVariable(Result, result);
 
         if (NeedElse)
