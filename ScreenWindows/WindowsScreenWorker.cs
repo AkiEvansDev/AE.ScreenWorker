@@ -25,12 +25,13 @@ public class WindowsScreenWorker : IScreenWorker
 {
     private readonly int width;
     private readonly int height;
-    private Bitmap screen = null;
+    private readonly Bitmap screen;
 
     public WindowsScreenWorker(int width = 1920, int height = 1080)
     {
         this.width = width;
         this.height = height;
+        this.screen = new Bitmap(1920, 1080);
     }
 
     public void Init()
@@ -44,7 +45,7 @@ public class WindowsScreenWorker : IScreenWorker
 
     public void Screen()
     {
-        screen = GetScreen(width, height);
+        GetScreen(screen);
     }
 
     public Color GetColor(int x, int y)

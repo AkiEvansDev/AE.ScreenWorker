@@ -207,18 +207,14 @@ public static class WindowsHelper
         return info.rcMonitor.Size;
     }
 
-    public static Bitmap GetScreen(int width, int height)
+    public static void GetScreen(Bitmap screen)
     {
-        var screen = new Bitmap(width, height);
-
         try
         {
             using var graphics = Graphics.FromImage(screen);
             graphics.CopyFromScreen(Point.Empty, Point.Empty, screen.Size);
         }
         catch { }
-
-        return screen;
     }
 
     public static Rectangle GetWindowSize(IntPtr window)

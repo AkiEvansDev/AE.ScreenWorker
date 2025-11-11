@@ -216,7 +216,9 @@ public partial class ScreenWindow : Window
         owner.WindowState = WindowState.Minimized;
 
         Task.Delay(250).Wait();
-        var bitmap = WindowsHelper.GetScreen(size.Width, size.Height);
+         
+        var bitmap = new Bitmap(size.Width, size.Height);
+        WindowsHelper.GetScreen(bitmap);
 
         return bitmap;
     }
