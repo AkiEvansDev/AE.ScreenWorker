@@ -240,11 +240,22 @@ public class WindowsScreenWorker : IScreenWorker
 
     public void Dispose()
     {
-        Application.Current.Dispatcher.Invoke(() =>
+        try
         {
-            HotKeyRegister.UnregAllHotKey();
-            //MouseEventRegister.UnregAllMouseEvent();
-        });
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                HotKeyRegister.UnregAllHotKey();
+                //MouseEventRegister.UnregAllMouseEvent();
+            });
+        }
+        catch 
+        {
+            try
+            {
+                HotKeyRegister.UnregAllHotKey();
+            }
+            catch { }
+        }
 
         GC.SuppressFinalize(this);
     }
